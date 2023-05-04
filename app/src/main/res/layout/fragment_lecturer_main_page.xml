@@ -10,7 +10,7 @@
     <View
         android:id="@+id/topView"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
