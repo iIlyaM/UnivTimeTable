@@ -60,17 +60,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lookTimeTableBtn" />
 
-    <ImageButton
-        android:id="@+id/prevPageButton"
-        android:layout_width="91dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/headman_bg"
-        android:contentDescription="Go to theprevious page"
-        android:src="@drawable/ic_arrow_back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

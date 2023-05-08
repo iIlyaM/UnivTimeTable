@@ -17,11 +17,10 @@ class HeadmanMainPageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_headman_main_page, container, false)
-        val button = view.findViewById<ImageButton>(R.id.prevPageButton)
-        button.setOnClickListener {
-            findNavController().navigate(R.id.action_headmanMainPageFragment_to_loginFragment)
-        }
-
+//        val button = view.findViewById<ImageButton>(R.id.prevPageButton)
+//        button.setOnClickListener {
+//            findNavController().navigate(R.id.action_headmanMainPageFragment_to_loginFragment)
+//        }
         return view
     }
 
