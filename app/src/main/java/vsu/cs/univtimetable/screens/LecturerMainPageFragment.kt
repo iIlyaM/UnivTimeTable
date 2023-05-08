@@ -10,20 +10,20 @@ import androidx.navigation.fragment.findNavController
 import vsu.cs.univtimetable.R
 
 
-class HeadmanMainPageFragment : Fragment() {
+class LecturerMainPageFragment : Fragment() {
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_headman_main_page, container, false)
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_lecturer_main_page, container, false)
         val button = view.findViewById<ImageButton>(R.id.prevPageButton)
         button.setOnClickListener {
-            findNavController().navigate(R.id.action_headmanMainPageFragment_to_loginFragment)
+            findNavController().navigate(R.id.action_lecturerMainPageFragment_to_loginFragment)
         }
 
         return view
     }
-
-
 }
