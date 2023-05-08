@@ -19,10 +19,10 @@ class LecturerMainPageFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_lecturer_main_page, container, false)
-        val button = view.findViewById<ImageButton>(R.id.prevPageButton)
-        button.setOnClickListener {
-            findNavController().navigate(R.id.action_lecturerMainPageFragment_to_loginFragment)
-        }
+//        val button = view.findViewById<ImageButton>(R.id.prevPageButton)
+//        button.setOnClickListener {
+//            findNavController().navigate(R.id.action_lecturerMainPageFragment_to_loginFragment)
+//        }
 
         return view
     }
