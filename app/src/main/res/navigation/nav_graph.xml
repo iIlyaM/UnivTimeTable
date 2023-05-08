@@ -14,8 +14,8 @@
             android:id="@+id/action_loginFragment_to_adminMainPageFragment"
             app:destination="@id/adminMainPageFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_lecturerMainPageFragment"
-            app:destination="@id/lecturerMainPageFragment" />
+            android:id="@+id/action_loginFragment_to_headmanMainPageFragment"
+            app:destination="@id/headmanMainPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/adminMainPageFragment"
@@ -27,12 +27,12 @@
             app:destination="@id/loginFragment" />
     </fragment>
     <fragment
-        android:id="@+id/lecturerMainPageFragment"
-        android:name="vsu.cs.univtimetable.screens.LecturerMainPageFragment"
-        android:label="fragment_lecturer_main_page"
-        tools:layout="@layout/fragment_lecturer_main_page" >
+        android:id="@+id/headmanMainPageFragment"
+        android:name="vsu.cs.univtimetable.screens.HeadmanMainPageFragment"
+        android:label="fragment_headman_main_page"
+        tools:layout="@layout/fragment_headman_main_page" >
         <action
-            android:id="@+id/action_lecturerMainPageFragment_to_loginFragment"
+            android:id="@+id/action_headmanMainPageFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
 </navigation>
