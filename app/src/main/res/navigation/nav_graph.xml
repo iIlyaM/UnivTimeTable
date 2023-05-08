@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_loginFragment_to_headmanMainPageFragment"
             app:destination="@id/headmanMainPageFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_lecturerMainPageFragment"
+            app:destination="@id/lecturerMainPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/adminMainPageFragment"
@@ -33,6 +36,15 @@
         tools:layout="@layout/fragment_headman_main_page" >
         <action
             android:id="@+id/action_headmanMainPageFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/lecturerMainPageFragment"
+        android:name="vsu.cs.univtimetable.screens.LecturerMainPageFragment"
+        android:label="fragment_lecturer_main_page"
+        tools:layout="@layout/fragment_lecturer_main_page" >
+        <action
+            android:id="@+id/action_lecturerMainPageFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
 </navigation>
