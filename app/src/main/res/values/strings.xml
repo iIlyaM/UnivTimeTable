@@ -15,4 +15,7 @@
     <string name="groupNum">Номер группы</string>
     <string name="add_audience">Добавить аудиторию</string>
     <string name="add_group">Добавить группу</string>
+    <string name="audience_num">Номер аудитории</string>
+    <string name="capacity">Вместимость</string>
+    <string name="equipment">Обородувание</string>
 </resources>
