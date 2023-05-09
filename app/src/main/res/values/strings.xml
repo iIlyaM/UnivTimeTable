@@ -8,4 +8,9 @@
     <string name="password">Пароль</string>
     <string name="login">Логин</string>
     <string name="email">Почта</string>
+    <string name="role">Роль</string>
+    <string name="fullName">Фамилия Имя Отчество</string>
+    <string name="univ">Университет</string>
+    <string name="faculty">Факультет</string>
+    <string name="groupNum">Номер группы</string>
 </resources>
