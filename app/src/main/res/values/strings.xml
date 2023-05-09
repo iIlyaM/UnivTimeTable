@@ -20,4 +20,5 @@
     <string name="equipment">Обородувание</string>
     <string name="choose_course">Выбрать курс</string>
     <string name="choose_headman">Выбрать старосту</string>
+    <string name="faculty_name">Наименование факультета</string>
 </resources>
