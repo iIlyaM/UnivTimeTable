@@ -27,12 +27,13 @@
 
     <SearchView
         android:id="@+id/enterUnivName"
-        android:layout_width="320dp"
-        android:layout_height="40dp"
+        android:layout_width="280dp"
+        android:layout_height="55dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/rect_border"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.03"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/waveView" />
 
@@ -55,25 +56,25 @@
 
     <ImageButton
         android:id="@+id/sortButton"
-        android:layout_width="52dp"
-        android:layout_height="46dp"
+        android:layout_width="51dp"
+        android:layout_height="40dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/admin_bg"
         android:contentDescription="@string/sort_btn_descr"
         android:src="@drawable/ic_sort"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enterUnivName" />
+        app:layout_constraintHorizontal_bias="0.944"
+        app:layout_constraintStart_toEndOf="@+id/enterUnivName"
+        app:layout_constraintTop_toBottomOf="@+id/waveView" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/univsList"
         android:layout_width="349dp"
         android:layout_height="347dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
