@@ -21,4 +21,9 @@
     <string name="choose_course">Выбрать курс</string>
     <string name="choose_headman">Выбрать старосту</string>
     <string name="faculty_name">Наименование факультета</string>
+    <string name="enter_univ_name">Введите название университета</string>
+    <string name="univ_name_string">Название университета</string>
+    <string name="univ_city_name_string">Город</string>
+    <string name="add">Добавить</string>
+    <string name="sort_btn_descr">Сортировка по алфавиту</string>
 </resources>
