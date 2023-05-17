@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:CardCornerRadius ="10dp"
-    app:cardElevation="8dp"
-    app:cardMaxElevation="5dp"
+    app:cardElevation="5dp"
     app:cardBackgroundColor="@color/adminsColor">
 
     <RelativeLayout
@@ -14,17 +13,56 @@
 
         <TextView
             android:id="@+id/univNameView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="Название университета"
-            android:textSize="18sp" />
+            android:layout_width="260dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:padding="5dp"
+            android:text="@string/univ_name_string"
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/cityNameView"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/univNameView"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:padding="5dp"
+            android:text="@string/univ_city_name_string"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/icDeleteView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Город"
-            android:textSize="14sp" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:padding="5dp"
+            app:srcCompat="@drawable/ic_delete" />
+
+        <ImageView
+            android:id="@+id/icSettingsView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="47dp"
+            android:layout_marginBottom="4dp"
+            android:padding="5dp"
+            app:srcCompat="@drawable/ic_settings" />
+
+
     </RelativeLayout>
+
+
+
 </androidx.cardview.widget.CardView>
