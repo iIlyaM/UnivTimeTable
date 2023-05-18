@@ -29,4 +29,9 @@
     <string name="full_name_string">Фамилия И.О</string>
     <string name="city">Город</string>
     <string name="univ_caps_string">ВУЗ</string>
+    <string name="sort_by_course_num">Сортировка по номеру курса</string>
+    <string name="course_num">Курс:</string>
+    <string name="group_num">Группа:</string>
+    <string name="headman_name">Староста:</string>
+    <string name="amount_of_students">Студентов:</string>
 </resources>
