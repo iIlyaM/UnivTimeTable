@@ -26,4 +26,7 @@
     <string name="univ_city_name_string">Город</string>
     <string name="add">Добавить</string>
     <string name="sort_btn_descr">Сортировка по алфавиту</string>
+    <string name="full_name_string">Фамилия И.О</string>
+    <string name="city">Город</string>
+    <string name="univ_caps_string">ВУЗ</string>
 </resources>
