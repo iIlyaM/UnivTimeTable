@@ -6,7 +6,8 @@
     android:layout_margin="5dp"
     app:cardCornerRadius ="10dp"
     app:cardElevation="5dp"
-    app:cardBackgroundColor="@color/adminsColor">
+    app:cardBackgroundColor="@color/adminsColor"
+    android:foreground="@drawable/prim_color_rect_border">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,44 +15,44 @@
 
         <TextView
             android:id="@+id/fullNameView"
-            android:layout_width="200dp"
-            android:layout_height="60dp"
+            android:layout_width="250dp"
+            android:layout_height="35dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
             android:padding="5dp"
-            android:text="Фамилия И.О"
+            android:text="@string/full_name_string"
             android:textColor="@color/black"
-            android:textSize="19sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/univView"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
+            android:layout_width="170dp"
+            android:layout_height="30dp"
             android:layout_below="@+id/fullNameView"
             android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:padding="5dp"
+            android:text="@string/univ"
             android:textColor="@color/black"
-            android:text="Университет"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/facultyView"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
+            android:layout_width="170dp"
+            android:layout_height="30dp"
             android:layout_below="@+id/univView"
             android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:padding="5dp"
+            android:text="@string/faculty"
             android:textColor="@color/black"
-            android:text="Факультет"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/icUserEditView"
@@ -79,30 +80,34 @@
 
         <TextView
             android:id="@+id/roleView"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@+id/fullNameView"
-            android:layout_marginTop="@+id/fullNameView"
-            android:layout_marginEnd="@+id/fullNameView"
-            android:layout_marginBottom="@+id/fullNameView"
+            android:layout_width="130dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/fullNameView"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:padding="5dp"
-            android:text="Роль"
+            android:text="@string/role"
             android:textColor="@color/black"
             android:textSize="14sp" />
 
-        <!--        <TextView-->
-<!--            android:id="@+id/cityView"-->
-<!--            android:layout_width="110dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="8dp"-->
-<!--            android:layout_marginTop="5dp"-->
-<!--            android:layout_marginEnd="8dp"-->
-<!--            android:layout_marginBottom="8dp"-->
-<!--            android:padding="5dp"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:layout_below="@+id/roleView"-->
-<!--            android:text="Город"-->
-<!--            android:textSize="14sp"/>-->
+        <TextView
+            android:id="@+id/cityView"
+            android:layout_width="130dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/roleView"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:padding="5dp"
+            android:text="@string/city"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
 
     </RelativeLayout>
 
