@@ -41,4 +41,6 @@
     <string name="subj_type">Лекция</string>
     <string name="audience_num_short">№ ауд.</string>
     <string name="group_num_short">№ группы</string>
+    <string name="date_day_week">DD.MM.YY, день</string>
+    <string name="week_type">Тип недели</string>
 </resources>

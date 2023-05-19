@@ -31,7 +31,7 @@
         <TextView
             android:id="@+id/subjNameView"
             android:layout_width="250dp"
-            android:layout_height="65dp"
+            android:layout_height="60dp"
             android:layout_below="@id/lectTimeView"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
