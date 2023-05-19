@@ -34,4 +34,13 @@
     <string name="group_num">Группа:</string>
     <string name="headman_name">Староста:</string>
     <string name="amount_of_students">Студентов:</string>
+    <string name="download">Скачать</string>
+    <string name="class_time">Время занятия</string>
+    <string name="subj_name">Название предмета</string>
+    <string name="course">№ курс</string>
+    <string name="subj_type">Лекция</string>
+    <string name="audience_num_short">№ ауд.</string>
+    <string name="group_num_short">№ группы</string>
+    <string name="date_day_week">DD.MM.YY, день</string>
+    <string name="week_type">Тип недели</string>
 </resources>
