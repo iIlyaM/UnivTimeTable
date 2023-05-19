@@ -43,4 +43,5 @@
     <string name="group_num_short">№ группы</string>
     <string name="date_day_week">DD.MM.YY, день</string>
     <string name="week_type">Тип недели</string>
+    <string name="full_name_view">Фамилия И. О.</string>
 </resources>
