@@ -41,13 +41,32 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="265dp"
-        android:layout_height="457dp"
+        android:id="@+id/recyclerView3"
+        android:layout_width="268dp"
+        android:layout_height="309dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="120dp"
         android:layout_marginEnd="32dp"
+        android:background="@drawable/lect_color_rect_border"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/waveView"
         tools:listitem="@layout/lecturer_item" />
+
+    <TextView
+        android:id="@+id/sendersLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/lect_color_rect_border"
+        android:text="Заявки отправили: "
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/waveView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
