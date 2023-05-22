@@ -21,4 +21,27 @@
     <string name="choose_course">Выбрать курс</string>
     <string name="choose_headman">Выбрать старосту</string>
     <string name="faculty_name">Наименование факультета</string>
+    <string name="enter_univ_name">Введите название университета</string>
+    <string name="univ_name_string">Название университета</string>
+    <string name="univ_city_name_string">Город</string>
+    <string name="add">Добавить</string>
+    <string name="sort_btn_descr">Сортировка по алфавиту</string>
+    <string name="full_name_string">Фамилия И.О</string>
+    <string name="city">Город</string>
+    <string name="univ_caps_string">ВУЗ</string>
+    <string name="sort_by_course_num">Сортировка по номеру курса</string>
+    <string name="course_num">Курс:</string>
+    <string name="group_num">Группа:</string>
+    <string name="headman_name">Староста:</string>
+    <string name="amount_of_students">Студентов:</string>
+    <string name="download">Скачать</string>
+    <string name="class_time">Время занятия</string>
+    <string name="subj_name">Название предмета</string>
+    <string name="course">№ курс</string>
+    <string name="subj_type">Лекция</string>
+    <string name="audience_num_short">№ ауд.</string>
+    <string name="group_num_short">№ группы</string>
+    <string name="date_day_week">DD.MM.YY, день</string>
+    <string name="week_type">Тип недели</string>
+    <string name="full_name_view">Фамилия И. О.</string>
 </resources>
