@@ -21,9 +21,16 @@ class SelectUnwantedTimePageFragment : Fragment() {
     ): View? {
 //        return inflater.inflate(R.layout.fragment_select_unwanted_time_page, container, false)
         val view = inflater.inflate(R.layout.fragment_select_unwanted_time_page, container, false)
-        val autoCompleteView = view.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView)
+        val autoCompleteView = view.findViewById<AutoCompleteTextView>(R.id.autoCompleteText)
         val daysAdapter = ArrayAdapter(requireContext(), R.layout.week_item, days)
         autoCompleteView.setAdapter(daysAdapter)
+
+        autoCompleteView.setOnItemClickListener {
+                parent, view1, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as String
+            // Действия, которые нужно выполнить при выборе элемента из выпадающего меню
+            // Например, обновление текста или выполнение определенного действия
+        }
 
 
 
