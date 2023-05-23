@@ -46,22 +46,49 @@
         app:layout_constraintTop_toBottomOf="@+id/waveView" />
 
 
-    <TextView
-        android:id="@+id/listGroupView"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/selectGroupsView"
         android:layout_width="335dp"
         android:layout_height="50dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/lect_color_rect_border"
-        android:gravity="start|center_vertical"
-        android:hint="Список групп"
-        android:paddingStart="16dp"
-        android:textColorHint="@color/black"
-        android:textSize="24sp"
+        android:foreground="@drawable/lect_color_rect_border"
+        app:cardBackgroundColor="#DDEAF6"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editSubjectNameText" />
+        app:layout_constraintTop_toBottomOf="@+id/editSubjectNameText"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/groupList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Список групп"
+                android:inputType="text"
+                android:paddingStart="16dp"
+                android:paddingTop="5dp"
+                android:textAlignment="viewStart"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ic_arrow_drop_down" />
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/confirmSubjectBtn"
@@ -84,6 +111,9 @@
         android:id="@+id/editHoursCountText"
         android:layout_width="335dp"
         android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="32dp"
         android:background="@drawable/lect_color_rect_border"
         android:ems="10"
         android:hint="Часов в неделю"
@@ -93,7 +123,8 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listGroupView" />
+        app:layout_constraintTop_toBottomOf="@+id/selectGroupsView"
+        tools:ignore="MissingConstraints" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/classTypeInputLayout"
@@ -101,6 +132,9 @@
         android:layout_width="335dp"
         android:layout_height="61dp"
         android:layout_margin="16dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="32dp"
         android:hint="Форма занятия"
         app:hintTextColor="@color/lecturerColor"
         app:layout_constraintEnd_toEndOf="parent"
@@ -117,6 +151,51 @@
             android:textSize="24sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/selectEquipmentView"
+        android:layout_width="335dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="32dp"
+        android:foreground="@drawable/lect_color_rect_border"
+        app:cardBackgroundColor="#DDEAF6"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/classTypeInputLayout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/equipmentList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Оборудование"
+                android:inputType="text"
+                android:paddingStart="16dp"
+                android:paddingTop="5dp"
+                android:textAlignment="viewStart"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ic_arrow_drop_down" />
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button"
