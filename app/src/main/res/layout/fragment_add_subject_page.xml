@@ -53,14 +53,13 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="32dp"
-        android:foreground="@drawable/lect_color_rect_border"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/lecturerColor"
         app:cardBackgroundColor="#DDEAF6"
-        app:cardCornerRadius="5dp"
-        app:cardElevation="10dp"
+        app:cardCornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editSubjectNameText"
-        >
+        app:layout_constraintTop_toBottomOf="@+id/editSubjectNameText">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -116,7 +115,7 @@
         android:layout_marginEnd="32dp"
         android:background="@drawable/lect_color_rect_border"
         android:ems="10"
-        android:hint="Часов в неделю"
+        android:hint="@string/hours_per_week"
         android:inputType="text"
         android:paddingStart="16dp"
         android:textColorHint="@color/black"
@@ -131,11 +130,17 @@
         style="@style/WeekTextInputLayoutStyle"
         android:layout_width="335dp"
         android:layout_height="61dp"
-        android:layout_margin="16dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
-        android:hint="Форма занятия"
+        android:background="@drawable/text_input_layout"
+        android:hint="@string/class_form"
+        android:textColorHint="@color/black"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+        app:cardCornerRadius="10dp"
         app:hintTextColor="@color/lecturerColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -146,8 +151,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:popupBackground="#DDEAF6"
             android:textColor="@color/black"
-            android:textColorHint="@color/black"
             android:textSize="24sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -155,17 +162,17 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/selectEquipmentView"
         android:layout_width="335dp"
-        android:layout_height="50dp"
+        android:layout_height="51dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="32dp"
-        android:foreground="@drawable/lect_color_rect_border"
         app:cardBackgroundColor="#DDEAF6"
-        app:cardCornerRadius="5dp"
-        app:cardElevation="10dp"
+        app:cardCornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/classTypeInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/classTypeInputLayout"
+        app:strokeColor="@color/lecturerColor"
+        app:strokeWidth="1dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -175,7 +182,7 @@
                 android:id="@+id/equipmentList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Оборудование"
+                android:hint="@string/equipment"
                 android:inputType="text"
                 android:paddingStart="16dp"
                 android:paddingTop="5dp"
@@ -187,9 +194,9 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="34dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginRight="15dp"
+                android:layout_marginEnd="15dp"
                 android:src="@drawable/ic_arrow_drop_down" />
         </RelativeLayout>
 
@@ -206,7 +213,7 @@
         android:background="@drawable/lecturer_bg"
         android:drawableStart="@drawable/ic_request_list"
         android:paddingStart="14dp"
-        android:text="Заявки"
+        android:text="@string/requests"
         android:textAllCaps="false"
         android:textSize="18sp"
         android:textStyle="bold"
