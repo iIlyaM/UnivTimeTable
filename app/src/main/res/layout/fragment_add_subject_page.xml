@@ -27,19 +27,95 @@
 
     <EditText
         android:id="@+id/editSubjectNameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="335dp"
+        android:layout_height="50dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/lect_color_rect_border"
         android:ems="10"
-        android:hint="Название предмета"
+        android:hint="@string/subject_name"
         android:inputType="text"
-        android:textAlignment="center"
+        android:paddingStart="16dp"
+        android:textAlignment="viewStart"
         android:textColor="@color/black"
+        android:textColorHint="@color/black"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/waveView" />
+
+    <TextView
+        android:id="@+id/listGroupView"
+        android:layout_width="335dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/lect_color_rect_border"
+        android:gravity="start|center_vertical"
+        android:hint="Список групп"
+        android:paddingStart="16dp"
+        android:textColorHint="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editSubjectNameText" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/confirmSubjectBtn"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="45dp"
+        android:background="@drawable/lecturer_bg"
+        android:text="@string/confirm"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/editHoursCountText"
+        android:layout_width="335dp"
+        android:layout_height="50dp"
+        android:background="@drawable/lect_color_rect_border"
+        android:ems="10"
+        android:hint="Часов в неделю"
+        android:inputType="text"
+        android:paddingStart="16dp"
+        android:textColorHint="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="342dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/classTypeInputLayout"
+        style="@style/WeekTextInputLayoutStyle"
+        android:layout_width="335dp"
+        android:layout_height="61dp"
+        android:layout_margin="16dp"
+        android:hint="Форма занятия"
+        app:hintTextColor="@color/lecturerColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editHoursCountText">
+
+        <AutoCompleteTextView
+            android:id="@+id/typeAutoCompleteText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="24sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
