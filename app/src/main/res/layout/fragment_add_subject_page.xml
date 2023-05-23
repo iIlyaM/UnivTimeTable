@@ -45,6 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/waveView" />
 
+
     <TextView
         android:id="@+id/listGroupView"
         android:layout_width="335dp"
@@ -68,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="45dp"
+        android:layout_marginBottom="55dp"
         android:background="@drawable/lecturer_bg"
         android:text="@string/confirm"
         android:textAllCaps="false"
@@ -76,7 +77,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.08"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
@@ -92,7 +93,7 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="342dp" />
+        app:layout_constraintTop_toBottomOf="@+id/listGroupView" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/classTypeInputLayout"
@@ -116,6 +117,25 @@
             android:textSize="24sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button"
+        android:layout_width="150dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="55dp"
+        android:background="@drawable/lecturer_bg"
+        android:drawableStart="@drawable/ic_request_list"
+        android:paddingStart="14dp"
+        android:text="Заявки"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toEndOf="@+id/confirmSubjectBtn" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
