@@ -16,112 +16,107 @@ import vsu.cs.univtimetable.R
 class AddSubjectPageFragment : Fragment() {
 
     private val groups =
-        arrayOf("3к. 5гр.", "1к. 12гр.", "1к. 13гр.", "4к. 1гр.")
+        arrayListOf("3к. 5гр.", "1к. 12гр.", "1к. 13гр.", "4к. 1гр.")
+
+    private val equipment =
+        arrayListOf("Проектор", "Компьютеры", "Миркофон", "Микроскоп")
 
     private val classTypes =
         arrayOf("Лекция", "Семинар")
 
     var groupListView: TextView? = null
+    var equipListView: TextView? = null
     lateinit var selectCard: MaterialCardView
+    lateinit var selectEquipCard: MaterialCardView
     lateinit var selectedGroups: BooleanArray
-    var langList = ArrayList<Int>()
+    lateinit var selectedEquipment: BooleanArray
+    var groupList = ArrayList<Int>()
+    var equipList = ArrayList<Int>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 //        return inflater.inflate(R.layout.fragment_add_subject_page, container, false)
         val view = inflater.inflate(R.layout.fragment_add_subject_page, container, false)
-//        val classTypeCompleteView = view.findViewById<AutoCompleteTextView>(R.id.typeAutoCompleteText)
+        val classTypeCompleteView = view.findViewById<AutoCompleteTextView>(R.id.typeAutoCompleteText)
         val typeAdapter = ArrayAdapter(requireContext(), R.layout.subj_item, classTypes)
 
         selectCard = view.findViewById(R.id.selectGroupsView)
-        groupListView = view.findViewById(R.id.groupList)
-        selectedGroups = BooleanArray(groups.size)
+        selectEquipCard = view.findViewById(R.id.selectEquipmentView)
 
-//        classTypeCompleteView.setAdapter(typeAdapter)
-//
-//        classTypeCompleteView.setOnItemClickListener {
-//                parent, view2, position, id ->
-//            val selectedItem = parent.getItemAtPosition(position) as String
-//            // Действия, которые нужно выполнить при выборе элемента из выпадающего меню
-//            // Например, обновление текста или выполнение определенного действия
-//        }
+        groupListView = view.findViewById(R.id.groupList)
+        equipListView = view.findViewById(R.id.equipmentList)
+
+        selectedGroups = BooleanArray(groups.size)
+        selectedEquipment = BooleanArray(equipment.size)
+
+        classTypeCompleteView.setAdapter(typeAdapter)
+
+        classTypeCompleteView.setOnItemClickListener {
+                parent, view2, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as String
+            // Действия, которые нужно выполнить при выборе элемента из выпадающего меню
+            // Например, обновление текста или выполнение определенного действия
+        }
 
         selectCard.setOnClickListener {
-//            val options = arrayOf("Option 1", "Option 2", "Option 3")
-//            val selectedOptions = ArrayList<Int>()
-//
-//            val builder = AlertDialog.Builder(requireContext())
-//            builder.setTitle("Select Options")
-//            builder.setMultiChoiceItems(options, null) { _, which, isChecked ->
-//                if (isChecked) {
-//                    selectedOptions.add(which)
-//                } else if (selectedOptions.contains(which)) {
-//                    selectedOptions.remove(Integer.valueOf(which))
-//                }
-//            }
-//            builder.setPositiveButton("OK") { _, _ ->
-//                // Действия, которые нужно выполнить при выборе опций
-//                for (option in selectedOptions) {
-//                    // Выполнение действий для каждой выбранной опции
-//                }
-//            }
-//            builder.setNegativeButton("Cancel") { dialog, _ ->
-//                dialog.dismiss()
-//            }
-//            val dialog = builder.create()
-//            dialog.show()
-
-            val builder = AlertDialog.Builder(requireContext())
-
-            // set title
-            builder.setTitle("Select Groups")
-
-            // set dialog non cancelable
-            builder.setCancelable(false)
-
-            builder.setMultiChoiceItems(groups, selectedGroups) { dialogInterface, i, b ->
-                // check condition
-                if (b) {
-                    // when checkbox selected
-                    // Add position in lang list
-                    langList.add(i)
-                    // Sort array list
-                    langList.sort()
-                } else {
-                    // when checkbox unselected
-                    // Remove position from langList
-                    langList.remove(i)
-                }
-            }
-
-            builder.setPositiveButton("OK") { dialogInterface, i ->
-                // Initialize string builder
-                val stringBuilder = StringBuilder()
-                // use for loop
-                for (j in langList.indices) {
-                    // concat array value
-                    stringBuilder.append(groups[langList[j]])
-                    // check condition
-                    if (j != langList.size - 1) {
-                        // When j value not equal.
-                        stringBuilder.append(", ")
-                    }
-                }
-                groupListView?.text = stringBuilder.toString()
-            }
-
-            builder.setNegativeButton("Cancel") { dialogInterface, i ->
-
-            }
-
-            builder.show()
+            val itemsArray = groups.toArray(arrayOf<CharSequence>(groups.size.toString()))
+            showDialog(itemsArray, groupList, selectedGroups, groupListView)
+        }
+        selectEquipCard.setOnClickListener {
+            val equipArray = equipment.toArray(arrayOf<CharSequence>(equipment.size.toString()))
+            showDialog(equipArray, equipList, selectedEquipment, equipListView)
         }
         return view
     }
 
-    private fun showDialog() {
-        // Initialize alert dialog
+    private fun showDialog(
+        items: Array<CharSequence>,
+        list: ArrayList<Int>,
+        selectedItems: BooleanArray,
+        listView: TextView?
+    ) {
+        val builder = AlertDialog.Builder(requireContext())
 
+        builder.setTitle("Выберите группы")
+
+        builder.setCancelable(false)
+
+        builder.setMultiChoiceItems(items, selectedItems) { dialogInterface, i, b ->
+            if (b) {
+                // when checkbox selected
+                // Add position in lang list
+                list.add(i)
+                // Sort array list
+                list.sort()
+            } else {
+                // when checkbox unselected
+                // Remove position from langList
+                list.remove(i)
+            }
+        }
+
+        builder.setPositiveButton("OK") { dialogInterface, i ->
+            // Initialize string builder
+            val stringBuilder = StringBuilder()
+            // use for loop
+            for (j in list.indices) {
+                // concat array value
+                stringBuilder.append(items[list[j]])
+                // check condition
+                if (j != items.size - 1) {
+                    // When j value not equal.
+                    stringBuilder.append(", ")
+                }
+            }
+            listView?.text = stringBuilder.toString()
+        }
+
+        builder.setNegativeButton("Cancel") { dialogInterface, i ->
+
+        }
+
+        builder.show()
     }
+
 }
