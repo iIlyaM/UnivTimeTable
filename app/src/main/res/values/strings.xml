@@ -48,4 +48,5 @@
     <string name="class_form">Форма занятия</string>
     <string name="requests">Заявки</string>
     <string name="hours_per_week">Часов в неделю</string>
+    <string name="full_name_view">Фамилия И. О.</string>
 </resources>
