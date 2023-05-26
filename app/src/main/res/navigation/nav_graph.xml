@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_loginFragment_to_lecturerMainPageFragment"
             app:destination="@id/lecturerMainPageFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_selectUnwantedTimePageFragment"
+            app:destination="@id/selectUnwantedTimePageFragment" />
     </fragment>
     <fragment
         android:id="@+id/adminMainPageFragment"
@@ -47,4 +50,9 @@
             android:id="@+id/action_lecturerMainPageFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/selectUnwantedTimePageFragment"
+        android:name="vsu.cs.univtimetable.screens.SelectUnwantedTimePageFragment"
+        android:label="fragment_select_unwanted_time_page"
+        tools:layout="@layout/fragment_select_unwanted_time_page" />
 </navigation>
