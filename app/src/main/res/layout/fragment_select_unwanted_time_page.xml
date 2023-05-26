@@ -26,29 +26,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
-        style="@style/WeekTextInputLayoutStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/weekView"
+        android:layout_width="253dp"
+        android:layout_height="319dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="32dp"
-        android:hint="День недели"
-        app:hintTextColor="@color/lecturerColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waveView">
-
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:listitem="@layout/week_item" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/confirmTimeBtn"
@@ -66,6 +54,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="344dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/lect_color_rect_border"
+        android:gravity="center_horizontal"
+        android:text="Выберите день и время отсутствия"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/waveView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
