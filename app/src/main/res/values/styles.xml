@@ -3,4 +3,10 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
     </style>
+
+    <style name="lectTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxStrokeColor">@color/lecturerColor</item>
+        <item name="boxStrokeWidth">1dp</item>
+    </style>
+
 </resources>
