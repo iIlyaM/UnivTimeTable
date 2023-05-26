@@ -5,4 +5,5 @@
     <color name="lecturerColor">#5AA895</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="popupbackgr">#E2EFF3</color>
 </resources>
