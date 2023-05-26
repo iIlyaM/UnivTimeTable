@@ -43,7 +43,7 @@
     </fragment>
     <fragment
         android:id="@+id/lecturerMainPageFragment"
-        android:name="vsu.cs.univtimetable.screens.LecturerMainPageFragment"
+        android:name="vsu.cs.univtimetable.screens.lect_screens.LecturerMainPageFragment"
         android:label="fragment_lecturer_main_page"
         tools:layout="@layout/fragment_lecturer_main_page" >
         <action
@@ -55,4 +55,5 @@
         android:name="vsu.cs.univtimetable.screens.SelectUnwantedTimePageFragment"
         android:label="fragment_select_unwanted_time_page"
         tools:layout="@layout/fragment_select_unwanted_time_page" />
+
 </navigation>

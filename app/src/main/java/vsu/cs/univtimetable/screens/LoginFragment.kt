@@ -19,7 +19,7 @@ class LoginFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
         val button = view.findViewById<Button>(R.id.login_btn)
         button.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_selectUnwantedTimePageFragment)
+            findNavController().navigate(R.id.action_loginFragment_to_moveClassTimePageFragment)
         }
 
         return view

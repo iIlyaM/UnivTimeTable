@@ -43,4 +43,10 @@
     <string name="group_num_short">№ группы</string>
     <string name="date_day_week">DD.MM.YY, день</string>
     <string name="week_type">Тип недели</string>
+    <string name="group_list">Список групп</string>
+    <string name="subject_name">Название предмета</string>
+    <string name="class_form">Форма занятия</string>
+    <string name="requests">Заявки</string>
+    <string name="hours_per_week">Часов в неделю</string>
+    <string name="full_name_view">Фамилия И. О.</string>
 </resources>
