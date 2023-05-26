@@ -50,7 +50,7 @@
             android:hint="Выберите предмет"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:popupBackground="@color/popupbackgr"
+            android:popupBackground="#DDEAF6"
             android:textColor="@color/black"
             android:textSize="24sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -83,7 +83,7 @@
             android:inputType="none"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:popupBackground="#@color/popupbackgr"
+            android:popupBackground="#DDEAF6"
             android:textColor="@color/black"
             android:textSize="24sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -116,7 +116,7 @@
             android:inputType="none"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:popupBackground="@color/popupbackgr"
+            android:popupBackground="#DDEAF6"
             android:textColor="@color/black"
             android:textSize="24sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -150,7 +150,7 @@
             android:inputType="none"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:popupBackground="@color/popupbackgr"
+            android:popupBackground="#DDEAF6"
             android:textColor="@color/black"
             android:textSize="24sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -183,7 +183,7 @@
             android:inputType="none"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:popupBackground="@color/popupbackgr"
+            android:popupBackground="#DDEAF6"
             android:textColor="@color/black"
             android:textSize="24sp" />
     </com.google.android.material.textfield.TextInputLayout>
