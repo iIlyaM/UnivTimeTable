@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.widget.addTextChangedListener
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.auth0.android.jwt.JWT
 import retrofit2.Call
@@ -23,6 +24,7 @@ import vsu.cs.univtimetable.TimeTableClient
 import vsu.cs.univtimetable.UserAuthApi
 import vsu.cs.univtimetable.dto.AuthRequestDto
 import vsu.cs.univtimetable.dto.AuthResponseDto
+import vsu.cs.univtimetable.utils.NavigationManager
 
 
 class LoginFragment : Fragment() {
@@ -32,31 +34,6 @@ class LoginFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         authApi = TimeTableClient.getClient().create(UserAuthApi::class.java)
-
-        val emailEditText = view?.findViewById<EditText>(R.id.editTextTextEmail)
-        val button = view?.findViewById<AppCompatButton>(R.id.login_btn)
-
-
-        val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
-
-        emailEditText?.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-//                if (!s.toString().matches(emailPattern.toRegex())) {
-//                    emailEditText.error = "Некорректный email"
-//                }
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(Patterns.EMAIL_ADDRESS.matcher(emailEditText.text.toString()).matches()) {
-                    button?.isEnabled = true
-                } else {
-                    button?.isEnabled = false
-                    emailEditText.error = "Почта введена некорректно"
-                }
-            }
-        })
     }
 
     override fun onCreateView(
@@ -67,27 +44,23 @@ class LoginFragment : Fragment() {
         val button = view.findViewById<AppCompatButton>(R.id.login_btn)
         val emailField = view.findViewById<EditText>(R.id.editTextTextEmail)
         val pwd = view.findViewById<EditText>(R.id.editTextTextPassword)
+        val navController = findNavController()
 
-
-//        validate(emailField, pwd, button)
         button.setOnClickListener {
-//            val emailField = view.findViewById<EditText>(R.id.editTextTextEmail).text.toString()
-//            val pwd = view.findViewById<EditText>(R.id.editTextTextPassword).text.toString()
-            login(emailField, pwd)
+            login(emailField, pwd, navController)
         }
-
         return view
     }
 
-    private fun login(email: EditText, password: EditText) {
-        if(email.text.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email.text.toString()).matches()) {
-            email.error = "Почта введена некорректно"
-            return
-        }
-        if (password.text.isEmpty()) {
-            password.error = "Вы должны ввести пароль"
-            return
-        }
+    private fun login(email: EditText, password: EditText, navController: NavController) {
+//        if(email.text.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email.text.toString()).matches()) {
+//            email.error = "Почта введена некорректно"
+//            return
+//        }
+//        if (password.text.isEmpty()) {
+//            password.error = "Вы должны ввести пароль"
+//            return
+//        }
 
         val call = authApi.login(AuthRequestDto(email.text.toString(), password.text.toString()))
         call.enqueue(object : Callback<AuthResponseDto> {
@@ -99,10 +72,10 @@ class LoginFragment : Fragment() {
                     val token = response.body()?.token
                     SessionManager.saveAuthToken(requireContext(), token!!)
                     val decodedToken = SessionManager.decodeToken(token)
-                    navigateTo(decodedToken)
-                    // Переход на другой экран при успешной авторизации
+                        NavigationManager.navigateTo(decodedToken, navController)
                 } else {
-                    // Обработка ошибки авторизации
+                    email.error = "Доступ запрещён"
+                    password.error = "Доступ запрещён"
                 }
             }
 
@@ -112,35 +85,19 @@ class LoginFragment : Fragment() {
         })
     }
 
-    private fun validate(emailField: EditText, pwdField: EditText, button: AppCompatButton) {
-        if(emailField.text.isEmpty() && !(Patterns.EMAIL_ADDRESS.matcher(emailField.text.toString()).matches())) {
-            emailField.error = "Почта введена некорректно"
-            button.isEnabled = false
-        } else {
-            button.isEnabled = true
-        }
-
-        if (pwdField.text.isEmpty()) {
-            pwdField.error = "Вы должны ввести пароль"
-            button.isEnabled = false
-        } else {
-            button.isEnabled = true
-        }
-    }
-
-    private fun navigateTo(decodedToken: String) {
-        if(decodedToken.contains("CREATE_USER", ignoreCase = true)) {
-            findNavController().navigate(R.id.action_loginFragment_to_adminMainPageFragment2)
-            return
-        }
-        if(decodedToken.contains("MOVE_CLASS", ignoreCase = true)) {
-            findNavController().navigate(R.id.action_loginFragment_to_lecturerMainPageFragment2)
-            return
-        }
-        if(decodedToken.contains("", ignoreCase = true)) {
-            findNavController().navigate(R.id.action_loginFragment_to_headmanMainPageFragment2)
-            return
-        }
-    }
+//    private fun navigateTo(decodedToken: String, navController: NavController) {
+//        if(decodedToken.contains("CREATE_USER", ignoreCase = true)) {
+//            navController.navigate(R.id.action_loginFragment_to_adminMainPageFragment2)
+//            return
+//        }
+//        if(decodedToken.contains("MOVE_CLASS", ignoreCase = true)) {
+//            navController.navigate(R.id.action_loginFragment_to_lecturerMainPageFragment2)
+//            return
+//        }
+//        if(decodedToken.contains("", ignoreCase = true)) {
+//            navController.navigate(R.id.action_loginFragment_to_headmanMainPageFragment2)
+//            return
+//        }
+//    }
 
 }
