@@ -11,17 +11,14 @@
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
-            android:id="@+id/action_loginFragment_to_adminMainPageFragment"
+            android:id="@+id/action_loginFragment_to_adminMainPageFragment2"
             app:destination="@id/adminMainPageFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_headmanMainPageFragment"
+            android:id="@+id/action_loginFragment_to_headmanMainPageFragment2"
             app:destination="@id/headmanMainPageFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_lecturerMainPageFragment"
+            android:id="@+id/action_loginFragment_to_lecturerMainPageFragment2"
             app:destination="@id/lecturerMainPageFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_moveClassTimePageFragment"
-            app:destination="@id/moveClassTimePageFragment" />
     </fragment>
     <fragment
         android:id="@+id/adminMainPageFragment"
@@ -43,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/lecturerMainPageFragment"
-        android:name="vsu.cs.univtimetable.screens.lect_screens.LecturerMainPageFragment"
+        android:name="vsu.cs.univtimetable.screens.LecturerMainPageFragment"
         android:label="fragment_lecturer_main_page"
         tools:layout="@layout/fragment_lecturer_main_page" >
         <action
