@@ -53,14 +53,14 @@ class LoginFragment : Fragment() {
     }
 
     private fun login(email: EditText, password: EditText, navController: NavController) {
-//        if(email.text.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email.text.toString()).matches()) {
-//            email.error = "Почта введена некорректно"
-//            return
-//        }
-//        if (password.text.isEmpty()) {
-//            password.error = "Вы должны ввести пароль"
-//            return
-//        }
+        if(email.text.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email.text.toString()).matches()) {
+            email.error = "Почта введена некорректно"
+            return
+        }
+        if (password.text.isEmpty()) {
+            password.error = "Вы должны ввести пароль"
+            return
+        }
 
         val call = authApi.login(AuthRequestDto(email.text.toString(), password.text.toString()))
         call.enqueue(object : Callback<AuthResponseDto> {
@@ -84,20 +84,5 @@ class LoginFragment : Fragment() {
             }
         })
     }
-
-//    private fun navigateTo(decodedToken: String, navController: NavController) {
-//        if(decodedToken.contains("CREATE_USER", ignoreCase = true)) {
-//            navController.navigate(R.id.action_loginFragment_to_adminMainPageFragment2)
-//            return
-//        }
-//        if(decodedToken.contains("MOVE_CLASS", ignoreCase = true)) {
-//            navController.navigate(R.id.action_loginFragment_to_lecturerMainPageFragment2)
-//            return
-//        }
-//        if(decodedToken.contains("", ignoreCase = true)) {
-//            navController.navigate(R.id.action_loginFragment_to_headmanMainPageFragment2)
-//            return
-//        }
-//    }
 
 }
