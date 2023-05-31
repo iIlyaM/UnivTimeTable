@@ -2,7 +2,8 @@ package vsu.cs.univtimetable.dto
 
 import com.google.gson.annotations.SerializedName
 
-class UnivResponseDto {
-    @SerializedName("contents")
-    val contents: ArrayList<UnivDto> = arrayListOf()
-}
+data class UnivResponseDto (
+
+    @SerializedName("universitiesPage")
+    var universitiesPage: PageModelDto<UnivDto>
+)
