@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.screens.University
+import vsu.cs.univtimetable.dto.UnivDto
 
-class UnivListAdapter(var context: Context, var univs: MutableList<University>):
+class UnivListAdapter(var context: Context, var univs: List<UnivDto>):
         RecyclerView.Adapter<UnivListAdapter.UnivViewHolder>() {
     inner class UnivViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var univNameView: TextView
@@ -27,8 +27,9 @@ class UnivListAdapter(var context: Context, var univs: MutableList<University>):
     }
 
     override fun onBindViewHolder(holder: UnivViewHolder, position: Int) {
-        holder.univNameView.text = univs[position].univName
-        holder.cityNameView.text = univs[position].city
+        val obj = univs[position]
+        holder.univNameView.text = obj.universityName
+        holder.cityNameView.text = obj.city
     }
 
 
