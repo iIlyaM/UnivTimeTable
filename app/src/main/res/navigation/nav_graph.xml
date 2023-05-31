@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_adminMainPageFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_adminMainPageFragment_to_univListPageFragment"
+            app:destination="@id/univListPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/headmanMainPageFragment"
@@ -52,4 +55,13 @@
         android:name="vsu.cs.univtimetable.screens.MoveClassTimePageFragment"
         android:label="fragment_move_class_time_page"
         tools:layout="@layout/fragment_move_class_time_page" />
+    <fragment
+        android:id="@+id/univListPageFragment"
+        android:name="vsu.cs.univtimetable.screens.UnivListPageFragment"
+        android:label="fragment_univ_list_page"
+        tools:layout="@layout/fragment_univ_list_page" >
+        <action
+            android:id="@+id/action_univListPageFragment_to_adminMainPageFragment"
+            app:destination="@id/adminMainPageFragment" />
+    </fragment>
 </navigation>
