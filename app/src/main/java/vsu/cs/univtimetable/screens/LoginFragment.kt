@@ -1,20 +1,15 @@
 package vsu.cs.univtimetable.screens
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.widget.AppCompatButton
-import androidx.core.widget.addTextChangedListener
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.auth0.android.jwt.JWT
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -53,7 +48,9 @@ class LoginFragment : Fragment() {
     }
 
     private fun login(email: EditText, password: EditText, navController: NavController) {
-        if(email.text.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email.text.toString()).matches()) {
+        if (email.text.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email.text.toString())
+                .matches()
+        ) {
             email.error = "Почта введена некорректно"
             return
         }
@@ -72,7 +69,7 @@ class LoginFragment : Fragment() {
                     val token = response.body()?.token
                     SessionManager.saveAuthToken(requireContext(), token!!)
                     val decodedToken = SessionManager.decodeToken(token)
-                        NavigationManager.navigateTo(decodedToken, navController)
+                    NavigationManager.navigateTo(decodedToken, navController)
                 } else {
                     email.error = "Доступ запрещён"
                     password.error = "Доступ запрещён"
