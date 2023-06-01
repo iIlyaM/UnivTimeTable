@@ -75,5 +75,4 @@ class UnivListAdapter(
     override fun getItemCount(): Int {
         return univs.size
     }
-
 }
