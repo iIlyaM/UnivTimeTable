@@ -1,13 +1,11 @@
 package vsu.cs.univtimetable.screens.adapter
 
-import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.dto.UnivDto
@@ -67,6 +65,9 @@ class UnivListAdapter(
         holder.cityNameView.text = obj.city
         holder.settingsBtn.setOnClickListener { view ->
             listener.onEditClick(univs[position])
+        }
+        holder.deleteBtn.setOnClickListener { view ->
+            listener.onDeleteClick(univs[position])
         }
     }
 
