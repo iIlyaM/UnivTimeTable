@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
@@ -15,7 +18,6 @@ import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimeTableClient
 import vsu.cs.univtimetable.api.UserApi
-import vsu.cs.univtimetable.dto.UnivResponseDto
 import vsu.cs.univtimetable.dto.UserDisplayDto
 import vsu.cs.univtimetable.dto.UserResponseDto
 import vsu.cs.univtimetable.screens.adapter.OnUserItemClickListener
@@ -38,7 +40,19 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
     ): View? {
 //        return inflater.inflate(R.layout.fragment_user_list_page, container, false)
         val view = inflater.inflate(R.layout.fragment_user_list_page, container, false)
+        recyclerView = view.findViewById(R.id.usersRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        val addUser = view.findViewById<AppCompatButton>(R.id.addNewUserBtn)
+        addUser.setOnClickListener {
+            findNavController().navigate(R.id.action_userListPageFragment_to_createUserAuthFragment)
+        }
+
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        getUsers(null, null, null, null)
     }
 
     override fun onEditClick(user: UserDisplayDto) {
