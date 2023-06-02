@@ -28,7 +28,7 @@
             android:textStyle="normal" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/editFacultyIcView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -40,7 +40,7 @@
             app:srcCompat="@drawable/ic_settings" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/deleteFacultyIcView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
