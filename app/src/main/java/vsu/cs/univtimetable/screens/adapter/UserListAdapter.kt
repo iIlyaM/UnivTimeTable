@@ -25,7 +25,6 @@ class UserListAdapter (
     RecyclerView.Adapter<UserListAdapter.UserViewHolder>() {
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val fullName: TextView
-        val email: TextView
         val univ: TextView
         val faculty: TextView
         val role: TextView
@@ -35,7 +34,6 @@ class UserListAdapter (
 
         init {
             fullName = itemView.findViewById(R.id.fullNameView)
-            email = itemView.findViewById(R.id.emailView)
             univ = itemView.findViewById(R.id.univView)
             faculty = itemView.findViewById(R.id.facultyView)
             role = itemView.findViewById(R.id.roleView)
@@ -71,9 +69,8 @@ class UserListAdapter (
     override fun onBindViewHolder(holder: UserListAdapter.UserViewHolder, position: Int) {
         val user = users[position]
         holder.fullName.text = user.fullName
-        holder.email.text = user.email
-        holder.univ.text = user.university
-        holder.faculty.text = user.faculty
+        holder.univ.text = user.univName
+        holder.faculty.text = user.facultyName
         holder.role.text = user.role
         holder.city.text  = user.city
         holder.settingsBtn.setOnClickListener { view ->
