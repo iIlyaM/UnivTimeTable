@@ -14,6 +14,8 @@ import vsu.cs.univtimetable.dto.UnivDto
 interface OnUnivItemClickListener {
     fun onEditClick(univ: UnivDto)
     fun onDeleteClick(univ: UnivDto)
+
+    fun onItemClick(id: Int)
 }
 
 class UnivListAdapter(
@@ -29,6 +31,10 @@ class UnivListAdapter(
         var deleteBtn: ImageView
 
         init {
+            itemView.setOnClickListener {
+                listener.onItemClick(univs[adapterPosition].id.toInt())
+            }
+
             univNameView = itemView.findViewById(R.id.univNameView)
             cityNameView = itemView.findViewById(R.id.cityNameView)
             settingsBtn = itemView.findViewById(R.id.icSettingsView)
