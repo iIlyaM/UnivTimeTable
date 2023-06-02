@@ -3,7 +3,6 @@ package vsu.cs.univtimetable.screens
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +21,6 @@ import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimeTableClient
 import vsu.cs.univtimetable.api.UnivApi
-import vsu.cs.univtimetable.dto.CreateUnivDto
 import vsu.cs.univtimetable.dto.UnivDto
 import vsu.cs.univtimetable.dto.UnivResponseDto
 import vsu.cs.univtimetable.screens.adapter.OnUnivItemClickListener
@@ -133,6 +132,15 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
             }
         builder.create()
         builder.show()
+    }
+
+    override fun onItemClick(id: Int) {
+        val bundle = Bundle()
+        bundle.putInt("univId", id)
+        findNavController().navigate(
+            R.id.action_univListPageFragment_to_univMainPageFragment,
+            bundle
+        )
     }
 
     private fun update(updatedUniversity: UnivDto, callback: (Int) -> Unit) {

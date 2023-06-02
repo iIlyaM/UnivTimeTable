@@ -66,6 +66,9 @@
         <action
             android:id="@+id/action_univListPageFragment_to_createUniversityFragment3"
             app:destination="@id/createUniversityFragment3" />
+        <action
+            android:id="@+id/action_univListPageFragment_to_univMainPageFragment"
+            app:destination="@id/univMainPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/createUniversityFragment3"
@@ -75,5 +78,38 @@
         <action
             android:id="@+id/action_createUniversityFragment3_to_univListPageFragment"
             app:destination="@id/univListPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/univMainPageFragment"
+        android:name="vsu.cs.univtimetable.screens.UnivMainPageFragment"
+        android:label="fragment_univ_main_page"
+        tools:layout="@layout/fragment_univ_main_page" >
+        <action
+            android:id="@+id/action_univMainPageFragment_to_univListPageFragment"
+            app:destination="@id/univListPageFragment" />
+        <action
+            android:id="@+id/action_univMainPageFragment_to_facultyListPageFragment"
+            app:destination="@id/facultyListPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/facultyListPageFragment"
+        android:name="vsu.cs.univtimetable.screens.FacultyListPageFragment"
+        android:label="fragment_faculty_list_page"
+        tools:layout="@layout/fragment_faculty_list_page" >
+        <action
+            android:id="@+id/action_facultyListPageFragment_to_univMainPageFragment"
+            app:destination="@id/univMainPageFragment" />
+        <action
+            android:id="@+id/action_facultyListPageFragment_to_createFacultyPageFragment"
+            app:destination="@id/createFacultyPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createFacultyPageFragment"
+        android:name="vsu.cs.univtimetable.screens.CreateFacultyPageFragment"
+        android:label="fragment_create_faculty_page"
+        tools:layout="@layout/fragment_create_faculty_page" >
+        <action
+            android:id="@+id/action_createFacultyPageFragment_to_facultyListPageFragment"
+            app:destination="@id/facultyListPageFragment" />
     </fragment>
 </navigation>
