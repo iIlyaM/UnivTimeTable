@@ -18,7 +18,7 @@ import vsu.cs.univtimetable.dto.UserResponseDto
 
 interface UserApi {
     @Headers("Content-Type: application/json")
-    @GET("universities")
+    @GET("users")
     fun getUsers(
         @Header("Authorization") basicToken: String,
         @Query("university") university: String?,
@@ -34,13 +34,13 @@ interface UserApi {
         @Path("id") id: Int,
         @Body university: UserDto
     ): Call<Void>
-//
-//    @Headers("Content-Type: application/json")
-//    @POST("user/create")
-//    fun addUniversity(
-//        @Header("Authorization") basicToken: String,
-//        @Body user: CreateUnivDto
-//    ): Call<Void>
+
+    @Headers("Content-Type: application/json")
+    @POST("user/create")
+    fun addUser(
+        @Header("Authorization") basicToken: String,
+        @Body user: CreateUnivDto
+    ): Call<Void>
 //
 //    @Headers("Content-Type: application/json")
 //    @DELETE("universities/{id}")
