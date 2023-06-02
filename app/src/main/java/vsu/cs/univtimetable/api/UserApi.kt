@@ -13,6 +13,7 @@ import retrofit2.http.Query
 import vsu.cs.univtimetable.dto.CreateUnivDto
 import vsu.cs.univtimetable.dto.UnivDto
 import vsu.cs.univtimetable.dto.UserDisplayDto
+import vsu.cs.univtimetable.dto.UserDto
 import vsu.cs.univtimetable.dto.UserResponseDto
 
 interface UserApi {
@@ -26,13 +27,13 @@ interface UserApi {
         @Query("name") name: String?,
     ): Call<UserResponseDto>
 
-//    @Headers("Content-Type: application/json")
-//    @PUT("universities/{id}")
-//    fun editUniversity(
-//        @Header("Authorization") basicToken: String,
-//        @Path("id") id: Int,
-//        @Body university: UnivDto
-//    ): Call<Void>
+    @Headers("Content-Type: application/json")
+    @PUT("users/{id}")
+    fun editUser(
+        @Header("Authorization") basicToken: String,
+        @Path("id") id: Int,
+        @Body university: UserDto
+    ): Call<Void>
 //
 //    @Headers("Content-Type: application/json")
 //    @POST("user/create")
