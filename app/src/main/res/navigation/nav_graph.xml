@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_adminMainPageFragment_to_univListPageFragment"
             app:destination="@id/univListPageFragment" />
+        <action
+            android:id="@+id/action_adminMainPageFragment_to_userListPageFragment"
+            app:destination="@id/userListPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/headmanMainPageFragment"
@@ -75,5 +78,38 @@
         <action
             android:id="@+id/action_createUniversityFragment3_to_univListPageFragment"
             app:destination="@id/univListPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userListPageFragment"
+        android:name="vsu.cs.univtimetable.screens.UserListPageFragment"
+        android:label="fragment_user_list_page"
+        tools:layout="@layout/fragment_user_list_page" >
+        <action
+            android:id="@+id/action_userListPageFragment_to_adminMainPageFragment"
+            app:destination="@id/adminMainPageFragment" />
+        <action
+            android:id="@+id/action_userListPageFragment_to_createUserAuthFragment"
+            app:destination="@id/createUserAuthFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createUserAuthFragment"
+        android:name="vsu.cs.univtimetable.screens.CreateUserAuthFragment"
+        android:label="fragment_create_user_auth"
+        tools:layout="@layout/fragment_create_user_auth" >
+        <action
+            android:id="@+id/action_createUserAuthFragment_to_userListPageFragment"
+            app:destination="@id/userListPageFragment" />
+        <action
+            android:id="@+id/action_createUserAuthFragment_to_createUserInfoFragment"
+            app:destination="@id/createUserInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createUserInfoFragment"
+        android:name="vsu.cs.univtimetable.screens.CreateUserInfoFragment"
+        android:label="fragment_create_user_info"
+        tools:layout="@layout/fragment_create_user_info" >
+        <action
+            android:id="@+id/action_createUserInfoFragment_to_createUserAuthFragment"
+            app:destination="@id/createUserAuthFragment" />
     </fragment>
 </navigation>
