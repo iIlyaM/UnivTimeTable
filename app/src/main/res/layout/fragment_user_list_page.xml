@@ -86,12 +86,12 @@
         app:layout_constraintStart_toEndOf="@+id/sortRoleBtn"
         app:layout_constraintTop_toTopOf="@+id/sortRoleBtn" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/addNewUserBtn"
         android:layout_width="90dp"
         android:layout_height="40dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/admin_bg"
         android:text="@string/add"
         android:textAllCaps="false"
@@ -101,10 +101,11 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="351dp"
-        android:layout_height="374dp"
+        android:id="@+id/usersRecyclerView"
+        android:layout_width="354dp"
+        android:layout_height="426dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
