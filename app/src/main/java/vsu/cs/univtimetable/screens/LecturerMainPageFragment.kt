@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
 import vsu.cs.univtimetable.R
 
@@ -19,10 +20,10 @@ class LecturerMainPageFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_lecturer_main_page, container, false)
-//        val button = view.findViewById<ImageButton>(R.id.prevPageButton)
-//        button.setOnClickListener {
-//            findNavController().navigate(R.id.action_lecturerMainPageFragment_to_loginFragment)
-//        }
+        val button = view.findViewById<AppCompatButton>(R.id.lookTimeTableBtn)
+        button.setOnClickListener {
+            findNavController().navigate(R.id.action_lecturerMainPageFragment_to_lecturerTimetablePageFragment)
+        }
 
         return view
     }

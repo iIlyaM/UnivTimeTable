@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/downloadLectTTBtn"
         android:layout_width="90dp"
         android:layout_height="40dp"
@@ -41,6 +41,7 @@
         app:layout_constraintHorizontal_bias="0.9" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/lecturerRecyclerView"
         android:layout_width="365dp"
         android:layout_height="365dp"
         android:layout_marginStart="32dp"

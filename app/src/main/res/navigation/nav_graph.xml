@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_lecturerMainPageFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_lecturerMainPageFragment_to_lecturerTimetablePageFragment"
+            app:destination="@id/lecturerTimetablePageFragment" />
     </fragment>
     <fragment
         android:id="@+id/moveClassTimePageFragment"
@@ -132,5 +135,14 @@
         <action
             android:id="@+id/action_createGroupPageFragment_to_groupListPageFragment"
             app:destination="@id/groupListPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/lecturerTimetablePageFragment"
+        android:name="vsu.cs.univtimetable.screens.LecturerTimetablePageFragment"
+        android:label="fragment_lecturer_timetable_page"
+        tools:layout="@layout/fragment_lecturer_timetable_page" >
+        <action
+            android:id="@+id/action_lecturerTimetablePageFragment_to_lecturerMainPageFragment"
+            app:destination="@id/lecturerMainPageFragment" />
     </fragment>
 </navigation>
