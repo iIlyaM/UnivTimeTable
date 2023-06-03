@@ -144,7 +144,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
         bundle.putInt("facultyId", facultyId)
         bundle.putInt("univId", getUnivId())
         findNavController().navigate(
-            R.id.action_facultyListPageFragment_to_univMainPageFragment,
+            R.id.action_facultyListPageFragment_to_groupListPageFragment,
             bundle
         )
     }
@@ -222,7 +222,6 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
                         )
                     }
                     recyclerView.adapter = adapter
-
                 } else {
                     println("Не успешно")
                 }
@@ -234,6 +233,8 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
             }
         })
     }
+
+
 
     private fun getUnivId(): Int {
         val id = arguments?.getInt("univId")
