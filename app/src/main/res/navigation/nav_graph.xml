@@ -102,6 +102,9 @@
         <action
             android:id="@+id/action_facultyListPageFragment_to_createFacultyPageFragment"
             app:destination="@id/createFacultyPageFragment" />
+        <action
+            android:id="@+id/action_facultyListPageFragment_to_groupListPageFragment"
+            app:destination="@id/groupListPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/createFacultyPageFragment"
@@ -111,5 +114,23 @@
         <action
             android:id="@+id/action_createFacultyPageFragment_to_facultyListPageFragment"
             app:destination="@id/facultyListPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/groupListPageFragment"
+        android:name="vsu.cs.univtimetable.screens.GroupListPageFragment"
+        android:label="fragment_group_list_page"
+        tools:layout="@layout/fragment_group_list_page" >
+        <action
+            android:id="@+id/action_groupListPageFragment_to_createGroupPageFragment"
+            app:destination="@id/createGroupPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createGroupPageFragment"
+        android:name="vsu.cs.univtimetable.screens.CreateGroupPageFragment"
+        android:label="fragment_create_group_page"
+        tools:layout="@layout/fragment_create_group_page" >
+        <action
+            android:id="@+id/action_createGroupPageFragment_to_groupListPageFragment"
+            app:destination="@id/groupListPageFragment" />
     </fragment>
 </navigation>
