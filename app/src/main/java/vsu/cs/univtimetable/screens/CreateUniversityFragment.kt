@@ -16,7 +16,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
-import vsu.cs.univtimetable.TimeTableClient
+import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.UnivApi
 import vsu.cs.univtimetable.dto.CreateUnivDto
 
@@ -26,7 +26,7 @@ class CreateUniversityFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        univApi = TimeTableClient.getClient().create(UnivApi::class.java)
+        univApi = TimetableClient.getClient().create(UnivApi::class.java)
     }
 
     override fun onCreateView(

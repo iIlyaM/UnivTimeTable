@@ -16,9 +16,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
-import vsu.cs.univtimetable.TimeTableClient
+import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.GroupApi
-import vsu.cs.univtimetable.api.UnivApi
 import vsu.cs.univtimetable.dto.GroupDto
 import vsu.cs.univtimetable.dto.GroupResponseDto
 import vsu.cs.univtimetable.screens.adapter.GroupListAdapter
@@ -35,7 +34,7 @@ class GroupListPageFragment : Fragment(), OnGroupItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        groupApi = TimeTableClient.getClient().create(GroupApi::class.java)
+        groupApi = TimetableClient.getClient().create(GroupApi::class.java)
     }
 
 

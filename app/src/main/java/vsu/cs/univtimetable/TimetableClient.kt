@@ -4,7 +4,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object TimeTableClient {
+object TimetableClient {
     private const val BASE_URL = "https://timetable-service-tukitoki.cloud.okteto.net/api/timetable/"
 
     val okHttpClient = OkHttpClient()

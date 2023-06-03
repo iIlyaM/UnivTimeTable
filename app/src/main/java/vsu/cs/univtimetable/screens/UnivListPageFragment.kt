@@ -19,7 +19,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
-import vsu.cs.univtimetable.TimeTableClient
+import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.UnivApi
 import vsu.cs.univtimetable.dto.UnivDto
 import vsu.cs.univtimetable.dto.UnivResponseDto
@@ -35,7 +35,7 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        univApi = TimeTableClient.getClient().create(UnivApi::class.java)
+        univApi = TimetableClient.getClient().create(UnivApi::class.java)
     }
 
 
