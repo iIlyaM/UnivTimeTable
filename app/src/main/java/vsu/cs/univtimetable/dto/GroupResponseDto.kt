@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class GroupResponseDto (
     @SerializedName("groupsPage")
-    var groupsPage: PageModelDto<GroupResponseDto>
+    var groupsPage: PageModelDto<GroupDto>
 )
