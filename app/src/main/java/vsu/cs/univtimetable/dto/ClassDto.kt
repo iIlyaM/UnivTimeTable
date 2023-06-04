@@ -3,7 +3,8 @@ package vsu.cs.univtimetable.dto
 
 data class ClassDto(
     val subjectName: String,
-    val startTime: StartTimeDto,
+    val startTime: String,
+    val endTime: String,
     val audience: Int,
     val dayOfWeek: String,
     val typeOfClass: String,
