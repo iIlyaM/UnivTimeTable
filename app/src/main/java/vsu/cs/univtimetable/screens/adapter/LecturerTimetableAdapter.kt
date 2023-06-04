@@ -1,5 +1,6 @@
 package vsu.cs.univtimetable.screens.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -45,9 +46,10 @@ class LecturerTimetableAdapter(
         return timetableItems.size
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: LecturerTimetableAdapter.LecturerTimeTableViewHolder, position: Int) {
         val timetableItem = timetableItems[position]
-        holder.lectTimeView.text = timetableItem.startTime.toString()
+        holder.lectTimeView.text = "${timetableItem.startTime} + ${timetableItem.endTime}"
         holder.subjNameView.text = timetableItem.subjectName
         holder.courseNumberView.text = timetableItem.courseNumber.toString()
         holder.audienceNumView.text = timetableItem.audience.toString()
