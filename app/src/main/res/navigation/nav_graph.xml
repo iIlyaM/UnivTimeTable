@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_adminMainPageFragment_to_univListPageFragment"
             app:destination="@id/univListPageFragment" />
+        <action
+            android:id="@+id/action_adminMainPageFragment_to_userListPageFragment"
+            app:destination="@id/userListPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/headmanMainPageFragment"
@@ -87,87 +90,33 @@
             app:destination="@id/univListPageFragment" />
     </fragment>
     <fragment
-        android:id="@+id/univMainPageFragment"
-        android:name="vsu.cs.univtimetable.screens.UnivMainPageFragment"
-        android:label="fragment_univ_main_page"
-        tools:layout="@layout/fragment_univ_main_page" >
+        android:id="@+id/userListPageFragment"
+        android:name="vsu.cs.univtimetable.screens.UserListPageFragment"
+        android:label="fragment_user_list_page"
+        tools:layout="@layout/fragment_user_list_page" >
         <action
-            android:id="@+id/action_univMainPageFragment_to_univListPageFragment"
-            app:destination="@id/univListPageFragment" />
+            android:id="@+id/action_userListPageFragment_to_adminMainPageFragment"
+            app:destination="@id/adminMainPageFragment" />
         <action
-            android:id="@+id/action_univMainPageFragment_to_facultyListPageFragment"
-            app:destination="@id/facultyListPageFragment" />
+            android:id="@+id/action_userListPageFragment_to_createUserAuthFragment"
+            app:destination="@id/createUserAuthFragment" />
     </fragment>
     <fragment
-        android:id="@+id/facultyListPageFragment"
-        android:name="vsu.cs.univtimetable.screens.FacultyListPageFragment"
-        android:label="fragment_faculty_list_page"
-        tools:layout="@layout/fragment_faculty_list_page" >
+        android:id="@+id/createUserAuthFragment"
+        android:name="vsu.cs.univtimetable.screens.CreateUserAuthFragment"
+        android:label="fragment_create_user_auth"
+        tools:layout="@layout/fragment_create_user_auth" >
         <action
-            android:id="@+id/action_facultyListPageFragment_to_univMainPageFragment"
-            app:destination="@id/univMainPageFragment" />
-        <action
-            android:id="@+id/action_facultyListPageFragment_to_createFacultyPageFragment"
-            app:destination="@id/createFacultyPageFragment" />
-        <action
-            android:id="@+id/action_facultyListPageFragment_to_groupListPageFragment"
-            app:destination="@id/groupListPageFragment" />
+            android:id="@+id/action_createUserAuthFragment_to_createUserInfoFragment"
+            app:destination="@id/createUserInfoFragment" />
     </fragment>
     <fragment
-        android:id="@+id/createFacultyPageFragment"
-        android:name="vsu.cs.univtimetable.screens.CreateFacultyPageFragment"
-        android:label="fragment_create_faculty_page"
-        tools:layout="@layout/fragment_create_faculty_page" >
+        android:id="@+id/createUserInfoFragment"
+        android:name="vsu.cs.univtimetable.screens.CreateUserInfoFragment"
+        android:label="fragment_create_user_info"
+        tools:layout="@layout/fragment_create_user_info" >
         <action
-            android:id="@+id/action_createFacultyPageFragment_to_facultyListPageFragment"
-            app:destination="@id/facultyListPageFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/groupListPageFragment"
-        android:name="vsu.cs.univtimetable.screens.GroupListPageFragment"
-        android:label="fragment_group_list_page"
-        tools:layout="@layout/fragment_group_list_page" >
-        <action
-            android:id="@+id/action_groupListPageFragment_to_createGroupPageFragment"
-            app:destination="@id/createGroupPageFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/createGroupPageFragment"
-        android:name="vsu.cs.univtimetable.screens.CreateGroupPageFragment"
-        android:label="fragment_create_group_page"
-        tools:layout="@layout/fragment_create_group_page" >
-        <action
-            android:id="@+id/action_createGroupPageFragment_to_groupListPageFragment"
-            app:destination="@id/groupListPageFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/lecturerTimetablePageFragment"
-        android:name="vsu.cs.univtimetable.screens.LecturerTimetablePageFragment"
-        android:label="fragment_lecturer_timetable_page"
-        tools:layout="@layout/fragment_lecturer_timetable_page" >
-        <action
-            android:id="@+id/action_lecturerTimetablePageFragment_to_lecturerMainPageFragment"
-            app:destination="@id/lecturerMainPageFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/selectUnwantedTimePageFragment"
-        android:name="vsu.cs.univtimetable.screens.SelectUnwantedTimePageFragment"
-        android:label="fragment_select_unwanted_time_page"
-        tools:layout="@layout/fragment_select_unwanted_time_page" >
-        <action
-            android:id="@+id/action_selectUnwantedTimePageFragment_to_lecturerMainPageFragment"
-            app:destination="@id/lecturerMainPageFragment" />
-        <action
-            android:id="@+id/action_selectUnwantedTimePageFragment_to_addSubjectPageFragment"
-            app:destination="@id/addSubjectPageFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/addSubjectPageFragment"
-        android:name="vsu.cs.univtimetable.screens.lect_screens.AddSubjectPageFragment"
-        android:label="fragment_add_subject_page"
-        tools:layout="@layout/fragment_add_subject_page" >
-        <action
-            android:id="@+id/action_addSubjectPageFragment_to_selectUnwantedTimePageFragment"
-            app:destination="@id/selectUnwantedTimePageFragment" />
+            android:id="@+id/action_createUserInfoFragment_to_userListPageFragment"
+            app:destination="@id/userListPageFragment" />
     </fragment>
 </navigation>
