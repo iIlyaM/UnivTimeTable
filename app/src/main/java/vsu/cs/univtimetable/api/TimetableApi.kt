@@ -1,11 +1,13 @@
 package vsu.cs.univtimetable.api
 
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Streaming
 import vsu.cs.univtimetable.dto.RequestDataDto
 import vsu.cs.univtimetable.dto.SendRequest
 import vsu.cs.univtimetable.dto.TimetableResponse
@@ -30,4 +32,11 @@ interface TimetableApi {
         @Header("Authorization") basicToken: String,
         @Body request: SendRequest
     ): Call<Void>
+
+    @Headers("Content-Type: application/json")
+    @Streaming
+    @GET("schedule/download")
+    fun downloadFile(
+        @Header("Authorization") basicToken: String,
+    ): Call<ResponseBody>
 }

@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_headmanMainPageFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_headmanMainPageFragment_to_studentTimeTablePageFragment"
+            app:destination="@id/studentTimeTablePageFragment" />
     </fragment>
     <fragment
         android:id="@+id/lecturerMainPageFragment"
@@ -169,5 +172,14 @@
         <action
             android:id="@+id/action_addSubjectPageFragment_to_selectUnwantedTimePageFragment"
             app:destination="@id/selectUnwantedTimePageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/studentTimeTablePageFragment"
+        android:name="vsu.cs.univtimetable.screens.StudentTimeTablePageFragment"
+        android:label="fragment_student_time_table_page"
+        tools:layout="@layout/fragment_student_time_table_page" >
+        <action
+            android:id="@+id/action_studentTimeTablePageFragment_to_headmanMainPageFragment"
+            app:destination="@id/headmanMainPageFragment" />
     </fragment>
 </navigation>
