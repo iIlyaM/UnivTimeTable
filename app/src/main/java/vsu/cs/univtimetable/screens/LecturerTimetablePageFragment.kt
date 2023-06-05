@@ -70,7 +70,7 @@ class LecturerTimetablePageFragment : Fragment() {
         if(getCurrDayOfWeek() == "Воскресенье") {
             toRightView.visibility = View.INVISIBLE
         }
-        if(getCurrDayOfWeek() == "Понедельник;") {
+        if(getCurrDayOfWeek() == "Понедельник") {
             toLeftView.visibility = View.INVISIBLE
         }
 
@@ -133,7 +133,9 @@ class LecturerTimetablePageFragment : Fragment() {
         weekType: String,
         dayOfWeek: String
     ) {
-        weekPointer = WEEK_DAYS.indexOf(dayOfWeek)
+
+//        weekPointer = WEEK_DAYS.indexOf(dayOfWeek)
+
 
         timeTableAdapter = LecturerTimetableAdapter(
             requireContext(),
@@ -156,7 +158,7 @@ class LecturerTimetablePageFragment : Fragment() {
         val week = WEEK_DAYS.toList()
         tempWeekPointer++
         getDayTimetable(timetable, checkWeekType(), week[tempWeekPointer])
-        if (tempWeekPointer == 2) {
+        if (tempWeekPointer == 1) {
             leftImg.visibility = View.VISIBLE
         } else
             if (tempWeekPointer == week.size - 1) {

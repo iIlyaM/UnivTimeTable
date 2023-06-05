@@ -49,7 +49,7 @@ class LecturerTimetableAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: LecturerTimetableAdapter.LecturerTimeTableViewHolder, position: Int) {
         val timetableItem = timetableItems[position]
-        holder.lectTimeView.text = "${timetableItem.startTime} + ${timetableItem.endTime}"
+        holder.lectTimeView.text = "${timetableItem.startTime.dropLast(3)} - ${timetableItem.endTime.dropLast(3)}"
         holder.subjNameView.text = timetableItem.subjectName
         holder.courseNumberView.text = timetableItem.courseNumber.toString()
         holder.audienceNumView.text = timetableItem.audience.toString()
