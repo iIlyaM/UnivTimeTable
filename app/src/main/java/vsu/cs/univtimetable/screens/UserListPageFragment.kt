@@ -66,9 +66,6 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
         univBtn = view.findViewById(R.id.sortUnivBtn)
 
         searchView = view.findViewById(R.id.userSearch)
-        univBtn.setOnClickListener {
-            univComboBox.visibility = View.VISIBLE
-        }
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {

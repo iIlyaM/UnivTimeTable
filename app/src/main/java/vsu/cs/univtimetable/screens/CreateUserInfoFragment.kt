@@ -42,33 +42,33 @@ class CreateUserInfoFragment : Fragment() {
     private var facultyList: ArrayList<FacultyResponse> = arrayListOf()
     private var groupList: ArrayList<GroupDto> = arrayListOf()
 
-    private lateinit var roleTextInputLayout: AutoCompleteTextView;
-    private lateinit var univTextInputLayout: AutoCompleteTextView;
-    private lateinit var facultyTextInputLayout: AutoCompleteTextView;
-    private lateinit var groupTextInputLayout: AutoCompleteTextView;
+    private lateinit var roleTextInputLayout: AutoCompleteTextView
+    private lateinit var univTextInputLayout: AutoCompleteTextView
+    private lateinit var facultyTextInputLayout: AutoCompleteTextView
+    private lateinit var groupTextInputLayout: AutoCompleteTextView
 
-    private lateinit var email: String;
-    private lateinit var password: String;
-    private lateinit var login: String;
-    private lateinit var city: String;
+    private lateinit var email: String
+    private lateinit var password: String
+    private lateinit var login: String
+    private lateinit var city: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userApi = TimeTableClient.getClient().create(UserApi::class.java)
 
-        val tempEmail = arguments?.getString("email");
+        val tempEmail = arguments?.getString("email")
         if (tempEmail != null) {
             email = tempEmail
         }
-        val tempPass = arguments?.getString("password");
+        val tempPass = arguments?.getString("password")
         if (tempPass != null) {
             password = tempPass
         }
-        val tempLogin = arguments?.getString("login");
+        val tempLogin = arguments?.getString("login")
         if (tempLogin != null) {
             login = tempLogin
         }
-        val tempCity = arguments?.getString("city");
+        val tempCity = arguments?.getString("city")
         if (tempCity != null) {
             city = tempCity
         }
@@ -87,7 +87,7 @@ class CreateUserInfoFragment : Fragment() {
 
         univTextInputLayout = view.findViewById(R.id.editUnivAutoCompleteTextView)
         univTextInputLayout.setOnItemClickListener { _, _, position, _ ->
-            univTextInputLayout(position, false)
+            univTextInputLayout(position)
         }
         facultyTextInputLayout = view.findViewById(R.id.editFacultyAutoCompleteTextView)
         facultyTextInputLayout.setOnItemClickListener { _, _, position, _ ->
@@ -145,13 +145,13 @@ class CreateUserInfoFragment : Fragment() {
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
         val editable = arguments?.getBoolean("editable")
-        var tempPass: String?;
+        val tempPass: String?;
         tempPass = if (password.isEmpty()) {
             null
         } else {
             password
         }
-        var user = UserCreateRequest(
+        val user = UserCreateRequest(
             0,
             role,
             fullName,
@@ -163,7 +163,7 @@ class CreateUserInfoFragment : Fragment() {
             facId,
             groupId
         );
-        var call: Call<Void>;
+        val call: Call<Void>;
         if (editable != null && editable) {
             val id = arguments?.getInt("id") ?: -1
             user.id = arguments?.getInt("id") ?: -1
@@ -289,7 +289,7 @@ class CreateUserInfoFragment : Fragment() {
         if (univId != null && univId != -1L) {
             val univ = univList.firstOrNull { it.id == univId }
             val position = univList.indexOf(univ)
-            univTextInputLayout(position, true)
+            univTextInputLayout(position)
             if (univ != null) {
                 univTextInputLayout.setText(univ.universityName, false)
             }
@@ -322,7 +322,7 @@ class CreateUserInfoFragment : Fragment() {
         }
     }
 
-    private fun univTextInputLayout(position: Int, editable: Boolean?) {
+    private fun univTextInputLayout(position: Int) {
         facultyMap.clear()
         facultyList = ArrayList(univMap[univList[position].universityName]?.facultyDtos!!)
         for (fac in facultyList) {
@@ -335,6 +335,8 @@ class CreateUserInfoFragment : Fragment() {
                 facultyList.map { it.name }.toList()
             )
         )
+        facultyTextInputLayout.text = null
+        groupTextInputLayout.text = null
         univTextInputLayout.error = null
     }
 
