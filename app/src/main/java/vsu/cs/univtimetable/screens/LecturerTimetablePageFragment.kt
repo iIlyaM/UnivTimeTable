@@ -1,14 +1,18 @@
 package vsu.cs.univtimetable.screens
 
+import android.app.AlertDialog
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -115,6 +119,9 @@ class LecturerTimetablePageFragment : Fragment() {
                     getDayTimetable(timetable, weekType, getCurrDayOfWeek())
                     tempWeekPointer = weekPointer
                 } else {
+                    if (response.code() == 400) {
+                        showDialog()
+                    }
                     Log.d("ошибка", "Получили ошибку - ${response.code()}")
                     Log.d("ошибка", "с ошибкой пришло - ${response.body()}")
                 }
@@ -135,7 +142,6 @@ class LecturerTimetablePageFragment : Fragment() {
     ) {
 
 //        weekPointer = WEEK_DAYS.indexOf(dayOfWeek)
-
 
         timeTableAdapter = LecturerTimetableAdapter(
             requireContext(),
@@ -185,6 +191,21 @@ class LecturerTimetablePageFragment : Fragment() {
             DateDto(getDayOfWeek(day, weekPointer), weekType)
         )
         lectWeekView.adapter = dayAdapter
+    }
+
+    private fun showDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+
+        builder.setMessage("Расписание ещё не сформировано")
+        val alert = builder.create()
+        alert.show()
+        alert.window?.setGravity(Gravity.BOTTOM)
+
+        Handler().postDelayed({
+            alert.dismiss()
+        }, 2000)
+        findNavController().navigate(R.id.action_lecturerTimetablePageFragment_to_lecturerMainPageFragment)
+
     }
 
 }

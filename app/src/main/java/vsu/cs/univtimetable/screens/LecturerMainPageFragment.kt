@@ -25,6 +25,12 @@ class LecturerMainPageFragment : Fragment() {
             findNavController().navigate(R.id.action_lecturerMainPageFragment_to_lecturerTimetablePageFragment)
         }
 
+        val sendRequestBtn = view.findViewById<AppCompatButton>(R.id.choosingTimeRequestBtn)
+        sendRequestBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_lecturerMainPageFragment_to_selectUnwantedTimePageFragment)
+        }
+
+
         return view
     }
 }
