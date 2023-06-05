@@ -15,7 +15,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
-import vsu.cs.univtimetable.TimeTableClient
+import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.UserAuthApi
 import vsu.cs.univtimetable.dto.AuthRequestDto
 import vsu.cs.univtimetable.dto.AuthResponseDto
@@ -28,7 +28,7 @@ class LoginFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        authApi = TimeTableClient.getClient().create(UserAuthApi::class.java)
+        authApi = TimetableClient.getClient().create(UserAuthApi::class.java)
     }
 
     override fun onCreateView(
@@ -71,6 +71,7 @@ class LoginFragment : Fragment() {
                     val decodedToken = SessionManager.decodeToken(token)
                     NavigationManager.navigateTo(decodedToken, navController)
                 } else {
+                    println(response.code())
                     email.error = "Доступ запрещён"
                     password.error = "Доступ запрещён"
                 }

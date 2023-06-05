@@ -25,202 +25,197 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <EditText
-        android:id="@+id/editSubjectNameText"
-        android:layout_width="335dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/lect_color_rect_border"
-        android:ems="10"
-        android:hint="@string/subject_name"
-        android:inputType="text"
-        android:paddingStart="16dp"
-        android:textAlignment="viewStart"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black"
-        android:textSize="24sp"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="170dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toBottomOf="@+id/selectEquipmentView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waveView" />
+        app:layout_constraintTop_toBottomOf="@+id/waveView"
+        tools:ignore="NotSibling">
 
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/selectGroupsView"
-        android:layout_width="335dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="32dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/lecturerColor"
-        app:cardBackgroundColor="#DDEAF6"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editSubjectNameText">
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/groupList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Список групп"
+            <EditText
+                android:id="@+id/editSubjectNameText"
+                android:layout_width="335dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/lect_color_rect_border"
+                android:ems="10"
+                android:hint="@string/subject_name"
                 android:inputType="text"
                 android:paddingStart="16dp"
-                android:paddingTop="5dp"
                 android:textAlignment="viewStart"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
                 android:textSize="24sp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginRight="15dp"
-                android:src="@drawable/ic_arrow_drop_down" />
-        </RelativeLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/selectGroupView"
+                style="@style/WeekTextInputLayoutStyle"
+                android:layout_width="335dp"
+                android:layout_height="61dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/text_input_layout"
+                android:hint="@string/add_group"
+                android:textColorHint="@color/black"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:cardCornerRadius="10dp"
+                app:hintTextColor="@color/lecturerColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:strokeWidth="1dp">
 
-    </com.google.android.material.card.MaterialCardView>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/confirmSubjectBtn"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="55dp"
-        android:background="@drawable/lecturer_bg"
-        android:text="@string/confirm"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.06"
-        app:layout_constraintStart_toStartOf="parent" />
+                <AutoCompleteTextView
+                    android:id="@+id/selectGroupAutoCompleteText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:popupBackground="#DDEAF6"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"/>
 
-    <EditText
-        android:id="@+id/editHoursCountText"
-        android:layout_width="335dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/lect_color_rect_border"
-        android:ems="10"
-        android:hint="@string/hours_per_week"
-        android:inputType="text"
-        android:paddingStart="16dp"
-        android:textColorHint="@color/black"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectGroupsView"
-        tools:ignore="MissingConstraints" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/classTypeInputLayout"
-        style="@style/WeekTextInputLayoutStyle"
-        android:layout_width="335dp"
-        android:layout_height="61dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/text_input_layout"
-        android:hint="@string/class_form"
-        android:textColorHint="@color/black"
-        app:boxCornerRadiusBottomEnd="10dp"
-        app:boxCornerRadiusBottomStart="10dp"
-        app:boxCornerRadiusTopEnd="10dp"
-        app:boxCornerRadiusTopStart="10dp"
-        app:cardCornerRadius="10dp"
-        app:hintTextColor="@color/lecturerColor"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editHoursCountText">
+            <EditText
+                android:id="@+id/editHoursCountText"
+                android:layout_width="335dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/lect_color_rect_border"
+                android:ems="10"
+                android:hint="@string/hours_per_week"
+                android:inputType="text"
+                android:paddingStart="16dp"
+                android:textColorHint="@color/black"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/selectGroupsView"
+                tools:ignore="MissingConstraints" />
 
-        <AutoCompleteTextView
-            android:id="@+id/typeAutoCompleteText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:popupBackground="#DDEAF6"
-            android:textColor="@color/black"
-            android:textSize="24sp" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/classTypeInputLayout"
+                style="@style/WeekTextInputLayoutStyle"
+                android:layout_width="335dp"
+                android:layout_height="61dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/text_input_layout"
+                android:hint="@string/class_form"
+                android:textColorHint="@color/black"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:cardCornerRadius="10dp"
+                app:hintTextColor="@color/lecturerColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editHoursCountText">
 
-    </com.google.android.material.textfield.TextInputLayout>
+                <AutoCompleteTextView
+                    android:id="@+id/typeAutoCompleteText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:popupBackground="#DDEAF6"
+                    android:textColor="@color/black"
+                    android:textSize="24sp" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/selectEquipmentView"
-        android:layout_width="335dp"
-        android:layout_height="51dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="32dp"
-        app:cardBackgroundColor="#DDEAF6"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/classTypeInputLayout"
-        app:strokeColor="@color/lecturerColor"
-        app:strokeWidth="1dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/equipmentList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/selectEquipmentView"
+                style="@style/lectTextInputLayoutStyle"
+                android:layout_width="335dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/lect_color_rect_border"
+                android:ems="10"
                 android:hint="@string/equipment"
                 android:inputType="text"
                 android:paddingStart="16dp"
-                android:paddingTop="5dp"
-                android:textAlignment="viewStart"
-                android:textColor="@color/black"
                 android:textColorHint="@color/black"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                app:layout_constraintTop_toBottomOf="@+id/classTypeInputLayout"
+                app:strokeColor="@color/lecturerColor"
+                app:strokeWidth="1dp">
+            </TextView>
 
-            <ImageView
+            <LinearLayout
+                android:id="@+id/reqBtnLayout"
                 android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginEnd="15dp"
-                android:src="@drawable/ic_arrow_drop_down" />
-        </RelativeLayout>
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="-8dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:padding="10dp">
 
-    </com.google.android.material.card.MaterialCardView>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/confirmSubjectBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="55dp"
+                    android:background="@drawable/lecturer_bg"
+                    android:text="@string/confirm"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.06"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button"
+                    android:layout_width="150dp"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="55dp"
+                    android:background="@drawable/lecturer_bg"
+                    android:drawableStart="@drawable/ic_request_list"
+                    android:paddingStart="14dp"
+                    android:text="@string/requests"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.08"
+                    app:layout_constraintStart_toEndOf="@+id/confirmSubjectBtn" />
+            </LinearLayout>
 
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button"
-        android:layout_width="150dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="55dp"
-        android:background="@drawable/lecturer_bg"
-        android:drawableStart="@drawable/ic_request_list"
-        android:paddingStart="14dp"
-        android:text="@string/requests"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.08"
-        app:layout_constraintStart_toEndOf="@+id/confirmSubjectBtn" />
+        </LinearLayout>
+    </ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

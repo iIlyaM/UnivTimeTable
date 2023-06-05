@@ -1,122 +1,241 @@
 package vsu.cs.univtimetable.screens.lect_screens
 
 import android.app.AlertDialog
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.EditText
 import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.textfield.TextInputLayout
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import vsu.cs.univtimetable.R
+import vsu.cs.univtimetable.SessionManager
+import vsu.cs.univtimetable.TimetableClient
+import vsu.cs.univtimetable.api.TimetableApi
+import vsu.cs.univtimetable.dto.GroupResponse
+import vsu.cs.univtimetable.dto.ImpossibleTimeDto
+import vsu.cs.univtimetable.dto.RequestDataDto
+import vsu.cs.univtimetable.dto.SendRequest
+import vsu.cs.univtimetable.screens.adapter.GroupAdapter
 
 
-class AddSubjectPageFragment : Fragment() {
+class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
 
-    private val groups =
-        arrayListOf("3к. 5гр.", "1к. 12гр.", "1к. 13гр.", "4к. 1гр.")
-
-    private val equipment =
-        arrayListOf("Проектор", "Компьютеры", "Миркофон", "Микроскоп")
-
-    private val classTypes =
+    private var classTypes =
         arrayOf("Лекция", "Семинар")
 
-    var groupListView: TextView? = null
-    var equipListView: TextView? = null
-    lateinit var selectCard: MaterialCardView
-    lateinit var selectEquipCard: MaterialCardView
-    lateinit var selectedGroups: BooleanArray
-    lateinit var selectedEquipment: BooleanArray
-    var groupList = ArrayList<Int>()
-    var equipList = ArrayList<Int>()
+
+    private lateinit var selectedEquipment: BooleanArray
+    private lateinit var groupAdapter: GroupAdapter
+    private var groupMap = mutableMapOf<String, GroupResponse>()
+    private var groupList = ArrayList<String>()
+    private var groups = mutableListOf<GroupResponse>()
+    private var equipList = ArrayList<String>()
+    private var chosenEquipment = mutableListOf<String>()
+    private lateinit var dayWeekTimeMap: ImpossibleTimeDto
+
+
+    private lateinit var timetableApi: TimetableApi
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        timetableApi = TimetableClient.getClient().create(TimetableApi::class.java)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        return inflater.inflate(R.layout.fragment_add_subject_page, container, false)
         val view = inflater.inflate(R.layout.fragment_add_subject_page, container, false)
-        val classTypeCompleteView = view.findViewById<AutoCompleteTextView>(R.id.typeAutoCompleteText)
+        val classTypeCompleteView =
+            view.findViewById<AutoCompleteTextView>(R.id.typeAutoCompleteText)
+        val confirm = view.findViewById<AppCompatButton>(R.id.confirmSubjectBtn)
+
         val typeAdapter = ArrayAdapter(requireContext(), R.layout.subj_item, classTypes)
 
-        selectCard = view.findViewById(R.id.selectGroupsView)
-        selectEquipCard = view.findViewById(R.id.selectEquipmentView)
-
-        groupListView = view.findViewById(R.id.groupList)
-        equipListView = view.findViewById(R.id.equipmentList)
-
-        selectedGroups = BooleanArray(groups.size)
-        selectedEquipment = BooleanArray(equipment.size)
+        val equipListView = view.findViewById<TextView>(R.id.selectEquipmentView)
+        val editSubjectNameText = view.findViewById<EditText>(R.id.editSubjectNameText)
+        val editHoursCountText = view.findViewById<EditText>(R.id.editHoursCountText)
 
         classTypeCompleteView.setAdapter(typeAdapter)
-
-        classTypeCompleteView.setOnItemClickListener {
-                parent, view2, position, id ->
+        classTypeCompleteView.setOnItemClickListener { parent, view2, position, id ->
             val selectedItem = parent.getItemAtPosition(position) as String
-            // Действия, которые нужно выполнить при выборе элемента из выпадающего меню
-            // Например, обновление текста или выполнение определенного действия
+
         }
 
-        selectCard.setOnClickListener {
-            val itemsArray = groups.toArray(arrayOf<CharSequence>(groups.size.toString()))
-            showDialog(itemsArray, groupList, selectedGroups, groupListView)
+        val groupTextInputLayout =
+            view.findViewById<TextInputLayout>(R.id.selectGroupView)
+        groupTextInputLayout.boxStrokeColor =
+            ContextCompat.getColor(requireContext(), R.color.adminsColor)
+
+        val selectGroupAutoCompleteText =
+            view.findViewById<AutoCompleteTextView>(R.id.selectGroupAutoCompleteText)
+
+        val groupAdapter = ArrayAdapter(requireContext(), R.layout.subj_item, groupList)
+        selectGroupAutoCompleteText.setAdapter(groupAdapter)
+        var items = arrayOfNulls<String>(equipList.size)
+        equipListView.setOnClickListener {
+            showEquipmentDialog(equipList.toArray(items))
         }
-        selectEquipCard.setOnClickListener {
-            val equipArray = equipment.toArray(arrayOf<CharSequence>(equipment.size.toString()))
-            showDialog(equipArray, equipList, selectedEquipment, equipListView)
+
+        confirm.setOnClickListener {
+            sendRequest(classTypeCompleteView, selectGroupAutoCompleteText, editSubjectNameText, editHoursCountText)
         }
         return view
     }
 
-    private fun showDialog(
-        items: Array<CharSequence>,
-        list: ArrayList<Int>,
-        selectedItems: BooleanArray,
-        listView: TextView?
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        getRequestData()
+    }
+
+    private fun sendRequest(
+        classTypeCompleteView: AutoCompleteTextView,
+        selectGroupAutoCompleteText: AutoCompleteTextView,
+        editSubjectNameText: EditText,
+        editHoursCountText: EditText,
     ) {
-        val builder = AlertDialog.Builder(requireContext())
+        val subject: String = editSubjectNameText.text.toString()
+        val hours: Int = editHoursCountText.text.toString().toInt()
+        val classType: String = classTypeCompleteView.text.toString()
+        val group: String = selectGroupAutoCompleteText.text.toString()
 
-        builder.setTitle("Выберите группы")
+        val token: String? = SessionManager.getToken(requireContext())
+        Log.d("API Request failed", "${token}")
 
-        builder.setCancelable(false)
+        val call = timetableApi.postSubject(
+            "Bearer ${token}",
+            SendRequest(
+                subject,
+                groupMap.get(group)!!,
+                hours,
+                classType,
+                chosenEquipment,
+                getUnwantedTime().impossibleTime
+            )
+        )
 
-        builder.setMultiChoiceItems(items, selectedItems) { dialogInterface, i, b ->
-            if (b) {
-                // when checkbox selected
-                // Add position in lang list
-                list.add(i)
-                // Sort array list
-                list.sort()
-            } else {
-                // when checkbox unselected
-                // Remove position from langList
-                list.remove(i)
-            }
-        }
-
-        builder.setPositiveButton("OK") { dialogInterface, i ->
-            // Initialize string builder
-            val stringBuilder = StringBuilder()
-            // use for loop
-            for (j in list.indices) {
-                // concat array value
-                stringBuilder.append(items[list[j]])
-                // check condition
-                if (j != items.size - 1) {
-                    // When j value not equal.
-                    stringBuilder.append(", ")
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(
+                call: Call<Void>,
+                response: Response<Void>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("API Request Successful", "${response.code()}")
+                } else {
+                    println("Не успешно")
                 }
             }
-            listView?.text = stringBuilder.toString()
-        }
 
-        builder.setNegativeButton("Cancel") { dialogInterface, i ->
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                println("Ошибка")
+                println(t)
+            }
+        })
+        editSubjectNameText.text.clear()
+        editHoursCountText.text.clear()
+    }
 
-        }
+    private fun getUnwantedTime(): ImpossibleTimeDto {
+        return requireArguments().getSerializable("map") as ImpossibleTimeDto
+    }
 
-        builder.show()
+    private fun getRequestData() {
+        val token: String? = SessionManager.getToken(requireContext())
+
+        Log.d("API Request failed", "${token}")
+        val call = timetableApi.getRequestData("Bearer ${token}")
+
+
+        call.enqueue(object : Callback<RequestDataDto> {
+            override fun onResponse(
+                call: Call<RequestDataDto>,
+                response: Response<RequestDataDto>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("API Request successful", "Получили ${response.code()}")
+                    val dataResponse = response.body()
+                    println(dataResponse)
+                    if (dataResponse != null) {
+                        groupAdapter = GroupAdapter(
+                            dataResponse.groupsOfCourse
+                        )
+                        equipList = dataResponse.equipments as ArrayList<String>
+                    }
+                    for (group in dataResponse!!.groupsOfCourse) {
+                        val str = "${group.courseNumber}к., ${group.groupNumber}гр."
+                        groupList.add(str)
+                        groupMap[str] = group
+                    }
+                } else {
+                    println("Не успешно")
+                }
+            }
+
+            override fun onFailure(call: Call<RequestDataDto>, t: Throwable) {
+                println("Ошибка")
+                println(t)
+            }
+        })
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onItemClick(position: Int) {
+        showDialog(groupList.toArray() as Array<String>)
+    }
+
+    private fun showDialog(options: Array<String>) {
+        val checkedItems = BooleanArray(options.size) { false }
+
+        val builder = AlertDialog.Builder(requireContext())
+            .setMultiChoiceItems(options, checkedItems) { _, which, isChecked ->
+                checkedItems[which] = isChecked
+            }
+            .setPositiveButton("Ок") { dialog, _ ->
+                val selectedOptions = ArrayList<String>()
+                for (i in options.indices) {
+                    if (checkedItems[i]) {
+                        groups.add(groupMap[options[i]]!!)
+                    }
+                }
+            }
+            .setNegativeButton("Отмена") { dialog, _ ->
+                dialog.dismiss()
+            }
+        builder.create().show()
+    }
+
+    private fun showEquipmentDialog(options: Array<String>) {
+        val checkedItems = BooleanArray(options.size) { false }
+
+        val builder = AlertDialog.Builder(requireContext())
+            .setMultiChoiceItems(options, checkedItems) { _, which, isChecked ->
+                checkedItems[which] = isChecked
+            }
+            .setPositiveButton("Ок") { dialog, _ ->
+                for (i in options.indices) {
+                    if (checkedItems[i]) {
+                        chosenEquipment.add(options[i])
+                    }
+                }
+            }
+            .setNegativeButton("Отмена") { dialog, _ ->
+                dialog.dismiss()
+            }
+        builder.create().show()
     }
 
 }

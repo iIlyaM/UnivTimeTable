@@ -18,7 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
-import vsu.cs.univtimetable.TimeTableClient
+import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.GroupApi
 import vsu.cs.univtimetable.api.UserApi
 import vsu.cs.univtimetable.dto.GroupDto
@@ -42,8 +42,8 @@ class CreateGroupPageFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        groupApi = TimeTableClient.getClient().create(GroupApi::class.java)
-        userApi = TimeTableClient.getClient().create(UserApi::class.java)
+        groupApi = TimetableClient.getClient().create(GroupApi::class.java)
+        userApi = TimetableClient.getClient().create(UserApi::class.java)
     }
 
     override fun onCreateView(
