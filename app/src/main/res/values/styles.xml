@@ -15,4 +15,8 @@
         <item name="boxStrokeWidth">1dp</item>
     </style>
 
+    <style name="adminTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxStrokeColor">@color/adminsColor</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
 </resources>

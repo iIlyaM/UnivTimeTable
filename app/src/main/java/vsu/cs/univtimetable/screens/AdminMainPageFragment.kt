@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
 import vsu.cs.univtimetable.R
 
@@ -19,8 +20,12 @@ class AdminMainPageFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_admin_main_page, container, false)
         val button = view.findViewById<ImageButton>(R.id.prevPageButton)
+        val usersBtn = view.findViewById<AppCompatButton>(R.id.usersButton)
         button.setOnClickListener {
             findNavController().navigate(R.id.action_adminMainPageFragment_to_loginFragment)
+        }
+        usersBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_adminMainPageFragment_to_userListPageFragment)
         }
 
         return view

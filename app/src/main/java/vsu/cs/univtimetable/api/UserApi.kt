@@ -10,10 +10,8 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
-import vsu.cs.univtimetable.dto.CreateUnivDto
-import vsu.cs.univtimetable.dto.UnivDto
-import vsu.cs.univtimetable.dto.UserDisplayDto
-import vsu.cs.univtimetable.dto.UserDto
+import vsu.cs.univtimetable.dto.CreateUserResponse
+import vsu.cs.univtimetable.dto.UserCreateRequest
 import vsu.cs.univtimetable.dto.UserResponseDto
 
 interface UserApi {
@@ -28,19 +26,39 @@ interface UserApi {
     ): Call<UserResponseDto>
 
     @Headers("Content-Type: application/json")
-    @PUT("users/{id}")
+    @GET("user/{id}")
+    fun getUser(
+        @Header("Authorization") basicToken: String,
+        @Path("id") id: Long
+    ): Call<UserCreateRequest>
+
+    @Headers("Content-Type: application/json")
+    @PUT("user/{id}")
     fun editUser(
         @Header("Authorization") basicToken: String,
         @Path("id") id: Int,
-        @Body university: UserDto
+        @Body userDto: UserCreateRequest
+    ): Call<Void>
+
+    @Headers("Content-Type: application/json")
+    @DELETE("user/{id}")
+    fun deleteUser(
+        @Header("Authorization") basicToken: String,
+        @Path("id") id: Int
     ): Call<Void>
 
     @Headers("Content-Type: application/json")
     @POST("user/create")
     fun addUser(
         @Header("Authorization") basicToken: String,
-        @Body user: CreateUnivDto
+        @Body user: UserCreateRequest
     ): Call<Void>
+
+    @Headers("Content-Type: application/json")
+    @GET("user/create")
+    fun createUserInfo(
+        @Header("Authorization") basicToken: String
+    ): Call<CreateUserResponse>
 //
 //    @Headers("Content-Type: application/json")
 //    @DELETE("universities/{id}")
