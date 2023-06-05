@@ -97,9 +97,6 @@
         android:label="fragment_create_user_auth"
         tools:layout="@layout/fragment_create_user_auth" >
         <action
-            android:id="@+id/action_createUserAuthFragment_to_userListPageFragment"
-            app:destination="@id/userListPageFragment" />
-        <action
             android:id="@+id/action_createUserAuthFragment_to_createUserInfoFragment"
             app:destination="@id/createUserInfoFragment" />
     </fragment>
@@ -109,7 +106,7 @@
         android:label="fragment_create_user_info"
         tools:layout="@layout/fragment_create_user_info" >
         <action
-            android:id="@+id/action_createUserInfoFragment_to_createUserAuthFragment"
-            app:destination="@id/createUserAuthFragment" />
+            android:id="@+id/action_createUserInfoFragment_to_userListPageFragment"
+            app:destination="@id/userListPageFragment" />
     </fragment>
 </navigation>

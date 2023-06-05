@@ -8,8 +8,5 @@ data class UserPageModelDto<T>(
     val currentPage: Long,
     val pageSize: Long,
     val totalPages: Long,
-    val totalElements: Long,
-    val roles: List<String>,
-    val universities: List<String>,
-    val cities: List<String>
+    val totalElements: Long
 )
