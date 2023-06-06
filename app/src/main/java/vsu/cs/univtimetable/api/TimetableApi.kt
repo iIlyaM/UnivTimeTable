@@ -52,6 +52,6 @@ interface TimetableApi {
     @POST("request/move-class")
     fun move(
         @Header("Authorization") basicToken: String,
-        @Body request: MoveClassRequest
+        @Body startClass: MoveClassRequest,
     ): Call<Void>
 }

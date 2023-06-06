@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/generateTTBtn"
         android:layout_width="161dp"
         android:layout_height="64dp"

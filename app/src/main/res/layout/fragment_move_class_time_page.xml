@@ -121,6 +121,39 @@
             android:textSize="24sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/weekTypeInputLayout"
+        style="@style/lectTextInputLayoutStyle"
+        android:layout_width="335dp"
+        android:layout_height="61dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/text_input_layout"
+        android:hint="Тип недели"
+        android:textColorHint="@color/black"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+        app:cardCornerRadius="10dp"
+        app:hintTextColor="@color/lecturerColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/classTimeInputLayout">
+
+        <AutoCompleteTextView
+            android:id="@+id/weekTypeAutoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:popupBackground="#DDEAF6"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/audienceInputLayout"
@@ -128,7 +161,7 @@
         android:layout_width="335dp"
         android:layout_height="61dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/text_input_layout"
         android:hint="Новая аудитория"
@@ -141,7 +174,7 @@
         app:hintTextColor="@color/lecturerColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/classTimeInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/weekTypeInputLayout">
 
         <AutoCompleteTextView
             android:id="@+id/audienceAutoCompleteTextView"
@@ -194,7 +227,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="55dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/lecturer_bg"
         android:text="@string/confirm"
         android:textAllCaps="false"

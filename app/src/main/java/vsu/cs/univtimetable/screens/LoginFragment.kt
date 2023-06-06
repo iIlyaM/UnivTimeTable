@@ -16,7 +16,7 @@ import retrofit2.Response
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
-import vsu.cs.univtimetable.UserAuthApi
+import vsu.cs.univtimetable.api.UserAuthApi
 import vsu.cs.univtimetable.dto.AuthRequestDto
 import vsu.cs.univtimetable.dto.AuthResponseDto
 import vsu.cs.univtimetable.utils.NavigationManager

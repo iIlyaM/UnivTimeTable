@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable
+package vsu.cs.univtimetable.api
 
 import retrofit2.Call
 import retrofit2.http.Body
