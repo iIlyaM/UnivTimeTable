@@ -25,6 +25,16 @@ class DateManager {
                 "Суббота",
                 "Воскресенье"
             )
+        var WEEK_DAYS_SHORT =
+            mutableMapOf<String, String>(
+                "Понедельник" to "пн",
+                "Вторник" to "вт",
+                "Среда" to "ср",
+                "Четверг" to "чт",
+                "Пятница" to "пт",
+                "Суббота" to "сб",
+                "Воскресенье" to "вс"
+            )
 
         var TIME = arrayOf(
             "8:00-9:35",

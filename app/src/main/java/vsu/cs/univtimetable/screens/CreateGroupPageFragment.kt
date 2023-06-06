@@ -22,6 +22,7 @@ import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.GroupApi
 import vsu.cs.univtimetable.api.UserApi
 import vsu.cs.univtimetable.dto.GroupDto
+import vsu.cs.univtimetable.dto.UserDisplayDto
 import vsu.cs.univtimetable.dto.UserResponse
 
 
@@ -37,8 +38,8 @@ class CreateGroupPageFragment : Fragment() {
         listOf("1к. бак.", "2к. бак.", "3к. бак.", "4к. бак.", "1к. маг.", "2к. маг.")
     private val courseNums = listOf(1, 2, 3, 4, 5, 6)
 
-    private var headmanMap: MutableMap<String, UserResponse> = mutableMapOf()
-    private var headmanList: List<UserResponse> = listOf()
+    private var headmanMap: MutableMap<String, UserDisplayDto> = mutableMapOf()
+    private var headmanList: List<UserDisplayDto> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,7 +105,7 @@ class CreateGroupPageFragment : Fragment() {
             course = courseItem
         }
         var headmanItem = headmanMap[headmanView.text.toString()]
-        var headmen: UserResponse? = null
+        var headmen: UserDisplayDto? = null
         if (headmanItem != null) {
             headmen = headmanItem
         }
@@ -149,10 +150,10 @@ class CreateGroupPageFragment : Fragment() {
 
         val call = userApi.getFreeHeadmen("Bearer ${token}", getFacultyId())
 
-        call.enqueue(object : Callback<List<UserResponse>> {
+        call.enqueue(object : Callback<List<UserDisplayDto>> {
             override fun onResponse(
-                call: Call<List<UserResponse>>,
-                response: Response<List<UserResponse>>
+                call: Call<List<UserDisplayDto>>,
+                response: Response<List<UserDisplayDto>>
             ) {
                 if (response.isSuccessful) {
                     Log.d("API Request successful", "Получили ${response.code()}")
@@ -171,7 +172,7 @@ class CreateGroupPageFragment : Fragment() {
 
             }
 
-            override fun onFailure(call: Call<List<UserResponse>>, t: Throwable) {
+            override fun onFailure(call: Call<List<UserDisplayDto>>, t: Throwable) {
                 println("Ошибка")
                 println(t)
             }

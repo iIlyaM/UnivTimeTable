@@ -17,7 +17,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
-import vsu.cs.univtimetable.TimeTableClient
+import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.UserApi
 import vsu.cs.univtimetable.dto.CreateUserResponse
 import vsu.cs.univtimetable.dto.FacultyResponse
@@ -54,7 +54,7 @@ class CreateUserInfoFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userApi = TimeTableClient.getClient().create(UserApi::class.java)
+        userApi = TimetableClient.getClient().create(UserApi::class.java)
 
         val tempEmail = arguments?.getString("email")
         if (tempEmail != null) {

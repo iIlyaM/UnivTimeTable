@@ -12,6 +12,8 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import vsu.cs.univtimetable.dto.CreateUserResponse
 import vsu.cs.univtimetable.dto.UserCreateRequest
+import vsu.cs.univtimetable.dto.UserDisplayDto
+import vsu.cs.univtimetable.dto.UserResponse
 import vsu.cs.univtimetable.dto.UserResponseDto
 
 interface UserApi {
@@ -72,5 +74,5 @@ interface UserApi {
     fun getFreeHeadmen(
         @Header("Authorization") basicToken: String,
         @Path("facultyId") id: Int,
-    ): Call<List<UserResponse>>
+    ): Call<List<UserDisplayDto>>
 }
