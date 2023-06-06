@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -104,6 +105,10 @@ class MoveClassTimePageFragment : Fragment() {
                 dayTimeAutoCompleteTextView,
                 weekTypeAutoCompleteTextView
             )
+        }
+        val requestListButton = view.findViewById<AppCompatButton>(R.id.requestListButton)
+        requestListButton.setOnClickListener {
+            findNavController().navigate(R.id.action_addSubjectPageFragment_to_generateTimetablePageFragment)
         }
 
         return view

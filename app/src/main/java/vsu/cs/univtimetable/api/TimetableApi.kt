@@ -54,4 +54,9 @@ interface TimetableApi {
         @Header("Authorization") basicToken: String,
         @Body startClass: MoveClassRequest,
     ): Call<Void>
+
+    @Headers("Content-Type: application/json")
+    @POST("schedule/makes")
+    fun generate(@Header("Authorization") basicToken: String
+    ): Call<Void>
 }

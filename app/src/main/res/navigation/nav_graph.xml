@@ -216,6 +216,9 @@
         <action
             android:id="@+id/action_addSubjectPageFragment_to_generateTimetablePageFragment"
             app:destination="@id/generateTimetablePageFragment" />
+        <action
+            android:id="@+id/action_addSubjectPageFragment_to_selectUnwantedTimePageFragment2"
+            app:destination="@id/selectUnwantedTimePageFragment" />
     </fragment>
     <fragment
         android:id="@+id/generateTimetablePageFragment"
