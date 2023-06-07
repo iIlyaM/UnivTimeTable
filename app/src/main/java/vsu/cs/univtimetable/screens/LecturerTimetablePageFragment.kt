@@ -116,8 +116,9 @@ class LecturerTimetablePageFragment : Fragment() {
                         weekType = checkWeekType()
                         timetable = dataResponse.classes[weekType]!!
                     }
-                    getDayTimetable(timetable, weekType, getCurrDayOfWeek())
+                    weekPointer = WEEK_DAYS.indexOf(getCurrDayOfWeek())
                     tempWeekPointer = weekPointer
+                     getDayTimetable(timetable, weekType, getCurrDayOfWeek())
                 } else {
                     if (response.code() == 400) {
                         showDialog()
@@ -141,7 +142,6 @@ class LecturerTimetablePageFragment : Fragment() {
         dayOfWeek: String
     ) {
 
-//        weekPointer = WEEK_DAYS.indexOf(dayOfWeek)
 
         timeTableAdapter = LecturerTimetableAdapter(
             requireContext(),

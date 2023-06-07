@@ -85,7 +85,7 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
                 val selectedOptions = ArrayList<String>()
                 for (i in options.indices) {
                     if (checkedItems[i]) {
-                        selectedOptions.add("${options[i].dropLast(6)}:00")
+                        selectedOptions.add(options[i].split('-')[0])
                     }
                 }
                 dayWeekTimeMap[title] = selectedOptions

@@ -37,8 +37,8 @@ class DateManager {
             )
 
         var TIME = arrayOf(
-            "8:00:00-9:35:00",
-            "9:45:00-11:20:00",
+            "08:00:00-9:35:00",
+            "09:45:00-11:20:00",
             "11:30:00-13:05:00",
             "13:25:00-15:00:00",
             "15:10:00-16:45:00",
@@ -46,18 +46,14 @@ class DateManager {
             "18:40:00-20:15:00"
         )
 
-
         @RequiresApi(Build.VERSION_CODES.O)
         fun checkWeekType(): String {
-            val currentYear = LocalDate.now().year
+            val prevYear = LocalDate.now().year - 1
             val currentDate = LocalDate.now()
-            val startDate = LocalDate.of(currentYear, SEPTEMBER, 1)
+            val startDate = LocalDate.of(prevYear, SEPTEMBER, 1)
 
-            var weeks = ChronoUnit.WEEKS.between(startDate, currentDate)
+            val weeks = ChronoUnit.WEEKS.between(startDate, currentDate)
 
-            if (currentDate.dayOfWeek == DayOfWeek.MONDAY) {
-                weeks++
-            }
             if (weeks.toInt() % 2 == 0) {
                 return "Знаменатель"
             }
@@ -70,14 +66,15 @@ class DateManager {
             val now = Calendar.getInstance()
             val weekday = week.indexOf(day) + 1
 
-            var days = 0
-            if (weekday - 1 > weekPointer) {
-                days = (Calendar.SATURDAY - (weekPointer + 1) - (Calendar.SATURDAY - weekday))
-            } else if (weekday - 1 < weekPointer){
-                days = (-(Calendar.SATURDAY - weekday)) % 7
-            } else {
-                days = 0
-            }
+//            var days = 0
+//            if (weekday - 1 > weekPointer) {
+//                days = (Calendar.SATURDAY - (weekPointer + 1) - (Calendar.SATURDAY - weekday))
+//            } else if (weekday - 1 < weekPointer){
+//                days = -((Calendar.SATURDAY - weekday) - (Calendar.SATURDAY - (weekPointer + 1)))
+//            } else {
+//                days = 0
+//            }
+            val days = (Calendar.SATURDAY - (weekPointer + 1) - (Calendar.SATURDAY - weekday))
             now.add(Calendar.DAY_OF_YEAR, days)
 
             val date: Date = now.time
