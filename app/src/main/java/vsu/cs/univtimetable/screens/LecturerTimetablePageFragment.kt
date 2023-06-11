@@ -1,9 +1,6 @@
 package vsu.cs.univtimetable.screens
 
 import android.app.AlertDialog
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -13,9 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
-import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -169,7 +166,7 @@ class LecturerTimetablePageFragment : Fragment() {
                             input.copyTo(output)
                         }
                     }
-                    showNotification(requireContext(), "Файл сохранён", "Расписание скачалось успешно.")
+                    showToastNotification()
                 } else {
                     if (response.code() == 400) {
                         showDialog()
@@ -186,21 +183,13 @@ class LecturerTimetablePageFragment : Fragment() {
         })
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun showNotification(context: Context, title: String, message: String) {
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channelId = "example_channel_id"
-        val channelName = "Example Channel"
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(channelId, channelName, importance)
-        notificationManager.createNotificationChannel(channel)
+    private fun showToastNotification() {
+        val duration = Toast.LENGTH_LONG
 
-        val notificationBuilder = NotificationCompat.Builder(context, channelId)
-            .setContentTitle(title)
-            .setContentText(message)
-            .setAutoCancel(true)
-
-        notificationManager.notify(0, notificationBuilder.build())
+        val toast = Toast.makeText(requireContext(), "Файл сохранён", duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 500)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
