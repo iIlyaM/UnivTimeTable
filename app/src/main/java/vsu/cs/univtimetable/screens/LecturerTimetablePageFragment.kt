@@ -1,6 +1,9 @@
 package vsu.cs.univtimetable.screens
 
 import android.app.AlertDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -11,10 +14,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,6 +36,8 @@ import vsu.cs.univtimetable.dto.DateDto
 import vsu.cs.univtimetable.dto.TimetableResponse
 import vsu.cs.univtimetable.screens.adapter.DayOfWeekAdapter
 import vsu.cs.univtimetable.screens.adapter.LecturerTimetableAdapter
+import java.io.File
+import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
@@ -85,6 +93,11 @@ class LecturerTimetablePageFragment : Fragment() {
         toRightView.setOnClickListener {
             getNextDay(toRightView, toLeftView)
         }
+
+        val downloadLectTTBtn = view.findViewById<AppCompatButton>(R.id.downloadLectTTBtn)
+        downloadLectTTBtn.setOnClickListener {
+            downloadTimetable()
+        }
         return view
     }
 
@@ -133,6 +146,61 @@ class LecturerTimetablePageFragment : Fragment() {
                 println(t)
             }
         })
+    }
+
+    private fun downloadTimetable() {
+        val token: String? = SessionManager.getToken(requireContext())
+        Log.d("API Request failed", "${token}")
+        val call = timetableApi.downloadFile("Bearer ${token}")
+
+        call.enqueue(object : Callback<ResponseBody> {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+                if (response.isSuccessful) {
+                    val file = File(context!!.getExternalFilesDir(null), "example.xlsx")
+                    val inputStream = response.body()?.byteStream()
+                    val outputStream = FileOutputStream(file)
+
+                    inputStream?.use { input ->
+                        outputStream.use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    showNotification(requireContext(), "Файл сохранён", "Расписание скачалось успешно.")
+                } else {
+                    if (response.code() == 400) {
+                        showDialog()
+                    }
+                    Log.d("ошибка", "Получили ошибку - ${response.code()}")
+                    Log.d("ошибка", "с ошибкой пришло - ${response.body()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                println("Ошибка")
+                println(t)
+            }
+        })
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun showNotification(context: Context, title: String, message: String) {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channelId = "example_channel_id"
+        val channelName = "Example Channel"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(channelId, channelName, importance)
+        notificationManager.createNotificationChannel(channel)
+
+        val notificationBuilder = NotificationCompat.Builder(context, channelId)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setAutoCancel(true)
+
+        notificationManager.notify(0, notificationBuilder.build())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

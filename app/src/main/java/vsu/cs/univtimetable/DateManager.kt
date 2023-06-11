@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -26,7 +25,7 @@ class DateManager {
                 "Воскресенье"
             )
         var WEEK_DAYS_SHORT =
-            mutableMapOf<String, String>(
+            mutableMapOf(
                 "Понедельник" to "пн",
                 "Вторник" to "вт",
                 "Среда" to "ср",
