@@ -35,7 +35,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sortUnivBtn"
         android:layout_width="90dp"
         android:layout_height="48dp"
@@ -51,7 +51,7 @@
         app:layout_constraintEnd_toStartOf="@+id/sortRoleBtn"
         app:layout_constraintTop_toTopOf="@+id/sortRoleBtn" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sortRoleBtn"
         android:layout_width="90dp"
         android:layout_height="48dp"
@@ -68,7 +68,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userSearch" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sortByCityBtn"
         android:layout_width="90dp"
         android:layout_height="48dp"
