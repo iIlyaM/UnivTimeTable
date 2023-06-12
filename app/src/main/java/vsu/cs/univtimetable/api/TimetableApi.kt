@@ -11,6 +11,7 @@ import retrofit2.http.Streaming
 import vsu.cs.univtimetable.dto.MoveClassRequest
 import vsu.cs.univtimetable.dto.MoveClassResponse
 import vsu.cs.univtimetable.dto.RequestDataDto
+import vsu.cs.univtimetable.dto.RequestDto
 import vsu.cs.univtimetable.dto.SendRequest
 import vsu.cs.univtimetable.dto.TimetableResponse
 
@@ -56,7 +57,19 @@ interface TimetableApi {
     ): Call<Void>
 
     @Headers("Content-Type: application/json")
-    @POST("schedule/makes")
+    @POST("schedule/make")
     fun generate(@Header("Authorization") basicToken: String
+    ): Call<Void>
+
+    @Headers("Content-Type: application/json")
+    @GET("request/all")
+    fun getLecturers(
+        @Header("Authorization") basicToken: String,
+    ): Call<List<RequestDto>>
+
+    @Headers("Content-Type: application/json")
+    @POST("schedule/reset")
+    fun clearTimetable(
+        @Header("Authorization") basicToken: String,
     ): Call<Void>
 }
