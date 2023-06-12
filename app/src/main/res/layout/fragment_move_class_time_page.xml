@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/move_class_time_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".screens.MoveClassTimePageFragment">
@@ -30,6 +31,8 @@
         style="@style/lectTextInputLayoutStyle"
         android:layout_width="335dp"
         android:layout_height="61dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:background="@drawable/text_input_layout"
         android:textColorHint="@color/black"
         app:boxCornerRadiusBottomEnd="10dp"
@@ -46,13 +49,14 @@
             android:id="@+id/subjAutoCompleteTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:inputType="none"
             android:hint="Выберите предмет"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
+            android:paddingTop="10dp"
             android:popupBackground="#DDEAF6"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="22sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -85,7 +89,7 @@
             android:paddingBottom="16dp"
             android:popupBackground="#DDEAF6"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="22sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -118,7 +122,7 @@
             android:paddingBottom="16dp"
             android:popupBackground="#DDEAF6"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="22sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -151,7 +155,7 @@
             android:paddingBottom="16dp"
             android:popupBackground="#DDEAF6"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="22sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -185,7 +189,7 @@
             android:paddingBottom="16dp"
             android:popupBackground="#DDEAF6"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="22sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -218,7 +222,7 @@
             android:paddingBottom="16dp"
             android:popupBackground="#DDEAF6"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="22sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton

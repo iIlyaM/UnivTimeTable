@@ -1,12 +1,16 @@
 package vsu.cs.univtimetable.screens
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -23,7 +27,6 @@ import vsu.cs.univtimetable.api.TimetableApi
 import vsu.cs.univtimetable.dto.AudienceToMoveResponse
 import vsu.cs.univtimetable.dto.ClassDto
 import vsu.cs.univtimetable.dto.DayTime
-import vsu.cs.univtimetable.dto.MoveClassDto
 import vsu.cs.univtimetable.dto.MoveClassRequest
 import vsu.cs.univtimetable.dto.MoveClassResponse
 
@@ -32,22 +35,26 @@ class MoveClassTimePageFragment : Fragment() {
     private lateinit var timetableApi: TimetableApi
 
     private lateinit var subjectCompleteView: AutoCompleteTextView
-//    private lateinit var dayAutoCompleteTextView: AutoCompleteTextView
-//    private lateinit var classTimeAutoCompleteTextView: AutoCompleteTextView
-//    private lateinit var audienceAutoCompleteTextView: AutoCompleteTextView
-//    private lateinit var weekTypeAutoCompleteTextView: AutoCompleteTextView
-//    private lateinit var dayTimeAutoCompleteTextView: AutoCompleteTextView
+
+    private lateinit var dayAutoInput: TextInputLayout
+    private lateinit var classTimeInputLayout: TextInputLayout
+    private lateinit var weekTypeInputLayout: TextInputLayout
+    private lateinit var audienceInputLayout: TextInputLayout
+    private lateinit var dayTimeInputLayout: TextInputLayout
+
+
     private var subjects = mutableSetOf<String>()
     private var subjDayTime = mutableMapOf<String, List<ClassDto>>()
+    private var dayToClassMap = mutableMapOf<String, ClassDto>()
     private var classes = mutableListOf<ClassDto>()
     private var weekTime = mutableMapOf<String, DayTime>()
     private var audiences = listOf<AudienceToMoveResponse>()
     private var possibleTimes = mutableMapOf<Int, AudienceToMoveResponse>()
     private var days = mutableSetOf<String>()
-    private var times = mutableListOf<String>()
+    private var times = mutableSetOf<String>()
     private var dayTimes = mutableListOf<String>()
     private var audienceDayTimeMap = mutableMapOf<DayTime, ClassDto>()
-    private var weekTypeList = mutableListOf<String>()
+    private var strToAudienceNum = mutableMapOf<String, Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,9 +71,9 @@ class MoveClassTimePageFragment : Fragment() {
             view.findViewById(R.id.subjAutoCompleteTextView)
         val dayAutoCompleteTextView =
             view.findViewById<AutoCompleteTextView>(R.id.dayAutoCompleteTextView)
-        dayAutoCompleteTextView.setVisibility(View.GONE)
-        val dayAutoInput =
-        view.findViewById<TextInputLayout>(R.id.dayInputLayout)
+        dayAutoCompleteTextView.visibility = View.GONE
+        dayAutoInput =
+            view.findViewById<TextInputLayout>(R.id.dayInputLayout)
         dayAutoInput.endIconMode = END_ICON_NONE
         val dayAdapter =
             ArrayAdapter(requireContext(), R.layout.subj_item, DateManager.WEEK_DAYS.toArray())
@@ -74,69 +81,76 @@ class MoveClassTimePageFragment : Fragment() {
 
         val classTimeAutoCompleteTextView =
             view.findViewById<AutoCompleteTextView>(R.id.classTimeAutoCompleteTextView)
-        classTimeAutoCompleteTextView.setVisibility(View.GONE)
-        val classTimeInputLayout =
+        classTimeAutoCompleteTextView.visibility = View.GONE
+        classTimeInputLayout =
             view.findViewById<TextInputLayout>(R.id.classTimeInputLayout)
         classTimeInputLayout.endIconMode = END_ICON_NONE
 
 
         val weekTypeAutoCompleteTextView =
             view.findViewById<AutoCompleteTextView>(R.id.weekTypeAutoCompleteTextView)
-        weekTypeAutoCompleteTextView.setVisibility(View.GONE)
-        val weekTypeInputLayout =
+        weekTypeAutoCompleteTextView.visibility = View.GONE
+        weekTypeInputLayout =
             view.findViewById<TextInputLayout>(R.id.weekTypeInputLayout)
-//        val weekTypeAdapter =
-//            ArrayAdapter(requireContext(), R.layout.subj_item, listOf("Числитель", "Знаменатель"))
-//        weekTypeAutoCompleteTextView.setAdapter(weekTypeAdapter)
         weekTypeInputLayout.endIconMode = END_ICON_NONE
 
-        val audienceInputLayout =
+        audienceInputLayout =
             view.findViewById<TextInputLayout>(R.id.audienceInputLayout)
         audienceInputLayout.endIconMode = END_ICON_NONE
         val audienceAutoCompleteTextView =
             view.findViewById<AutoCompleteTextView>(R.id.audienceAutoCompleteTextView)
-        audienceAutoCompleteTextView.setVisibility(View.GONE)
+        audienceAutoCompleteTextView.visibility = View.GONE
 
         val dayTimeAutoCompleteTextView =
             view.findViewById<AutoCompleteTextView>(R.id.dayTimeAutoCompleteTextView)
-        dayTimeAutoCompleteTextView.setVisibility(View.GONE)
-        val dayTimeInputLayout =
+        dayTimeAutoCompleteTextView.visibility = View.GONE
+        dayTimeInputLayout =
             view.findViewById<TextInputLayout>(R.id.dayTimeInputLayout)
         dayTimeInputLayout.endIconMode = END_ICON_NONE
 
         subjectCompleteView.setOnItemClickListener { parent, view, position, id ->
+            subjectCompleteView.setSelection(0)
             val selectedItem = parent.getItemAtPosition(position) as String
             subjectCompleteView.clearFocus()
             dayAutoCompleteTextView.clearFocus()
             classTimeAutoCompleteTextView.clearFocus()
             weekTypeAutoCompleteTextView.clearFocus()
-            val classes = subjDayTime[selectedItem]!!
-            setDayTime(selectedItem, subjDayTime, days, times)
+            setDay(selectedItem, subjDayTime, days)
             setAdapterToView(dayAutoCompleteTextView, days.toList())
             dayAutoCompleteTextView.setVisibility(View.VISIBLE)
             dayAutoInput.endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
 
             dayAutoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
+                dayAutoCompleteTextView.setSelection(0)
                 val selectedItem = parent.getItemAtPosition(position) as String
                 subjectCompleteView.clearFocus()
                 dayAutoCompleteTextView.clearFocus()
                 classTimeAutoCompleteTextView.clearFocus()
                 weekTypeAutoCompleteTextView.clearFocus()
+                setTime(subjectCompleteView.text.toString(), selectedItem, subjDayTime, times)
                 setAdapterToView(classTimeAutoCompleteTextView, times.toList())
                 classTimeAutoCompleteTextView.setVisibility(View.VISIBLE)
                 classTimeInputLayout.endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
 
                 classTimeAutoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
+                    classTimeAutoCompleteTextView.setSelection(0)
                     val selectedItem = parent.getItemAtPosition(position) as String
                     subjectCompleteView.clearFocus()
                     dayAutoCompleteTextView.clearFocus()
                     classTimeAutoCompleteTextView.clearFocus()
                     weekTypeAutoCompleteTextView.clearFocus()
-                    setAdapterToView(weekTypeAutoCompleteTextView, getWeekTypes())
+                    setAdapterToView(
+                        weekTypeAutoCompleteTextView, getWeekTypes(
+                            subjectCompleteView.text.toString(),
+                            dayAutoCompleteTextView.text.toString(),
+                            classTimeAutoCompleteTextView.text.toString()
+                        )
+                    )
                     weekTypeAutoCompleteTextView.setVisibility(View.VISIBLE)
                     weekTypeInputLayout.endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
 
                     weekTypeAutoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
+                        weekTypeAutoCompleteTextView.setSelection(0)
                         val selectedItem = parent.getItemAtPosition(position) as String
                         toPossibleTimes(
                             dayAutoCompleteTextView,
@@ -146,28 +160,29 @@ class MoveClassTimePageFragment : Fragment() {
                         val audAdapter = ArrayAdapter(
                             requireContext(),
                             R.layout.move_class_item,
-                            possibleTimes.keys.toList()
+                            strToAudienceNum.keys.toList()
                         )
                         audienceAutoCompleteTextView.setAdapter(audAdapter)
                         audienceAutoCompleteTextView.setVisibility(View.VISIBLE)
                         audienceInputLayout.endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
 
                         audienceAutoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
-                            val selectedItem = parent.getItemAtPosition(position) as Int
+                            audienceAutoCompleteTextView.setSelection(0)
+                            val selectedItem = parent.getItemAtPosition(position) as String
                             dayTimeAutoCompleteTextView.setVisibility(View.VISIBLE)
+                            dayTimeAutoCompleteTextView.setSelection(0)
                             dayTimeInputLayout.endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
-                            setNewDate(possibleTimes, selectedItem, dayTimes, weekTime)
+                            setNewDate(
+                                possibleTimes,
+                                strToAudienceNum[selectedItem]!!,
+                                dayTimes,
+                                weekTime
+                            )
                             setAdapterToView(dayTimeAutoCompleteTextView, dayTimes)
                         }
                     }
                 }
             }
-//            val audAdapter = ArrayAdapter(
-//                requireContext(),
-//                R.layout.move_class_item,
-//                possibleTimes.keys.toList()
-//            )
-//            audienceAutoCompleteTextView.setAdapter(audAdapter)
         }
 
         val confirmSubjectBtn = view.findViewById<AppCompatButton>(R.id.confirmSubjectBtn)
@@ -200,8 +215,8 @@ class MoveClassTimePageFragment : Fragment() {
         dayTimeAutoCompleteTextView: AutoCompleteTextView,
         weekTypeAutoCompleteTextView: AutoCompleteTextView
     ) {
+        dayTimeAutoCompleteTextView.setSelection(0)
         val token: String? = SessionManager.getToken(requireContext())
-
         val keyDto = DayTime(
             dayAutoCompleteTextView.text.toString(),
             weekTypeAutoCompleteTextView.text.toString(),
@@ -210,7 +225,6 @@ class MoveClassTimePageFragment : Fragment() {
         )
 
         val startDto = audienceDayTimeMap[keyDto]
-        val audience = audienceAutoCompleteTextView.text.toString().toInt()
         val bundle = Bundle()
 
         val call = timetableApi.move(
@@ -221,10 +235,10 @@ class MoveClassTimePageFragment : Fragment() {
                     startDto.subjectName,
                     weekTime.get(dayTimeAutoCompleteTextView.text.toString())!!.time,
                     "",
-                    audienceAutoCompleteTextView.text.toString().toInt(),
+                    strToAudienceNum[audienceAutoCompleteTextView.text.toString()]!!,
                     weekTime.get(dayTimeAutoCompleteTextView.text.toString())!!.dayOfWeek,
                     startDto.typeOfClass,
-                    weekTypeAutoCompleteTextView.text.toString(),
+                    weekTime.get(dayTimeAutoCompleteTextView.text.toString())!!.weekType,
                     startDto.courseNumber,
                     startDto.groupsNumber,
                     startDto.capacity,
@@ -240,10 +254,10 @@ class MoveClassTimePageFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     Log.d("API Request successful", "Получили ${response.code()}")
-                    val dataResponse = response.body()
-                    println(dataResponse)
+                    showToastNotification()
+                    findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
                 } else {
-                    Log.d("Не успешно", "Получили ${response.code()}")
+                    Log.d("Перенос не произошёл", "Получили ${response.code()}")
                 }
             }
 
@@ -282,6 +296,9 @@ class MoveClassTimePageFragment : Fragment() {
                         subjectCompleteView.setAdapter(adapter)
                     }
                 } else {
+                    if (response.code() == 400) {
+                        showDialog()
+                    }
                     Log.d("Не успешно", "Получили ${response.code()}")
                 }
             }
@@ -301,14 +318,14 @@ class MoveClassTimePageFragment : Fragment() {
     ) {
         val dayTimeItem = possibleTimesInAudience[audience]!!.dayTimes
         for (day in dayTimeItem) {
-            for (weekItem in day.weekTimes.values) {
-                for (time in weekItem) {
+            for (weekItem in day.weekTimes.entries) {
+                for (time in weekItem.value) {
                     val str =
-                        "${day.weekTimes.keys.first()}, ${time}, ${DateManager.WEEK_DAYS_SHORT[day.dayOfWeek]}"
+                        "${weekItem.key}, ${time}, ${DateManager.WEEK_DAYS_SHORT[day.dayOfWeek]}"
                     list.add(str)
                     weekTime.put(
                         str,
-                        DayTime(day.dayOfWeek, day.weekTimes.keys.first(), time, null)
+                        DayTime(day.dayOfWeek, weekItem.key, time, null)
                     )
                 }
             }
@@ -368,12 +385,20 @@ class MoveClassTimePageFragment : Fragment() {
         }
         if (classDto.equipments.isNotEmpty()) {
             val audience = checkEquipment(classDto.equipments, possibleAudience)
-            possibleTimes[audience.audienceNumber] = audience
+            for (aud in audience) {
+                possibleTimes[aud.key.audienceNumber] = aud.key
+                strToAudienceNum["${aud.key.audienceNumber}, оборудование: ${aud.value}/${classDto.equipments.size}, мест: ${aud.key.capacity} "] =
+                    aud.key.audienceNumber
+            }
         } else {
             val audience = possibleAudience
             audience.sortBy { it.capacity }
-            val aud = audience.first()
-            possibleTimes[aud.audienceNumber] = aud
+            for (aud in audience) {
+                possibleTimes[aud.audienceNumber] = aud
+                strToAudienceNum["${aud.audienceNumber}, мест: ${aud.capacity}"] =
+                    aud.audienceNumber
+            }
+
         }
 
     }
@@ -381,8 +406,9 @@ class MoveClassTimePageFragment : Fragment() {
     private fun checkEquipment(
         equipment: List<String>,
         audienceList: List<AudienceToMoveResponse>
-    ): AudienceToMoveResponse {
+    ): Map<AudienceToMoveResponse, Int> {
         var responseToIntMap = mutableMapOf<AudienceToMoveResponse, Int>()
+        var resultToIntMap = mutableMapOf<AudienceToMoveResponse, Int>()
         for (item in equipment) {
             for (audience in audienceList) {
                 var count = 0
@@ -395,7 +421,10 @@ class MoveClassTimePageFragment : Fragment() {
             }
         }
         val result = responseToIntMap.toList().sortedBy { (_, value) -> value }.toMap()
-        return result.entries.toList()[result.size - 1].key
+        for (entry in result.entries.reversed()) {
+            resultToIntMap[entry.key] = entry.value
+        }
+        return resultToIntMap
     }
 
     private fun getClassByDayTimeFields(
@@ -412,16 +441,29 @@ class MoveClassTimePageFragment : Fragment() {
         return audienceDayTimeMap[key]!!
     }
 
-    private fun setDayTime(
+    private fun setDay(
         subject: String,
         subjDayTime: MutableMap<String, List<ClassDto>>,
         days: MutableSet<String>,
-        time: MutableList<String>
     ) {
         val list = subjDayTime[subject]
         for (subj in list!!) {
             days.add(subj.dayOfWeek)
-            time.add(subj.startTime)
+            dayToClassMap[subj.dayOfWeek] = subj
+        }
+    }
+
+    private fun setTime(
+        subject: String,
+        day: String,
+        subjDayTime: MutableMap<String, List<ClassDto>>,
+        times: MutableSet<String>,
+    ) {
+        val list = subjDayTime[subject]
+        for (classesDto in list!!) {
+            if (day == classesDto.dayOfWeek) {
+                times.add(classesDto.startTime)
+            }
         }
     }
 
@@ -433,11 +475,35 @@ class MoveClassTimePageFragment : Fragment() {
         }
     }
 
-    private fun getWeekTypes(): MutableList<String> {
+    private fun getWeekTypes(subject: String, day: String, time: String): MutableList<String> {
         val set = mutableSetOf<String>()
         for (classDto in audienceDayTimeMap.values) {
-            set.add(classDto.weekType)
+            if (classDto.subjectName == subject && classDto.dayOfWeek == day && classDto.startTime == time)
+                set.add(classDto.weekType)
         }
         return set.toMutableList()
+    }
+
+    private fun showToastNotification() {
+        val duration = Toast.LENGTH_LONG
+
+        val toast = Toast.makeText(requireContext(), "Занятие перенесено", duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 1500)
+    }
+
+    private fun showDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+
+        builder.setMessage("Расписание ещё не сформировано")
+        val alert = builder.create()
+        alert.show()
+        alert.window?.setGravity(Gravity.BOTTOM)
+
+        Handler().postDelayed({
+            alert.dismiss()
+        }, 2000)
+        findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
     }
 }
