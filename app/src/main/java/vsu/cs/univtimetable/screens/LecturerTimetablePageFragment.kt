@@ -10,11 +10,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,6 +33,8 @@ import vsu.cs.univtimetable.dto.DateDto
 import vsu.cs.univtimetable.dto.TimetableResponse
 import vsu.cs.univtimetable.screens.adapter.DayOfWeekAdapter
 import vsu.cs.univtimetable.screens.adapter.LecturerTimetableAdapter
+import java.io.File
+import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
@@ -85,6 +90,11 @@ class LecturerTimetablePageFragment : Fragment() {
         toRightView.setOnClickListener {
             getNextDay(toRightView, toLeftView)
         }
+
+        val downloadLectTTBtn = view.findViewById<AppCompatButton>(R.id.downloadLectTTBtn)
+        downloadLectTTBtn.setOnClickListener {
+            downloadTimetable()
+        }
         return view
     }
 
@@ -116,8 +126,9 @@ class LecturerTimetablePageFragment : Fragment() {
                         weekType = checkWeekType()
                         timetable = dataResponse.classes[weekType]!!
                     }
-                    getDayTimetable(timetable, weekType, getCurrDayOfWeek())
+                    weekPointer = WEEK_DAYS.indexOf(getCurrDayOfWeek())
                     tempWeekPointer = weekPointer
+                     getDayTimetable(timetable, weekType, getCurrDayOfWeek())
                 } else {
                     if (response.code() == 400) {
                         showDialog()
@@ -134,6 +145,53 @@ class LecturerTimetablePageFragment : Fragment() {
         })
     }
 
+    private fun downloadTimetable() {
+        val token: String? = SessionManager.getToken(requireContext())
+        Log.d("API Request failed", "${token}")
+        val call = timetableApi.downloadFile("Bearer ${token}")
+
+        call.enqueue(object : Callback<ResponseBody> {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+                if (response.isSuccessful) {
+                    val file = File(context!!.getExternalFilesDir(null), "example.xlsx")
+                    val inputStream = response.body()?.byteStream()
+                    val outputStream = FileOutputStream(file)
+
+                    inputStream?.use { input ->
+                        outputStream.use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    showToastNotification()
+                } else {
+                    if (response.code() == 400) {
+                        showDialog()
+                    }
+                    Log.d("ошибка", "Получили ошибку - ${response.code()}")
+                    Log.d("ошибка", "с ошибкой пришло - ${response.body()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                println("Ошибка")
+                println(t)
+            }
+        })
+    }
+
+    private fun showToastNotification() {
+        val duration = Toast.LENGTH_LONG
+
+        val toast = Toast.makeText(requireContext(), "Файл сохранён", duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 500)
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getDayTimetable(
         timetable: MutableMap<String, List<ClassDto>>,
@@ -141,7 +199,6 @@ class LecturerTimetablePageFragment : Fragment() {
         dayOfWeek: String
     ) {
 
-//        weekPointer = WEEK_DAYS.indexOf(dayOfWeek)
 
         timeTableAdapter = LecturerTimetableAdapter(
             requireContext(),

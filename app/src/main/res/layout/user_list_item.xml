@@ -26,6 +26,8 @@
             android:textColor="@color/black"
             android:textSize="18sp" />
 
+
+
         <TextView
             android:id="@+id/univView"
             android:layout_width="170dp"

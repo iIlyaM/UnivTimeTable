@@ -1,9 +1,9 @@
 package vsu.cs.univtimetable.dto
 
 data class GroupDto(
-    val id: Int?,
+    val id: Long?,
     val groupNumber: Int,
-    val courseNumber:Int,
+    val courseNumber: Int,
     val studentsAmount: Int,
-    val headman: UserResponse?
+    val headman: UserDisplayDto?
 )

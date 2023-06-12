@@ -26,7 +26,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/lookTimeTableBtn"
         android:layout_width="250dp"
         android:layout_height="90dp"
@@ -43,7 +43,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/waveView" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/saveTimeTableBtn"
         android:layout_width="250dp"
         android:layout_height="90dp"

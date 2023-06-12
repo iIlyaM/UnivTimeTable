@@ -25,23 +25,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <EditText
+<!--    <EditText-->
+<!--        android:id="@+id/editRoleText"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:background="@drawable/rect_border"-->
+<!--        android:drawablePadding="16dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="@string/role"-->
+<!--        android:inputType="text"-->
+<!--        android:padding="16dp"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textStyle="normal"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/waveView" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editRoleText"
+        style="@style/adminTextInputLayoutStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/rect_border"
-        android:drawablePadding="16dp"
-        android:ems="10"
-        android:hint="@string/role"
-        android:inputType="text"
-        android:padding="16dp"
-        android:textSize="24sp"
-        android:textStyle="normal"
+        android:textColorHint="@color/black"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+        app:cardCornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waveView" />
+        app:layout_constraintTop_toBottomOf="@+id/waveView">
+
+        <AutoCompleteTextView
+            android:id="@+id/editRoleAutoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/role"
+            android:inputType="none"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:popupBackground="#DDEAF6"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <EditText
         android:id="@+id/editFullNameText"
@@ -62,64 +93,160 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editRoleText" />
 
-    <EditText
+<!--    <EditText-->
+<!--        android:id="@+id/editUnivText"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:background="@drawable/rect_border"-->
+<!--        android:drawablePadding="16dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="@string/univ"-->
+<!--        android:inputType="text"-->
+<!--        android:padding="16dp"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textStyle="normal"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/editFullNameText" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editUnivText"
+        style="@style/adminTextInputLayoutStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
+        android:textColorHint="@color/black"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+        app:cardCornerRadius="10dp"
         android:background="@drawable/rect_border"
-        android:drawablePadding="16dp"
-        android:ems="10"
-        android:hint="@string/univ"
-        android:inputType="text"
-        android:padding="16dp"
-        android:textSize="24sp"
-        android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editFullNameText" />
+        app:layout_constraintTop_toBottomOf="@+id/editFullNameText" >
 
-    <EditText
+        <AutoCompleteTextView
+            android:id="@+id/editUnivAutoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:hint="@string/univ"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:popupBackground="#DDEAF6"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+<!--    <EditText-->
+<!--        android:id="@+id/editFacultyText"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:background="@drawable/rect_border"-->
+<!--        android:drawablePadding="16dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="@string/faculty"-->
+<!--        android:inputType="text"-->
+<!--        android:padding="16dp"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textStyle="normal"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/editUnivText" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editFacultyText"
+        style="@style/adminTextInputLayoutStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
+        android:textColorHint="@color/black"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+        app:cardCornerRadius="10dp"
         android:background="@drawable/rect_border"
-        android:drawablePadding="16dp"
-        android:ems="10"
-        android:hint="@string/faculty"
-        android:inputType="text"
-        android:padding="16dp"
-        android:textSize="24sp"
-        android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editUnivText" />
+        app:layout_constraintTop_toBottomOf="@+id/editUnivText" >
 
-    <EditText
+        <AutoCompleteTextView
+            android:id="@+id/editFacultyAutoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:hint="@string/faculty"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:popupBackground="#DDEAF6"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+<!--    <EditText-->
+<!--        android:id="@+id/editGroupNumText"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:background="@drawable/rect_border"-->
+<!--        android:drawablePadding="16dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="@string/groupNum"-->
+<!--        android:inputType="text"-->
+<!--        android:padding="16dp"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textStyle="normal"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/editFacultyText" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editGroupNumText"
+        style="@style/adminTextInputLayoutStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
+        android:textColorHint="@color/black"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+        app:cardCornerRadius="10dp"
         android:background="@drawable/rect_border"
-        android:drawablePadding="16dp"
-        android:ems="10"
-        android:hint="@string/groupNum"
-        android:inputType="text"
-        android:padding="16dp"
-        android:textSize="24sp"
-        android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editFacultyText" />
+        app:layout_constraintTop_toBottomOf="@+id/editFacultyText" >
 
-    <Button
+        <AutoCompleteTextView
+            android:id="@+id/editGroupNumAutoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:hint="@string/groupNum"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:popupBackground="#DDEAF6"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/confUserInfoBtn"
         android:layout_width="150dp"
         android:layout_height="wrap_content"

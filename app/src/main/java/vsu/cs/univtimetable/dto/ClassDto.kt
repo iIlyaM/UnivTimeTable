@@ -10,5 +10,7 @@ data class ClassDto(
     val typeOfClass: String,
     val weekType: String,
     val courseNumber: Int,
-    val groupsNumber: List<Int>
+    val groupsNumber: List<Int>,
+    val capacity: Int,
+    val equipments: List<String>
 )
