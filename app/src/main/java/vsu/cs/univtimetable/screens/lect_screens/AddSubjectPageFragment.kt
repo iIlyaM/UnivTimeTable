@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
 import retrofit2.Callback
@@ -61,6 +62,7 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
         val classTypeCompleteView =
             view.findViewById<AutoCompleteTextView>(R.id.typeAutoCompleteText)
         val confirm = view.findViewById<AppCompatButton>(R.id.confirmSubjectBtn)
+        val lectRequestsButton = view.findViewById<AppCompatButton>(R.id.lectRequestsButton)
 
         val typeAdapter = ArrayAdapter(requireContext(), R.layout.subj_item, classTypes)
 
@@ -91,6 +93,10 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
 
         confirm.setOnClickListener {
             sendRequest(classTypeCompleteView, selectGroupAutoCompleteText, editSubjectNameText, editHoursCountText)
+        }
+
+        lectRequestsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_addSubjectPageFragment_to_generateTimetablePageFragment)
         }
         return view
     }
