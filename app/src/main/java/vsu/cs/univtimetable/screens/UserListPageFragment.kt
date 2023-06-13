@@ -1,6 +1,5 @@
 package vsu.cs.univtimetable.screens
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.SearchView
-import android.widget.Spinner
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.app.AlertDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,6 +25,7 @@ import vsu.cs.univtimetable.dto.UserDisplayDto
 import vsu.cs.univtimetable.dto.UserResponseDto
 import vsu.cs.univtimetable.screens.adapter.OnUserItemClickListener
 import vsu.cs.univtimetable.screens.adapter.UserListAdapter
+import java.util.concurrent.atomic.AtomicReference
 
 class UserListPageFragment : Fragment(), OnUserItemClickListener {
 
@@ -38,15 +38,17 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
     private lateinit var univBtn: Button
     private lateinit var cityBtn: Button
 
-    private lateinit var roleComboBox: Spinner
-    private lateinit var univComboBox: Spinner
-    private lateinit var cityComboBox: Spinner
-
     private lateinit var userForEdit: UserCreateRequest
 
     private var searchCity: String? = null
     private var searchRole: String? = null
     private var searchUniv: String? = null
+
+    private var univs = mutableSetOf<String>()
+    private var roles = mutableSetOf<String>()
+    private var cities = mutableSetOf<String>()
+    private var searchItem: String = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,13 +59,34 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        return inflater.inflate(R.layout.fragment_user_list_page, container, false)
         val view = inflater.inflate(R.layout.fragment_user_list_page, container, false)
         recyclerView = view.findViewById(R.id.usersRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         val addUser = view.findViewById<AppCompatButton>(R.id.addNewUserBtn)
+        val refreshFilterBtn = view.findViewById<AppCompatButton>(R.id.refreshFilterBtn)
+
+        refreshFilterBtn.setOnClickListener {
+            getUsers(null, null, null, null)
+        }
 
         univBtn = view.findViewById(R.id.sortUnivBtn)
+        univBtn.setOnClickListener {
+            showRadioButtonDialog("Выберите ВУЗ", univs.toList()) { selectedValue ->
+                getUsers(selectedValue, null, null, null)
+            }
+        }
+        roleBtn = view.findViewById(R.id.sortRoleBtn)
+        roleBtn.setOnClickListener {
+            showRadioButtonDialog("Выберите роль", roles.toList()) { selectedValue ->
+                getUsers(null, selectedValue, null, null)
+            }
+        }
+        cityBtn = view.findViewById(R.id.sortByCityBtn)
+        cityBtn.setOnClickListener {
+            showRadioButtonDialog("Выберите город", cities.toList()) { selectedValue ->
+                getUsers(null, null, selectedValue, null)
+            }
+        }
 
         searchView = view.findViewById(R.id.userSearch)
 
@@ -177,8 +200,10 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
                             dataResponse.usersPage.contents,
                             this@UserListPageFragment
                         )
+                        getSearchItems(dataResponse.usersPage.contents)
                     }
                     recyclerView.adapter = adapter
+
                 } else {
                     println("Не успешно")
                 }
@@ -240,5 +265,46 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
                 // Обработка ошибки
             }
         })
+    }
+
+    private fun showRadioButtonDialog(
+        title: String,
+        items: List<String>,
+        onItemSelected: (String) -> Unit
+    ) {
+        val selectedValue = AtomicReference<String>()
+
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(title)
+        builder.setSingleChoiceItems(
+            items.toTypedArray(),
+            -1
+        ) { _, which ->
+            selectedValue.set(items[which])
+        }
+        builder.setPositiveButton("Выбрать") { _, _ ->
+            val value = selectedValue.get()
+            if (!value.isNullOrEmpty()) {
+                onItemSelected(value)
+            }
+        }
+        builder.setNegativeButton("Отмена", null)
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+//    private fun showChosenItem(msg: String) {
+//        Snackbar.make(requireView(), msg, Snackbar.LENGTH_SHORT).show()
+//    }
+
+    private fun getSearchItems(userDtoList: List<UserDisplayDto>) {
+        for (userDto in userDtoList) {
+            if (userDto.univName != null) {
+                univs.add(userDto.univName)
+            }
+            roles.add(userDto.role)
+            cities.add(userDto.city)
+        }
     }
 }
