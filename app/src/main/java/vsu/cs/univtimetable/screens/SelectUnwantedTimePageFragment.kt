@@ -3,26 +3,21 @@ package vsu.cs.univtimetable.screens
 import android.app.AlertDialog
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.yandex.metrica.YandexMetrica
 import vsu.cs.univtimetable.DateManager
 import vsu.cs.univtimetable.Day
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.dto.ImpossibleTimeDto
 import vsu.cs.univtimetable.screens.adapter.DayAdapter
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListener {
 
@@ -57,6 +52,9 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
         val bundle = Bundle()
         confirmTimeBtn.setOnClickListener {
             bundle.putSerializable("map", ImpossibleTimeDto(dayWeekTimeMap))
+
+            YandexMetrica.reportEvent("Выбор непредпочтительного времени")
+
             findNavController().navigate(
                 R.id.action_selectUnwantedTimePageFragment_to_addSubjectPageFragment,
                 bundle

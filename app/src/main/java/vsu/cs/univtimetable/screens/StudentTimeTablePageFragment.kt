@@ -6,15 +6,19 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.yandex.metrica.YandexMetrica
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,7 +32,8 @@ import vsu.cs.univtimetable.dto.DateDto
 import vsu.cs.univtimetable.dto.TimetableResponse
 import vsu.cs.univtimetable.screens.adapter.DayOfWeekAdapter
 import vsu.cs.univtimetable.screens.adapter.HeadmanTimetableAdapter
-import java.io.OutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
@@ -69,10 +74,10 @@ class StudentTimeTablePageFragment : Fragment() {
 
         toLeftView = view.findViewById(R.id.toPrevDayView)
         toRightView = view.findViewById(R.id.toNextDayView)
-        if(getCurrDayOfWeek() == "Воскресенье") {
+        if (getCurrDayOfWeek() == "Воскресенье") {
             toRightView.visibility = View.INVISIBLE
         }
-        if(getCurrDayOfWeek() == "Понедельник") {
+        if (getCurrDayOfWeek() == "Понедельник") {
             toLeftView.visibility = View.INVISIBLE
         }
 
@@ -91,6 +96,10 @@ class StudentTimeTablePageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         getTimetable()
 
+        val downloadTimetable = view.findViewById<AppCompatButton>(R.id.saveTimeTable)
+        downloadTimetable.setOnClickListener {
+            downloadTimetable()
+        }
     }
 
     private fun getTimetable() {
@@ -114,8 +123,11 @@ class StudentTimeTablePageFragment : Fragment() {
                         weekType = DateManager.checkWeekType()
                         timetable = dataResponse.classes[weekType]!!
                     }
-                    getDayTimetable(timetable, weekType, getCurrDayOfWeek())
+                    weekPointer = DateManager.WEEK_DAYS.indexOf(getCurrDayOfWeek())
                     tempWeekPointer = weekPointer
+                    getDayTimetable(timetable, weekType, getCurrDayOfWeek())
+
+                    YandexMetrica.reportEvent("Получение расписания")
                 } else {
                     if (response.code() == 400) {
                         showDialog()
@@ -152,7 +164,8 @@ class StudentTimeTablePageFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getCurrDayOfWeek(): String {
-        val currDay = LocalDate.now().dayOfWeek.getDisplayName(TextStyle.FULL, Locale("ru")).capitalize()
+        val currDay =
+            LocalDate.now().dayOfWeek.getDisplayName(TextStyle.FULL, Locale("ru")).capitalize()
         currDayInd = DateManager.WEEK_DAYS.toList().indexOf(currDay)
         return currDay
     }
@@ -204,6 +217,57 @@ class StudentTimeTablePageFragment : Fragment() {
         }, 2000)
         findNavController().navigate(R.id.action_studentTimeTablePageFragment_to_headmanMainPageFragment)
 
+    }
+
+    private fun showToastNotification() {
+        val duration = Toast.LENGTH_LONG
+
+        val toast = Toast.makeText(requireContext(), "Файл сохранён", duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 500)
+    }
+
+    private fun downloadTimetable() {
+        val token: String? = SessionManager.getToken(requireContext())
+        Log.d("API Request failed", "${token}")
+        val call = timetableApi.downloadFile("Bearer ${token}")
+
+        call.enqueue(object : Callback<ResponseBody> {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+                if (response.isSuccessful) {
+                    val file = File(context!!.getExternalFilesDir(null), "example.xlsx")
+                    val inputStream = response.body()?.byteStream()
+                    val outputStream = FileOutputStream(file)
+
+
+                    inputStream?.use { input ->
+                        outputStream.use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+
+                    YandexMetrica.reportEvent("Скачивание расписания")
+
+                    showToastNotification()
+                } else {
+                    if (response.code() == 400) {
+                        showDialog()
+                    }
+                    Log.d("ошибка", "Получили ошибку - ${response.code()}")
+                    Log.d("ошибка", "с ошибкой пришло - ${response.body()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                println("Ошибка")
+                println(t)
+            }
+        })
     }
 
 }

@@ -9,6 +9,7 @@ import android.widget.EditText
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.yandex.metrica.YandexMetrica
 import vsu.cs.univtimetable.R
 
 class CreateUserAuthFragment : Fragment() {
@@ -64,6 +65,8 @@ class CreateUserAuthFragment : Fragment() {
         bundle.putString("password", password.text.toString())
         bundle.putString("login", login.text.toString())
         bundle.putString("city", city.text.toString())
+
+        YandexMetrica.reportEvent("Страница с информацией для авторизации пользователя")
 
         findNavController().navigate(
             R.id.action_createUserAuthFragment_to_createUserInfoFragment,

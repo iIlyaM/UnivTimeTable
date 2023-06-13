@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
+import com.yandex.metrica.YandexMetrica
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -138,6 +139,8 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
                 response: Response<Void>
             ) {
                 if (response.isSuccessful) {
+                    YandexMetrica.reportEvent("Lecturer successfully send request")
+
                     Log.d("API Request Successful", "${response.code()}")
                 } else {
                     println("Не успешно")

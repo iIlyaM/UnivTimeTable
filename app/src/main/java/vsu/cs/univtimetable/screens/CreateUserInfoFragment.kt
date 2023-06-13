@@ -12,6 +12,7 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
+import com.yandex.metrica.YandexMetrica
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -185,6 +186,7 @@ class CreateUserInfoFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     Log.d("API Request successful", "Получили ${response.code()}")
+                    YandexMetrica.reportEvent("Создание пользователя")
                 } else {
                     println("Не успешно")
                 }

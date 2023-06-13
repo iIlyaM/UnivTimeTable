@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.widget.AppCompatButton
+import com.yandex.metrica.YandexMetrica
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,6 +68,7 @@ class CreateFacultyPageFragment : Fragment() {
                     if (response.isSuccessful) {
                         Log.d("API Request Successful", "${response.code()}")
                         showDialog(name, response.code())
+                        YandexMetrica.reportEvent("Факультет создан")
                     } else {
                         println("Не успешно")
                         showDialog(name, response.code())

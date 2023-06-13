@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.yandex.metrica.YandexMetrica
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -51,7 +52,6 @@ class LecturerTimetablePageFragment : Fragment() {
 
     private lateinit var timetable: MutableMap<String, List<ClassDto>>
 
-
     private var weekPointer = 0
     private var tempWeekPointer = 0
     private var currDayInd = 0
@@ -76,10 +76,10 @@ class LecturerTimetablePageFragment : Fragment() {
 
         toLeftView = view.findViewById(R.id.toLeftView)
         toRightView = view.findViewById(R.id.toRightView)
-        if(getCurrDayOfWeek() == "Воскресенье") {
+        if (getCurrDayOfWeek() == "Воскресенье") {
             toRightView.visibility = View.INVISIBLE
         }
-        if(getCurrDayOfWeek() == "Понедельник") {
+        if (getCurrDayOfWeek() == "Понедельник") {
             toLeftView.visibility = View.INVISIBLE
         }
 
@@ -128,7 +128,9 @@ class LecturerTimetablePageFragment : Fragment() {
                     }
                     weekPointer = WEEK_DAYS.indexOf(getCurrDayOfWeek())
                     tempWeekPointer = weekPointer
-                     getDayTimetable(timetable, weekType, getCurrDayOfWeek())
+                    getDayTimetable(timetable, weekType, getCurrDayOfWeek())
+
+                    YandexMetrica.reportEvent("Получение расписания")
                 } else {
                     if (response.code() == 400) {
                         showDialog()
@@ -161,11 +163,15 @@ class LecturerTimetablePageFragment : Fragment() {
                     val inputStream = response.body()?.byteStream()
                     val outputStream = FileOutputStream(file)
 
+
                     inputStream?.use { input ->
                         outputStream.use { output ->
                             input.copyTo(output)
                         }
                     }
+
+                    YandexMetrica.reportEvent("Скачивание расписания")
+
                     showToastNotification()
                 } else {
                     if (response.code() == 400) {
@@ -211,7 +217,8 @@ class LecturerTimetablePageFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getCurrDayOfWeek(): String {
-        val currDay = LocalDate.now().dayOfWeek.getDisplayName(TextStyle.FULL, Locale("ru")).capitalize()
+        val currDay =
+            LocalDate.now().dayOfWeek.getDisplayName(TextStyle.FULL, Locale("ru")).capitalize()
         currDayInd = WEEK_DAYS.toList().indexOf(currDay)
         return currDay
     }

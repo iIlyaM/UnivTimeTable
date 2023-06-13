@@ -13,6 +13,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputLayout
+import com.yandex.metrica.YandexMetrica
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,7 +24,6 @@ import vsu.cs.univtimetable.api.GroupApi
 import vsu.cs.univtimetable.api.UserApi
 import vsu.cs.univtimetable.dto.GroupDto
 import vsu.cs.univtimetable.dto.UserDisplayDto
-import vsu.cs.univtimetable.dto.UserResponse
 
 
 class CreateGroupPageFragment : Fragment() {
@@ -80,7 +80,12 @@ class CreateGroupPageFragment : Fragment() {
 
         val confirmBtn = view.findViewById<AppCompatButton>(R.id.confirmCreateGroupBtn)
         confirmBtn.setOnClickListener {
-            addGroup(courseTypeCompleteView, headmenTypeCompleteView, groupNumField, studAmountField)
+            addGroup(
+                courseTypeCompleteView,
+                headmenTypeCompleteView,
+                groupNumField,
+                studAmountField
+            )
         }
         return view
     }
@@ -126,6 +131,8 @@ class CreateGroupPageFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     Log.d("API Request Successful", "${response.code()}")
+
+                    YandexMetrica.reportEvent("Создание группы")
                 } else {
                     println("Не успешно, ошибка = ${response.code()}")
                 }

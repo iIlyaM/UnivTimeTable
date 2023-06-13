@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1045091003283",
+    "project_id": "university-timetable-1e169",
+    "storage_bucket": "university-timetable-1e169.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045091003283:android:9ddaab5c444f112165d666",
+        "android_client_info": {
+          "package_name": "vsu.cs.univtimetable"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1045091003283-n7c96li43v5c9rvnptsd7l33qti805rb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDR3l7t1e5LsCD3qbvzU5qrC3pkTvzSU4s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1045091003283-n7c96li43v5c9rvnptsd7l33qti805rb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

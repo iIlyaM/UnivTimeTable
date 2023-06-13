@@ -14,6 +14,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.yandex.metrica.YandexMetrica
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -162,6 +163,9 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
                 if (response.isSuccessful) {
                     Log.d("API Request okay", "Обновили ${response.code()}")
                     val code = response.code()
+
+                    val eventParameters = "{\"faculty name\":\"${updatedFaculty.name}\"}"
+                    YandexMetrica.reportEvent("Обновление факультета", eventParameters)
                 } else {
                     Log.d("API Request failed", "${response.code()}")
                     Log.d("API Request failed", "${response.body()}")
@@ -186,6 +190,9 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Log.d("API Request okay", "Удалили ${response.code()}")
+
+                    val eventParameters = "{\"id\":\"${id}\"}"
+                    YandexMetrica.reportEvent("Удаление факультета", eventParameters)
                 } else {
                     Log.d("API Request failed", "${response.code()}")
                 }
@@ -221,6 +228,8 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
                             this@FacultyListPageFragment
                         )
                     }
+
+                    YandexMetrica.reportEvent("Страница списка факультетов")
                     recyclerView.adapter = adapter
                 } else {
                     println("Не успешно")

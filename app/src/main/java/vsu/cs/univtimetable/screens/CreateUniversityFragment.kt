@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.widget.AppCompatButton
+import com.yandex.metrica.YandexMetrica
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -65,6 +66,9 @@ class CreateUniversityFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     Log.d("API Request Successful", "${response.code()}")
+
+                    val eventParameters = "{\"university name\":\"${univName}\"}"
+                    YandexMetrica.reportEvent("Создание университета", eventParameters)
                     showDialog(univName, response.code())
                 } else {
                     println("Не успешно")

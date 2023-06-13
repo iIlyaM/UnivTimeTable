@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.app.AlertDialog
+import com.yandex.metrica.YandexMetrica
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -143,6 +144,7 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
                         bundle.putLong("facultyId", dataResponse.facultyId ?: -1L)
                         bundle.putLong("group", dataResponse.groupId ?: -1L)
 
+                        YandexMetrica.reportEvent("Обновление пользователя")
                         findNavController().navigate(
                             R.id.action_userListPageFragment_to_createUserAuthFragment,
                             bundle
@@ -168,6 +170,7 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
             .setPositiveButton("Удалить") { _, _ ->
                 delete(user.id) { code ->
                     if (code == 200) {
+                        YandexMetrica.reportEvent("Удаление пользователя")
                         getUsers(null, null, null, null)
                     }
                 }
@@ -200,6 +203,7 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
                             dataResponse.usersPage.contents,
                             this@UserListPageFragment
                         )
+                        YandexMetrica.reportEvent("Страница списка пользователей")
                         getSearchItems(dataResponse.usersPage.contents)
                     }
                     recyclerView.adapter = adapter
@@ -255,6 +259,7 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Log.d("API Request okay", "Удалили ${response.code()}")
+                    YandexMetrica.reportEvent("Создание пользователя")
                 } else {
                     Log.d("API Request failed", "${response.code()}")
                 }

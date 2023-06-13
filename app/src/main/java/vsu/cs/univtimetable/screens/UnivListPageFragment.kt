@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.yandex.metrica.YandexMetrica
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -156,6 +157,9 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
                 if (response.isSuccessful) {
                     Log.d("API Request okay", "Обновили ${response.code()}")
                     val code = response.code()
+
+                    val eventParameters = "{\"university\":\"${updatedUniversity.universityName}\"}"
+                    YandexMetrica.reportEvent("Обновление университета", eventParameters)
                 } else {
                     if(response.code() == 400) {
                         
@@ -183,6 +187,9 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Log.d("API Request okay", "Удалили ${response.code()}")
+
+                    val eventParameters = "{\"id\":\"${id}\"}"
+                    YandexMetrica.reportEvent("Удаление университета", eventParameters)
                 } else {
                     Log.d("API Request failed", "${response.code()}")
                 }
@@ -217,6 +224,8 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
                             this@UnivListPageFragment
                         )
                     }
+
+                    YandexMetrica.reportEvent("Страница списка университетов")
                     recyclerView.adapter = adapter
 
                 } else {

@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textfield.TextInputLayout.END_ICON_NONE
+import com.yandex.metrica.YandexMetrica
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -255,6 +256,9 @@ class MoveClassTimePageFragment : Fragment() {
                 if (response.isSuccessful) {
                     Log.d("API Request successful", "Получили ${response.code()}")
                     showToastNotification()
+
+                    YandexMetrica.reportEvent("Перенос пары")
+
                     findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
                 } else {
                     Log.d("Перенос не произошёл", "Получили ${response.code()}")

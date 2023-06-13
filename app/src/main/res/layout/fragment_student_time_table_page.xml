@@ -72,7 +72,7 @@
         app:layout_constraintTop_toTopOf="@+id/recyclerView2"
         tools:ignore="ContentDescription" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/saveTimeTable"
         android:layout_width="137dp"
         android:layout_height="42dp"
