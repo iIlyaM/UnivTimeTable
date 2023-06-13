@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -90,7 +91,6 @@ class StudentTimeTablePageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getTimetable()
-
     }
 
     private fun getTimetable() {
@@ -118,7 +118,13 @@ class StudentTimeTablePageFragment : Fragment() {
                     tempWeekPointer = weekPointer
                 } else {
                     if (response.code() == 400) {
-                        showDialog()
+                        showToastNotification("Расписание ещё не сформировано")
+                    }
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showToastNotification("Неверный username пользователя")
                     }
                     Log.d("ошибка", "Получили ошибку - ${response.code()}")
                     Log.d("ошибка", "с ошибкой пришло - ${response.body()}")
@@ -191,19 +197,28 @@ class StudentTimeTablePageFragment : Fragment() {
         lectWeekView.adapter = dayAdapter
     }
 
-    private fun showDialog() {
-        val builder = AlertDialog.Builder(requireContext())
+    private fun showToastNotification (message: String) {
+        val duration = Toast.LENGTH_LONG
 
-        builder.setMessage("Расписание ещё не сформировано")
-        val alert = builder.create()
-        alert.show()
-        alert.window?.setGravity(Gravity.BOTTOM)
-
-        Handler().postDelayed({
-            alert.dismiss()
-        }, 2000)
-        findNavController().navigate(R.id.action_studentTimeTablePageFragment_to_headmanMainPageFragment)
-
+        val toast = Toast.makeText(requireContext(), message, duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 1500)
     }
+
+//    private fun showDialog() {
+//        val builder = AlertDialog.Builder(requireContext())
+//
+//        builder.setMessage("Расписание ещё не сформировано")
+//        val alert = builder.create()
+//        alert.show()
+//        alert.window?.setGravity(Gravity.BOTTOM)
+//
+//        Handler().postDelayed({
+//            alert.dismiss()
+//        }, 2000)
+//        findNavController().navigate(R.id.action_studentTimeTablePageFragment_to_headmanMainPageFragment)
+//
+//    }
 
 }

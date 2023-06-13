@@ -1,6 +1,7 @@
 package vsu.cs.univtimetable.screens
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -126,8 +128,18 @@ class CreateGroupPageFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     Log.d("API Request Successful", "${response.code()}")
+                    showToastNotification("Группа успешно создана")
                 } else {
                     println("Не успешно, ошибка = ${response.code()}")
+                    if (response.code() == 400) {
+                        showToastNotification("Такая группа на этом факультете уже существует")
+                    }
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showToastNotification("Cтароста для группы по переданному id не был найден")
+                    }
                 }
             }
 
@@ -155,6 +167,7 @@ class CreateGroupPageFragment : Fragment() {
                 call: Call<List<UserDisplayDto>>,
                 response: Response<List<UserDisplayDto>>
             ) {
+                //TODO: showToastNotification
                 if (response.isSuccessful) {
                     Log.d("API Request successful", "Получили ${response.code()}")
                     val dataResponse = response.body()
@@ -167,6 +180,7 @@ class CreateGroupPageFragment : Fragment() {
                         headmans.add(headman.fullName)
                     }
                 } else {
+                    showToastNotification("Не получилось назначить старосту группы")
                     println("Не успешно")
                 }
 
@@ -186,5 +200,14 @@ class CreateGroupPageFragment : Fragment() {
             facultyId = id
         }
         return facultyId
+    }
+
+    private fun showToastNotification(message: String) {
+        val duration = Toast.LENGTH_LONG
+
+        val toast = Toast.makeText(requireContext(), message, duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 1500)
     }
 }

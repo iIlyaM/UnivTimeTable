@@ -1,12 +1,14 @@
 package vsu.cs.univtimetable.screens
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -255,7 +257,14 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Log.d("API Request okay", "Удалили ${response.code()}")
+                    showToastNotification("Пользователь успешно удален")
                 } else {
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showToastNotification("Пользователь по переданному id не был найден")
+                    }
                     Log.d("API Request failed", "${response.code()}")
                 }
                 callback(response.code())
@@ -297,6 +306,15 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
 //    private fun showChosenItem(msg: String) {
 //        Snackbar.make(requireView(), msg, Snackbar.LENGTH_SHORT).show()
 //    }
+
+    private fun showToastNotification (message: String) {
+        val duration = Toast.LENGTH_LONG
+
+        val toast = Toast.makeText(requireContext(), message, duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 1500)
+    }
 
     private fun getSearchItems(userDtoList: List<UserDisplayDto>) {
         for (userDto in userDtoList) {

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import retrofit2.Call
 import retrofit2.Callback
@@ -66,10 +67,18 @@ class CreateFacultyPageFragment : Fragment() {
                 ) {
                     if (response.isSuccessful) {
                         Log.d("API Request Successful", "${response.code()}")
-                        showDialog(name, response.code())
+                        showToastNotification("Факультет успешно создан")
                     } else {
                         println("Не успешно")
-                        showDialog(name, response.code())
+                        if (response.code() == 400) {
+                            showToastNotification("Такой факультет в этом университете уже существует")
+                        }
+                        if (response.code() == 403) {
+                            showToastNotification("Недостаточно прав доступа для выполнения")
+                        }
+                        if (response.code() == 404) {
+                            showToastNotification("Университет по переданному id для добавления факульета не был найден")
+                        }
                     }
                 }
 
@@ -84,29 +93,38 @@ class CreateFacultyPageFragment : Fragment() {
 
     }
 
-    private fun showDialog(facultyName: String, code: Int) {
-        val builder = AlertDialog.Builder(requireContext())
-        if (code == 201) {
-            builder.setMessage("${facultyName} добавлен")
-            val alert = builder.create()
-            alert.show()
-            alert.window?.setGravity(Gravity.BOTTOM)
+    private fun showToastNotification(message: String) {
+        val duration = Toast.LENGTH_LONG
 
-            Handler().postDelayed({
-                alert.dismiss()
-            }, 2000)
-        }
-        if (code == 400) {
-            builder.setMessage("${facultyName} уже есть в списке")
-            val alert = builder.create()
-            alert.show()
-            alert.window?.setGravity(Gravity.BOTTOM)
-
-            Handler().postDelayed({
-                alert.dismiss()
-            }, 2000)
-        }
+        val toast = Toast.makeText(requireContext(), message, duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 1500)
     }
+
+//    private fun showDialog(facultyName: String, code: Int) {
+//        val builder = AlertDialog.Builder(requireContext())
+//        if (code == 201) {
+//            builder.setMessage("${facultyName} добавлен")
+//            val alert = builder.create()
+//            alert.show()
+//            alert.window?.setGravity(Gravity.BOTTOM)
+//
+//            Handler().postDelayed({
+//                alert.dismiss()
+//            }, 2000)
+//        }
+//        if (code == 400) {
+//            builder.setMessage("${facultyName} уже есть в списке")
+//            val alert = builder.create()
+//            alert.show()
+//            alert.window?.setGravity(Gravity.BOTTOM)
+//
+//            Handler().postDelayed({
+//                alert.dismiss()
+//            }, 2000)
+//        }
+//    }
 
 
 }

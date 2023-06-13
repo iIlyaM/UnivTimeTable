@@ -1,11 +1,13 @@
 package vsu.cs.univtimetable.screens
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -40,18 +42,22 @@ class CreateUserAuthFragment : Fragment() {
                 .matches()
         ) {
             email.error = "Почта введена некорректно"
+            showToastNotification("Пожалуйста, заполните все поля")
             return
         }
         if (password.text.isEmpty() && editable == null) {
             password.error = "Вы должны ввести пароль"
+            showToastNotification("Пожалуйста, заполните все поля")
             return
         }
         if (login.text.isEmpty()) {
             login.error = "Введите имя пользователя"
+            showToastNotification("Пожалуйста, заполните все поля")
             return
         }
         if (city.text.isEmpty()) {
             city.error = "Введите город"
+            showToastNotification("Пожалуйста, заполните все поля")
             return
         }
         val bundle = Bundle()
@@ -84,5 +90,14 @@ class CreateUserAuthFragment : Fragment() {
             login.setText(arguments?.getString("login"))
             city.setText(arguments?.getString("city"))
         }
+    }
+
+    private fun showToastNotification (message: String) {
+        val duration = Toast.LENGTH_LONG
+
+        val toast = Toast.makeText(requireContext(), message, duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 1500)
     }
 }

@@ -3,13 +3,12 @@ package vsu.cs.univtimetable.screens.lect_screens
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -84,9 +83,11 @@ class GenerateTimetablePageFragment : Fragment() {
                     }
                 } else {
                     println("Не успешно")
+                    if (response.code() == 403){
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
                 }
             }
-
             override fun onFailure(call: Call<List<RequestDto>>, t: Throwable) {
                 println("Ошибка")
                 println(t)
@@ -111,6 +112,16 @@ class GenerateTimetablePageFragment : Fragment() {
                     Log.d("API Request Successful", "${response.code()}")
                     showToastNotification("Расписание сформировано")
                 } else {
+                    if (response.code() == 400) {
+                        showToastNotification("Расписание не может быть составлено,\n" +
+                                "Расписание уже было составлено")
+                    }
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showToastNotification("Неверный username пользователя")
+                    }
                     println("Не успешно")
                     Log.d("Не успешно", "Ошибка, код - ${response.code()}")
                 }
@@ -140,10 +151,15 @@ class GenerateTimetablePageFragment : Fragment() {
                     Log.d("API Request Successful", "${response.code()}")
                     showToastNotification("Расписание очищено")
                 } else {
+                    if (response.code() == 404) {
+                        showToastNotification("Неверный username пользователя")
+                    }
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
                     println("Не успешно")
                 }
             }
-
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 println("Ошибка")
                 println(t)

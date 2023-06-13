@@ -254,9 +254,18 @@ class MoveClassTimePageFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     Log.d("API Request successful", "Получили ${response.code()}")
-                    showToastNotification()
+                    showToastNotification("Занятие перенесено")
                     findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
                 } else {
+                    if (response.code() == 400) {
+                        showToastNotification("Аудитория занята для переноса")
+                    }
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showToastNotification("Неверный username пользователя")
+                    }
                     Log.d("Перенос не произошёл", "Получили ${response.code()}")
                 }
             }
@@ -273,7 +282,6 @@ class MoveClassTimePageFragment : Fragment() {
 
         Log.d("API Request failed", "${token}")
         val call = timetableApi.getMoveClassData("Bearer ${token}")
-
 
         call.enqueue(object : Callback<MoveClassResponse> {
             override fun onResponse(
@@ -296,9 +304,7 @@ class MoveClassTimePageFragment : Fragment() {
                         subjectCompleteView.setAdapter(adapter)
                     }
                 } else {
-                    if (response.code() == 400) {
-                        showDialog()
-                    }
+                    showToastNotification("Расписание ещё не сформировано")
                     Log.d("Не успешно", "Получили ${response.code()}")
                 }
             }
@@ -398,9 +404,7 @@ class MoveClassTimePageFragment : Fragment() {
                 strToAudienceNum["${aud.audienceNumber}, мест: ${aud.capacity}"] =
                     aud.audienceNumber
             }
-
         }
-
     }
 
     private fun checkEquipment(
@@ -484,26 +488,26 @@ class MoveClassTimePageFragment : Fragment() {
         return set.toMutableList()
     }
 
-    private fun showToastNotification() {
+    private fun showToastNotification (message: String) {
         val duration = Toast.LENGTH_LONG
 
-        val toast = Toast.makeText(requireContext(), "Занятие перенесено", duration)
+        val toast = Toast.makeText(requireContext(), message, duration)
         toast.show()
         val handler = Handler()
         handler.postDelayed({ toast.cancel() }, 1500)
     }
 
-    private fun showDialog() {
-        val builder = AlertDialog.Builder(requireContext())
-
-        builder.setMessage("Расписание ещё не сформировано")
-        val alert = builder.create()
-        alert.show()
-        alert.window?.setGravity(Gravity.BOTTOM)
-
-        Handler().postDelayed({
-            alert.dismiss()
-        }, 2000)
-        findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
-    }
+//    private fun showDialog() {
+//        val builder = AlertDialog.Builder(requireContext())
+//
+//        builder.setMessage("Расписание ещё не сформировано")
+//        val alert = builder.create()
+//        alert.show()
+//        alert.window?.setGravity(Gravity.BOTTOM)
+//
+//        Handler().postDelayed({
+//            alert.dismiss()
+//        }, 2000)
+//        findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
+//    }
 }

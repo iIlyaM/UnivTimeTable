@@ -131,7 +131,13 @@ class LecturerTimetablePageFragment : Fragment() {
                      getDayTimetable(timetable, weekType, getCurrDayOfWeek())
                 } else {
                     if (response.code() == 400) {
-                        showDialog()
+                        showToastNotification("Расписание ещё не сформировано")
+                    }
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showToastNotification("Неверный username пользователя")
                     }
                     Log.d("ошибка", "Получили ошибку - ${response.code()}")
                     Log.d("ошибка", "с ошибкой пришло - ${response.body()}")
@@ -166,10 +172,16 @@ class LecturerTimetablePageFragment : Fragment() {
                             input.copyTo(output)
                         }
                     }
-                    showToastNotification()
+                    showToastNotification("Файл сохранён")
                 } else {
                     if (response.code() == 400) {
-                        showDialog()
+                        showToastNotification("Расписание ещё не сформировано")
+                    }
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showToastNotification("Неверный username пользователя")
                     }
                     Log.d("ошибка", "Получили ошибку - ${response.code()}")
                     Log.d("ошибка", "с ошибкой пришло - ${response.body()}")
@@ -183,13 +195,13 @@ class LecturerTimetablePageFragment : Fragment() {
         })
     }
 
-    private fun showToastNotification() {
+    private fun showToastNotification (message: String) {
         val duration = Toast.LENGTH_LONG
 
-        val toast = Toast.makeText(requireContext(), "Файл сохранён", duration)
+        val toast = Toast.makeText(requireContext(), message, duration)
         toast.show()
         val handler = Handler()
-        handler.postDelayed({ toast.cancel() }, 500)
+        handler.postDelayed({ toast.cancel() }, 1500)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -250,19 +262,19 @@ class LecturerTimetablePageFragment : Fragment() {
         lectWeekView.adapter = dayAdapter
     }
 
-    private fun showDialog() {
-        val builder = AlertDialog.Builder(requireContext())
-
-        builder.setMessage("Расписание ещё не сформировано")
-        val alert = builder.create()
-        alert.show()
-        alert.window?.setGravity(Gravity.BOTTOM)
-
-        Handler().postDelayed({
-            alert.dismiss()
-        }, 2000)
-        findNavController().navigate(R.id.action_lecturerTimetablePageFragment_to_lecturerMainPageFragment)
-
-    }
+//    private fun showDialog() {
+//        val builder = AlertDialog.Builder(requireContext())
+//
+//        builder.setMessage("Расписание ещё не сформировано")
+//        val alert = builder.create()
+//        alert.show()
+//        alert.window?.setGravity(Gravity.BOTTOM)
+//
+//        Handler().postDelayed({
+//            alert.dismiss()
+//        }, 2000)
+//        findNavController().navigate(R.id.action_lecturerTimetablePageFragment_to_lecturerMainPageFragment)
+//
+//    }
 
 }

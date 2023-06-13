@@ -2,12 +2,14 @@ package vsu.cs.univtimetable.screens
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.SearchView
@@ -161,8 +163,19 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Log.d("API Request okay", "Обновили ${response.code()}")
+                    showToastNotification("Университет успешно обновлен")
+
                     val code = response.code()
                 } else {
+                    if (response.code() == 400) {
+                        showToastNotification("Такой Факультет уже существует")
+                    }
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showToastNotification("Факультет по переданному id не был найден")
+                    }
                     Log.d("API Request failed", "${response.code()}")
                     Log.d("API Request failed", "${response.body()}")
                     Log.d("API Request failed", "${response.errorBody()}")
@@ -186,8 +199,15 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Log.d("API Request okay", "Удалили ${response.code()}")
+                    showToastNotification("Факультет успешно удален")
                 } else {
                     Log.d("API Request failed", "${response.code()}")
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showToastNotification("Факультет по переданному id не был найден")
+                    }
                 }
                 callback(response.code())
             }
@@ -234,7 +254,14 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
         })
     }
 
+    private fun showToastNotification (message: String) {
+        val duration = Toast.LENGTH_LONG
 
+        val toast = Toast.makeText(requireContext(), message, duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 1500)
+    }
 
     private fun getUnivId(): Int {
         val id = arguments?.getInt("univId")
