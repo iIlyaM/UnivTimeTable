@@ -24,19 +24,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/searchByCourseView"
         android:layout_width="170dp"
         android:layout_height="45dp"
         android:background="@drawable/rect_border"
-        android:queryHint="№ курса"
+        android:hint="№ курса"
         android:iconifiedByDefault="false"
+        app:defaultQueryHint="№ курса"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/waveView" />
 
-    <SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/searchByGroupView"
         android:layout_width="170dp"
         android:layout_height="45dp"
@@ -49,7 +50,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchByCourseView" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/addNewGroupBtn"
         android:layout_width="90dp"
         android:layout_height="40dp"
@@ -75,6 +76,7 @@
         app:layout_constraintTop_toBottomOf="@+id/waveView" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/groupRecyclerView"
         android:layout_width="349dp"
         android:layout_height="347dp"
         android:layout_marginTop="40dp"

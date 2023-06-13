@@ -41,7 +41,7 @@
 
         <TextView
             android:id="@+id/headmanNameView"
-            android:layout_width="250dp"
+            android:layout_width="220dp"
             android:layout_height="40dp"
             android:layout_below="@id/courseNumView"
             android:layout_marginStart="8dp"
@@ -61,7 +61,7 @@
             android:layout_alignParentEnd="true"
             android:layout_below="@id/groupNumView"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="25dp"
+            android:layout_marginEnd="35dp"
             android:layout_marginBottom="4dp"
             android:padding="5dp"
             android:text="@string/amount_of_students"
@@ -81,7 +81,7 @@
             app:srcCompat="@drawable/ic_settings" />
 
         <ImageView
-            android:id="@+id/delreGroupView"
+            android:id="@+id/deleteGroupView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

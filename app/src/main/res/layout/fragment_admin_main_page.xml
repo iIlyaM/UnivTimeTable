@@ -25,7 +25,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/univsButton"
         android:layout_width="214dp"
         android:layout_height="81dp"
@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/waveView" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/usersButton"
         android:layout_width="212dp"
         android:layout_height="81dp"
