@@ -60,7 +60,7 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
 
         val addUnivBtn = view.findViewById<AppCompatButton>(R.id.addNewUnivBtn)
         addUnivBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_univListPageFragment_to_createUniversityFragment3)
+            findNavController().navigate(R.id.action_univListPageFragment_to_createUniversityFragment)
         }
 
         return view
@@ -157,6 +157,9 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
                     Log.d("API Request okay", "Обновили ${response.code()}")
                     val code = response.code()
                 } else {
+                    if(response.code() == 400) {
+                        
+                    }
                     Log.d("API Request failed", "${response.code()}")
                     Log.d("API Request failed", "${response.body()}")
                     Log.d("API Request failed", "${response.errorBody()}")

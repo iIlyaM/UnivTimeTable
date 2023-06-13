@@ -21,6 +21,10 @@ class AdminMainPageFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_admin_main_page, container, false)
         val button = view.findViewById<ImageButton>(R.id.prevPageButton)
         val usersBtn = view.findViewById<AppCompatButton>(R.id.usersButton)
+        val univsButton = view.findViewById<AppCompatButton>(R.id.univsButton)
+        univsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_adminMainPageFragment_to_univListPageFragment)
+        }
         button.setOnClickListener {
             findNavController().navigate(R.id.action_adminMainPageFragment_to_loginFragment)
         }
