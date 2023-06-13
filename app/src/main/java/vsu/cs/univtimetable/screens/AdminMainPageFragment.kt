@@ -28,6 +28,11 @@ class AdminMainPageFragment : Fragment() {
             findNavController().navigate(R.id.action_adminMainPageFragment_to_userListPageFragment)
         }
 
+        val univsButton = view.findViewById<AppCompatButton>(R.id.univsButton)
+        univsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_adminMainPageFragment_to_univListPageFragment)
+        }
+
         return view
     }
 }

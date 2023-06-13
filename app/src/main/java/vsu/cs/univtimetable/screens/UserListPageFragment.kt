@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.SearchView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
@@ -64,10 +65,15 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         val addUser = view.findViewById<AppCompatButton>(R.id.addNewUserBtn)
         val refreshFilterBtn = view.findViewById<AppCompatButton>(R.id.refreshFilterBtn)
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_userListPageFragment_to_adminMainPageFragment)
+        }
 
         refreshFilterBtn.setOnClickListener {
             getUsers(null, null, null, null)
         }
+
 
         univBtn = view.findViewById(R.id.sortUnivBtn)
         univBtn.setOnClickListener {

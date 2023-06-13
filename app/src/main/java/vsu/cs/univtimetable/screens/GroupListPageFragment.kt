@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.fragment.findNavController
@@ -49,6 +50,16 @@ class GroupListPageFragment : Fragment(), OnGroupItemClickListener {
         val addGroupBtn = view.findViewById<AppCompatButton>(R.id.addNewGroupBtn)
         addGroupBtn.setOnClickListener {
             sendId()
+        }
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_groupListPageFragment_to_facultyListPageFragment)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_groupListPageFragment_to_adminMainPageFragment)
         }
 
         return view

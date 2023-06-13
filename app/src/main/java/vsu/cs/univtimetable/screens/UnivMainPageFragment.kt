@@ -26,10 +26,10 @@ class UnivMainPageFragment : Fragment() {
 
             if (univId != null) {
                 univMainBundle.putInt("univId", univId)
-                findNavController().navigate(
-                    R.id.action_univMainPageFragment_to_facultyListPageFragment,
-                    univMainBundle
-                )
+//                findNavController().navigate(
+//                    R.id.action_univMainPageFragment_to_facultyListPageFragment,
+//                    univMainBundle
+//                )
             }
         }
         return view

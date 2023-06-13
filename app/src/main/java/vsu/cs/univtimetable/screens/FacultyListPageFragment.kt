@@ -46,6 +46,16 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
         recyclerView = view.findViewById(R.id.facultyRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_facultyListPageFragment_to_univListPageFragment)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_facultyListPageFragment_to_adminMainPageFragment)
+        }
+
         val sortBtn = view.findViewById<ImageButton>(R.id.sortFacultyListBtn)
         var order = "ASC"
         sortBtn.setOnClickListener {
@@ -233,7 +243,6 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
             }
         })
     }
-
 
 
     private fun getUnivId(): Int {

@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
 import retrofit2.Callback
@@ -56,6 +58,16 @@ class CreateGroupPageFragment : Fragment() {
             view.findViewById<TextInputLayout>(R.id.editCourseText)
         courseTextInputLayout.boxStrokeColor =
             ContextCompat.getColor(requireContext(), R.color.adminsColor)
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_createGroupPageFragment_to_groupListPageFragment)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_createAudiencePageFragment_to_adminMainPageFragment)
+        }
 
         val courseTypeCompleteView =
             view.findViewById<AutoCompleteTextView>(R.id.editCourseAutoCompleteText)
