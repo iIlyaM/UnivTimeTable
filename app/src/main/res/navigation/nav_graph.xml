@@ -207,7 +207,11 @@
         android:id="@+id/createGroupPageFragment"
         android:name="vsu.cs.univtimetable.screens.CreateGroupPageFragment"
         android:label="fragment_create_group_page"
-        tools:layout="@layout/fragment_create_group_page" />
+        tools:layout="@layout/fragment_create_group_page" >
+        <action
+            android:id="@+id/action_createGroupPageFragment_to_groupListPageFragment"
+            app:destination="@id/groupListPageFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addSubjectPageFragment"
         android:name="vsu.cs.univtimetable.screens.lect_screens.AddSubjectPageFragment"

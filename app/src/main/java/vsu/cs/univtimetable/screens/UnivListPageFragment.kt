@@ -60,7 +60,7 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
 
         val addUnivBtn = view.findViewById<AppCompatButton>(R.id.addNewUnivBtn)
         addUnivBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_univListPageFragment_to_createUniversityFragment3)
+            findNavController().navigate(R.id.action_univListPageFragment_to_createUniversityFragment)
         }
 
         return view
