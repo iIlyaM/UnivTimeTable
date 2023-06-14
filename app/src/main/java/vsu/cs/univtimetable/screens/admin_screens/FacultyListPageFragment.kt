@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.admin_screens
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +33,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: FacultyListAdapter
     private lateinit var searchView: SearchView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -153,6 +155,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
         val bundle = Bundle()
         bundle.putInt("facultyId", facultyId)
         bundle.putInt("univId", getUnivId())
+
         findNavController().navigate(
             R.id.action_facultyListPageFragment_to_groupListPageFragment,
             bundle
@@ -212,7 +215,8 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
         val token: String? = SessionManager.getToken(requireContext())
 
         Log.d("API Request failed", "${token}")
-        val call = facultyApi.getFaculties("Bearer ${token}", getUnivId(), name, order)
+        val universityId = getUnivId()
+        val call = facultyApi.getFaculties("Bearer ${token}", universityId, name, order)
 
 
         call.enqueue(object : Callback<FacultyResponseDto> {
@@ -243,7 +247,6 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
             }
         })
     }
-
 
     private fun getUnivId(): Int {
         val id = arguments?.getInt("univId")

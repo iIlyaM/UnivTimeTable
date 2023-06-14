@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.LecturerMainPageFragment">
+    tools:context=".screens.lect_screens.LecturerMainPageFragment">
 
 
     <View
@@ -77,4 +77,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/choosingTimeRequestBtn" />
 
+    <ImageButton
+        android:id="@+id/lecturerLogoutBtn"
+        android:layout_width="86dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/lect_log_out_bg"
+        android:src="@drawable/ic_logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/topView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

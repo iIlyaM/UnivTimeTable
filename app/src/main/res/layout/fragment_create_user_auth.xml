@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.CreateUserAuthFragment">
+    tools:context=".screens.admin_screens.CreateUserAuthFragment">
 
 
     <View
@@ -128,7 +128,7 @@
         android:id="@+id/prevPageButton"
         android:layout_width="91dp"
         android:layout_height="40dp"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="28dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/admin_bg"
         android:contentDescription="Go to theprevious page"
@@ -140,7 +140,7 @@
         android:id="@+id/mainPageButton"
         android:layout_width="91dp"
         android:layout_height="40dp"
-        android:layout_marginStart="140dp"
+        android:layout_marginStart="145dp"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/admin_bg"

@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.headman_screens
 
 import android.app.AlertDialog
 import android.os.Build
@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
@@ -28,7 +29,6 @@ import vsu.cs.univtimetable.dto.DateDto
 import vsu.cs.univtimetable.dto.TimetableResponse
 import vsu.cs.univtimetable.screens.adapter.DayOfWeekAdapter
 import vsu.cs.univtimetable.screens.adapter.HeadmanTimetableAdapter
-import java.io.OutputStream
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
@@ -82,6 +82,11 @@ class StudentTimeTablePageFragment : Fragment() {
 
         toRightView.setOnClickListener {
             getNextDay(toRightView, toLeftView)
+        }
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_studentTimeTablePageFragment_to_headmanMainPageFragment)
         }
         return view
     }

@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.admin_screens
 
 import android.os.Bundle
 import android.util.Log
@@ -25,7 +25,6 @@ import vsu.cs.univtimetable.api.GroupApi
 import vsu.cs.univtimetable.api.UserApi
 import vsu.cs.univtimetable.dto.GroupDto
 import vsu.cs.univtimetable.dto.UserDisplayDto
-import vsu.cs.univtimetable.dto.UserResponse
 
 
 class CreateGroupPageFragment : Fragment() {
