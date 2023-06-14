@@ -89,6 +89,7 @@ class GroupListPageFragment : Fragment(), OnGroupItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getGroups(null, null, null)
+        universityId = getUnivId()
         searchByCourseView = view.findViewById(R.id.searchByCourseView)
         searchByCourseView.inputType = InputType.TYPE_CLASS_NUMBER;
         searchByCourseView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

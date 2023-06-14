@@ -217,18 +217,15 @@ class MoveClassTimePageFragment : Fragment() {
         dayTimeAutoCompleteTextView: AutoCompleteTextView,
         weekTypeAutoCompleteTextView: AutoCompleteTextView
     ) {
-        if (dayAutoCompleteTextView.text.isEmpty())
-        {
+        if (dayAutoCompleteTextView.text.isEmpty()) {
             dayAutoCompleteTextView.error = "Выберите исходную дату переносимого занятия"
             return
         }
-        if (classTimeAutoCompleteTextView.text.isEmpty())
-        {
+        if (classTimeAutoCompleteTextView.text.isEmpty()) {
             classTimeAutoCompleteTextView.error = "Выберите исходное время переносимого занятия"
             return
         }
-        if (audienceAutoCompleteTextView.text.isEmpty() || audienceAutoCompleteTextView.text.toString().toInt() < 0)
-        {
+        if (audienceAutoCompleteTextView.text.isEmpty()) {
             audienceAutoCompleteTextView.error = "Выберите аудиторию для переноса"
             return
         }
@@ -283,13 +280,13 @@ class MoveClassTimePageFragment : Fragment() {
                     findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
                 } else {
                     if (response.code() == 400) {
-                        showToastNotification("Аудитория занята для переноса")
+                        showDialog("Аудитория занята для переноса")
                     }
                     if (response.code() == 403) {
-                        showToastNotification("Недостаточно прав доступа для выполнения")
+                        showDialog("Недостаточно прав доступа для выполнения")
                     }
                     if (response.code() == 404) {
-                        showToastNotification("Неверный username пользователя")
+                        showDialog("Неверный username пользователя")
                     }
                     Log.d("Перенос не произошёл", "Получили ${response.code()}")
                 }
@@ -513,7 +510,7 @@ class MoveClassTimePageFragment : Fragment() {
         return set.toMutableList()
     }
 
-    private fun showToastNotification (message: String) {
+    private fun showToastNotification(message: String) {
         val duration = Toast.LENGTH_LONG
 
         val toast = Toast.makeText(requireContext(), message, duration)
@@ -522,17 +519,17 @@ class MoveClassTimePageFragment : Fragment() {
         handler.postDelayed({ toast.cancel() }, 1500)
     }
 
-//    private fun showDialog() {
-//        val builder = AlertDialog.Builder(requireContext())
-//
-//        builder.setMessage("Расписание ещё не сформировано")
-//        val alert = builder.create()
-//        alert.show()
-//        alert.window?.setGravity(Gravity.BOTTOM)
-//
-//        Handler().postDelayed({
-//            alert.dismiss()
-//        }, 2000)
-//        findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
-//    }
+    private fun showDialog(msg: String) {
+        val builder = AlertDialog.Builder(requireContext())
+
+        builder.setMessage(msg)
+        val alert = builder.create()
+        alert.show()
+        alert.window?.setGravity(Gravity.BOTTOM)
+
+        Handler().postDelayed({
+            alert.dismiss()
+        }, 1500)
+        findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
+    }
 }

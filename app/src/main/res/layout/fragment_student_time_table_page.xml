@@ -75,7 +75,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/saveTimeTable"
         android:layout_width="137dp"
-        android:layout_height="42dp"
+        android:layout_height="40dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="32dp"
@@ -99,10 +99,12 @@
         android:layout_width="91dp"
         android:layout_height="40dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/headman_bg"
         android:contentDescription="Go to the previous page"
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

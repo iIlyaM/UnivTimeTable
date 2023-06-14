@@ -24,6 +24,7 @@ import vsu.cs.univtimetable.dto.CreateFacultyDto
 class CreateFacultyPageFragment : Fragment() {
 
     private lateinit var facultyApi: FacultyApi
+    private var universityId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,18 +42,21 @@ class CreateFacultyPageFragment : Fragment() {
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
-            findNavController().navigate(R.id.action_facultyListPageFragment_to_univListPageFragment)
+            val bundle = Bundle()
+            bundle.putInt("univId", universityId)
+            findNavController().navigate(R.id.action_createFacultyPageFragment_to_facultyListPageFragment, bundle)
         }
 
-        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
-        mainPageButton.setOnClickListener {
-            findNavController().navigate(R.id.action_facultyListPageFragment_to_adminMainPageFragment)
-        }
 
         confirmBtn.setOnClickListener {
             addFaculty(facultyNameField)
         }
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        universityId = getUnivId()
     }
 
     private fun addFaculty(facultyField: EditText) {
@@ -110,6 +114,15 @@ class CreateFacultyPageFragment : Fragment() {
         toast.show()
         val handler = Handler()
         handler.postDelayed({ toast.cancel() }, 1500)
+    }
+
+    private fun getUnivId(): Int {
+        val id = arguments?.getInt("univId")
+        var univId: Int = 0
+        if (id != null) {
+            univId = id
+        }
+        return univId
     }
 
 //    private fun showDialog(facultyName: String, code: Int) {

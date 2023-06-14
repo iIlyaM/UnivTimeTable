@@ -72,11 +72,8 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
 
         val addFacultyBtn = view.findViewById<AppCompatButton>(R.id.addNewFacultyBtn)
         addFacultyBtn.setOnClickListener {
-            val id = arguments?.getInt("univId")
             val bundle = Bundle()
-            if (id != null) {
-                bundle.putInt("univId", id)
-            }
+            bundle.putInt("univId", getUnivId())
             findNavController().navigate(
                 R.id.action_facultyListPageFragment_to_createFacultyPageFragment,
                 bundle
