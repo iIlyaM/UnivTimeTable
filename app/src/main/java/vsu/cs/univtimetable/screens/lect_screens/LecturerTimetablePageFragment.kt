@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.lect_screens
 
 import android.app.AlertDialog
 import android.os.Build
@@ -9,6 +9,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -95,6 +96,12 @@ class LecturerTimetablePageFragment : Fragment() {
         downloadLectTTBtn.setOnClickListener {
             downloadTimetable()
         }
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_lecturerTimetablePageFragment_to_lecturerMainPageFragment)
+        }
+
         return view
     }
 

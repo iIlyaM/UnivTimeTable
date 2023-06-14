@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.lect_screens
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
@@ -66,6 +67,11 @@ class MoveClassTimePageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_move_class_time_page, container, false)
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
+        }
 
         subjectCompleteView =
             view.findViewById(R.id.subjAutoCompleteTextView)
@@ -194,10 +200,6 @@ class MoveClassTimePageFragment : Fragment() {
                 dayTimeAutoCompleteTextView,
                 weekTypeAutoCompleteTextView
             )
-        }
-        val requestListButton = view.findViewById<AppCompatButton>(R.id.requestListButton)
-        requestListButton.setOnClickListener {
-            findNavController().navigate(R.id.action_addSubjectPageFragment_to_generateTimetablePageFragment)
         }
 
         return view

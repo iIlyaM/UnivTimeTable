@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.lect_screens
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
 import vsu.cs.univtimetable.R
+import vsu.cs.univtimetable.SessionManager
 
 
 class LecturerMainPageFragment : Fragment() {
@@ -33,6 +34,12 @@ class LecturerMainPageFragment : Fragment() {
         val moveClassBtn = view.findViewById<AppCompatButton>(R.id.moveClassRequestBtn)
         moveClassBtn.setOnClickListener {
             findNavController().navigate(R.id.action_lecturerMainPageFragment_to_moveClassTimePageFragment)
+        }
+
+        val lecturerLogoutBtn = view.findViewById<ImageButton>(R.id.lecturerLogoutBtn)
+        lecturerLogoutBtn.setOnClickListener {
+            SessionManager.clearData(requireContext())
+            findNavController().navigate(R.id.action_lecturerMainPageFragment_to_loginFragment)
         }
 
 

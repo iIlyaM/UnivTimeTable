@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.admin_screens
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -63,6 +63,11 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
         val addUnivBtn = view.findViewById<AppCompatButton>(R.id.addNewUnivBtn)
         addUnivBtn.setOnClickListener {
             findNavController().navigate(R.id.action_univListPageFragment_to_createUniversityFragment)
+        }
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_univListPageFragment_to_adminMainPageFragment)
         }
 
         return view
@@ -140,7 +145,7 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
         val bundle = Bundle()
         bundle.putInt("univId", id)
         findNavController().navigate(
-            R.id.action_univListPageFragment_to_univMainPageFragment,
+            R.id.action_univListPageFragment_to_facultyListPageFragment,
             bundle
         )
     }

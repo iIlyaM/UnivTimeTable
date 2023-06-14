@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,6 +39,16 @@ class CreateUniversityFragment : Fragment() {
         val confirmBtn = view.findViewById<AppCompatButton>(R.id.confirmAddUnivBtn)
         val univField = view.findViewById<EditText>(R.id.editUnivNameText)
         val city = view.findViewById<EditText>(R.id.editCityText)
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_createUniversityFragment_to_univListPageFragment)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_createUniversityFragment_to_adminMainPageFragment)
+        }
 
         confirmBtn.setOnClickListener {
             addUniversity(univField, city)
@@ -75,6 +84,7 @@ class CreateUniversityFragment : Fragment() {
                         showToastNotification("Недостаточно прав доступа для выполнения")
                     }
                     println("Не успешно")
+                    showDialog(univName, response.code())
                 }
             }
 
@@ -119,4 +129,5 @@ class CreateUniversityFragment : Fragment() {
         val handler = Handler()
         handler.postDelayed({ toast.cancel() }, 1500)
     }
+
 }

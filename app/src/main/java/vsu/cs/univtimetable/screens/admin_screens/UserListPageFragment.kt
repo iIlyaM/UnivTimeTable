@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.admin_screens
 
 import android.os.Bundle
 import android.os.Handler
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
@@ -66,10 +67,15 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         val addUser = view.findViewById<AppCompatButton>(R.id.addNewUserBtn)
         val refreshFilterBtn = view.findViewById<AppCompatButton>(R.id.refreshFilterBtn)
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_userListPageFragment_to_adminMainPageFragment)
+        }
 
         refreshFilterBtn.setOnClickListener {
             getUsers(null, null, null, null)
         }
+
 
         univBtn = view.findViewById(R.id.sortUnivBtn)
         univBtn.setOnClickListener {
@@ -120,7 +126,6 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
         val bundle = Bundle()
 
         val token: String? = SessionManager.getToken(requireContext())
-        Log.d("API Request failed", "${token}")
         val call = userApi.getUser("Bearer ${token}", user.id.toLong())
 
         call.enqueue(object : Callback<UserCreateRequest> {

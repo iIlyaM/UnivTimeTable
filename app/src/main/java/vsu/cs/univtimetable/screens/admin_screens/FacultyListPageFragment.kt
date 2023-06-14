@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +36,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
     private lateinit var adapter: FacultyListAdapter
     private lateinit var searchView: SearchView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         facultyApi = TimetableClient.getClient().create(FacultyApi::class.java)
@@ -47,6 +49,16 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
         val view = inflater.inflate(R.layout.fragment_faculty_list_page, container, false)
         recyclerView = view.findViewById(R.id.facultyRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_facultyListPageFragment_to_univListPageFragment)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_facultyListPageFragment_to_adminMainPageFragment)
+        }
 
         val sortBtn = view.findViewById<ImageButton>(R.id.sortFacultyListBtn)
         var order = "ASC"
@@ -145,6 +157,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
         val bundle = Bundle()
         bundle.putInt("facultyId", facultyId)
         bundle.putInt("univId", getUnivId())
+
         findNavController().navigate(
             R.id.action_facultyListPageFragment_to_groupListPageFragment,
             bundle
@@ -222,7 +235,8 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
         val token: String? = SessionManager.getToken(requireContext())
 
         Log.d("API Request failed", "${token}")
-        val call = facultyApi.getFaculties("Bearer ${token}", getUnivId(), name, order)
+        val universityId = getUnivId()
+        val call = facultyApi.getFaculties("Bearer ${token}", universityId, name, order)
 
 
         call.enqueue(object : Callback<FacultyResponseDto> {

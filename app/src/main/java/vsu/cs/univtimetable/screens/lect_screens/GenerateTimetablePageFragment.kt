@@ -3,11 +3,15 @@ package vsu.cs.univtimetable.screens.lect_screens
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.navigation.fragment.findNavController
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -51,6 +55,17 @@ class GenerateTimetablePageFragment : Fragment() {
         clearTTBtn.setOnClickListener {
             clear()
         }
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_generateTimetablePageFragment_to_addSubjectPageFragment)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_generateTimetablePageFragment_to_lecturerMainPageFragment)
+        }
+
         return view
     }
 
@@ -88,6 +103,7 @@ class GenerateTimetablePageFragment : Fragment() {
                     }
                 }
             }
+
             override fun onFailure(call: Call<List<RequestDto>>, t: Throwable) {
                 println("Ошибка")
                 println(t)
@@ -160,6 +176,7 @@ class GenerateTimetablePageFragment : Fragment() {
                     println("Не успешно")
                 }
             }
+
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 println("Ошибка")
                 println(t)

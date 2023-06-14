@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import retrofit2.Call
 import retrofit2.Callback
@@ -38,6 +37,16 @@ class CreateFacultyPageFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_create_faculty_page, container, false)
         val facultyNameField = view.findViewById<EditText>(R.id.editFacultyNameText)
         val confirmBtn = view.findViewById<AppCompatButton>(R.id.confirmFacultyCreateBtn)
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_facultyListPageFragment_to_univListPageFragment)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_facultyListPageFragment_to_adminMainPageFragment)
+        }
 
         confirmBtn.setOnClickListener {
             addFaculty(facultyNameField)

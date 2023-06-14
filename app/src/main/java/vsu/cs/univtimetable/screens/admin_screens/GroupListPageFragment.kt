@@ -1,13 +1,16 @@
 package vsu.cs.univtimetable.screens
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +35,13 @@ class GroupListPageFragment : Fragment(), OnGroupItemClickListener {
     private lateinit var searchByCourseView: SearchView
     private lateinit var searchByGroupView: SearchView
 
+    private var courseSearch: Int? = null
+    private var groupSeacrh: Int? = null
+    private var order = "ASC"
+
+    private var universityId = 0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         groupApi = TimetableClient.getClient().create(GroupApi::class.java)
@@ -51,6 +61,28 @@ class GroupListPageFragment : Fragment(), OnGroupItemClickListener {
             sendId()
         }
 
+        val sortBtn = view.findViewById<ImageButton>(R.id.sortByCourseBtn)
+        sortBtn.setOnClickListener {
+            order = if (order.equals("ASC")) {
+                "DESC"
+            } else {
+                "ASC"
+            }
+            getGroups(courseSearch, order, groupSeacrh)
+        }
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putInt("univId", universityId)
+            findNavController().navigate(R.id.action_groupListPageFragment_to_facultyListPageFragment, bundle)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_groupListPageFragment_to_adminMainPageFragment)
+        }
+
         return view
     }
 
@@ -58,7 +90,7 @@ class GroupListPageFragment : Fragment(), OnGroupItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         getGroups(null, null, null)
         searchByCourseView = view.findViewById(R.id.searchByCourseView)
-
+        searchByCourseView.inputType = InputType.TYPE_CLASS_NUMBER;
         searchByCourseView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -66,6 +98,8 @@ class GroupListPageFragment : Fragment(), OnGroupItemClickListener {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
+                    courseSearch = newText.toIntOrNull()
+                    getGroups(courseSearch, order, groupSeacrh)
                 }
 
                 return true
@@ -73,7 +107,7 @@ class GroupListPageFragment : Fragment(), OnGroupItemClickListener {
         })
 
         searchByGroupView = view.findViewById(R.id.searchByGroupView)
-
+        searchByGroupView.inputType = InputType.TYPE_CLASS_NUMBER;
         searchByGroupView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -81,6 +115,8 @@ class GroupListPageFragment : Fragment(), OnGroupItemClickListener {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
+                    groupSeacrh = newText.toIntOrNull()
+                    getGroups(courseSearch, order, groupSeacrh)
                 }
 
                 return true
@@ -89,11 +125,91 @@ class GroupListPageFragment : Fragment(), OnGroupItemClickListener {
     }
 
     override fun onEditClick(groupDto: GroupDto) {
-        TODO("Not yet implemented")
+        val bundle = Bundle()
+
+        val token: String? = SessionManager.getToken(requireContext())
+        val call = groupApi.getGroup("Bearer ${token}", groupDto.id ?: -1L)
+
+        call.enqueue(object : Callback<GroupDto> {
+            override fun onResponse(
+                call: Call<GroupDto>,
+                response: Response<GroupDto>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("API Request successful", "Получили ${response.code()}")
+                    val dataResponse = response.body()
+                    println(dataResponse)
+                    if (dataResponse != null) {
+                        bundle.putLong("id", dataResponse.id ?: -1L)
+                        bundle.putBoolean("editable", true)
+                        bundle.putInt("groupNumber", dataResponse.groupNumber)
+                        bundle.putInt("courseNumber", dataResponse.courseNumber)
+                        bundle.putInt("studentsAmount", dataResponse.studentsAmount)
+                        bundle.putInt("headmanId", dataResponse.headman?.id ?: -1)
+                        bundle.putInt("facultyId", getFacultyId())
+
+                        findNavController().navigate(
+                            R.id.action_groupListPageFragment_to_createGroupPageFragment,
+                            bundle
+                        )
+                    }
+                } else {
+                    println("Не успешно")
+                }
+            }
+
+            override fun onFailure(call: Call<GroupDto>, t: Throwable) {
+                println("Ошибка")
+                println(t)
+            }
+        })
     }
 
     override fun onDeleteClick(groupDto: GroupDto) {
-        TODO("Not yet implemented")
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Удаление группы")
+            .setMessage(
+                "Вы уверены что хотите удалить группу курса: ${groupDto.courseNumber}, " +
+                        "номер: ${groupDto.groupNumber} из списка?"
+            )
+            .setCancelable(true)
+            .setPositiveButton("Удалить") { _, _ ->
+                if (groupDto.id != null) {
+                    delete(groupDto.id) { code ->
+                        if (code == 200) {
+                            getGroups(null, null, null)
+                        }
+                    }
+                }
+            }
+            .setNegativeButton(
+                "Отмена"
+            ) { _, _ ->
+            }
+        builder.create()
+        builder.show()
+    }
+
+    private fun delete(id: Long, callback: (Int) -> Unit) {
+        val token: String? = SessionManager.getToken(requireContext())
+        Log.d("API Request failed", "${token}")
+        val call = groupApi.deleteGroups(
+            "Bearer ${token}", id
+        )
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Log.d("API Request okay", "Удалили ${response.code()}")
+                } else {
+                    Log.d("API Request failed", "${response.code()}")
+                }
+                callback(response.code())
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                // Обработка ошибки
+            }
+        })
     }
 
 

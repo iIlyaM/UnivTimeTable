@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.admin_screens
 
 import android.os.Bundle
 import android.os.Handler
@@ -11,6 +11,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
@@ -83,6 +84,17 @@ class CreateUserInfoFragment : Fragment() {
         // Inflate the layout for this fragment
 //        return inflater.inflate(R.layout.fragment_create_user_info, container, false)
         val view = inflater.inflate(R.layout.fragment_create_user_info, container, false)
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_createUserInfoFragment_to_createUserAuthFragment)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_createUserInfoFragment_to_adminMainPageFragment)
+        }
+
 
         roleTextInputLayout = view.findViewById(R.id.editRoleAutoCompleteTextView)
         roleTextInputLayout(view)

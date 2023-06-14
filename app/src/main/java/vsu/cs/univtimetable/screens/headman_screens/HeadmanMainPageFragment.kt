@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.headman_screens
 
 import android.os.Bundle
 import android.util.Log
@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
@@ -46,6 +47,12 @@ class HeadmanMainPageFragment : Fragment() {
         val saveFilebtn = view.findViewById<AppCompatButton>(R.id.saveTimeTableBtn)
         saveFilebtn.setOnClickListener {
             download()
+        }
+
+        val headmanLogoutBtn = view.findViewById<ImageButton>(R.id.headmanLogoutBtn)
+        headmanLogoutBtn.setOnClickListener {
+            SessionManager.clearData(requireContext())
+            findNavController().navigate(R.id.action_headmanMainPageFragment_to_loginFragment)
         }
         return view
     }
