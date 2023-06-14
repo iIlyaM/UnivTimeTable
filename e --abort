@@ -1,0 +1,90 @@
+[33m4dea9c8[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/timetable-43[m[33m)[m HEAD@{0}: rebase (finish): returning to refs/heads/feature/timetable-43
+[33m4dea9c8[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/timetable-43[m[33m)[m HEAD@{1}: rebase (pick): change fragments labels at ``nav_graph``
+[33md543869[m HEAD@{2}: rebase (pick): add ``nav_graph`` toolbar
+[33m24bc511[m[33m ([m[1;32mfeature/timetable-53[m[33m)[m HEAD@{3}: rebase (start): checkout feature/timetable-53
+[33mc18024d[m HEAD@{4}: checkout: moving from feature/timetable-53 to feature/timetable-43
+[33m24bc511[m[33m ([m[1;32mfeature/timetable-53[m[33m)[m HEAD@{5}: checkout: moving from feature/timetable-43 to feature/timetable-53
+[33mc18024d[m HEAD@{6}: checkout: moving from feature/timetable-53-8-lect_fix to feature/timetable-43
+[33m3aa9393[m[33m ([m[1;32mfeature/timetable-53-8-lect_fix[m[33m)[m HEAD@{7}: commit: edit ``MoveClassTimePageFragment``: add ``move()``
+[33m24bc511[m[33m ([m[1;32mfeature/timetable-53[m[33m)[m HEAD@{8}: checkout: moving from feature/timetable-53 to feature/timetable-53-8-lect_fix
+[33m24bc511[m[33m ([m[1;32mfeature/timetable-53[m[33m)[m HEAD@{9}: merge feature/timetable-53-7-headman_tt: Merge made by the 'ort' strategy.
+[33m86fcf81[m HEAD@{10}: commit (merge): Merge branch 'feature/timetable-53-3-users' into feature/timetable-53
+[33m5b08374[m[33m ([m[1;31morigin/feature/timetable-53[m[33m)[m HEAD@{11}: reset: moving to HEAD
+[33m5b08374[m[33m ([m[1;31morigin/feature/timetable-53[m[33m)[m HEAD@{12}: merge feature/timetable-53-3-users: updating HEAD
+[33m5b08374[m[33m ([m[1;31morigin/feature/timetable-53[m[33m)[m HEAD@{13}: checkout: moving from feature/timetable-43 to feature/timetable-53
+[33mc18024d[m HEAD@{14}: checkout: moving from feature/timetable-53-3-users to feature/timetable-43
+[33medc32e4[m[33m ([m[1;32mfeature/timetable-53-3-users[m[33m)[m HEAD@{15}: merge origin/feature/timetable-53-3-users: Merge made by the 'ort' strategy.
+[33m812ac19[m HEAD@{16}: commit: ignore
+[33m8d9e96c[m HEAD@{17}: checkout: moving from feature/timetable-53-7-headman_tt to feature/timetable-53-3-users
+[33m1f6c297[m HEAD@{18}: commit: edit StudentTimeTablePage: add getTimetable, save
+[33m5b08374[m[33m ([m[1;31morigin/feature/timetable-53[m[33m)[m HEAD@{19}: checkout: moving from feature/timetable-53 to feature/timetable-53-7-headman_tt
+[33m5b08374[m[33m ([m[1;31morigin/feature/timetable-53[m[33m)[m HEAD@{20}: merge origin/feature/timetable-53: Fast-forward
+[33m44eb8b6[m HEAD@{21}: checkout: moving from feature/timetable-53-6-lecturer_tt to feature/timetable-53
+[33m44eb8b6[m HEAD@{22}: checkout: moving from feature/timetable-53 to feature/timetable-53-6-lecturer_tt
+[33m44eb8b6[m HEAD@{23}: merge feature/timetable-53-6-lecturer_tt: Fast-forward
+[33mbc60e9b[m HEAD@{24}: checkout: moving from feature/timetable-53-6-lecturer_tt to feature/timetable-53
+[33m44eb8b6[m HEAD@{25}: commit: edit ``LecturerTimetablePageFragment``: handle 400
+[33mf6fb638[m HEAD@{26}: commit: edit: LecturerTimetablePageFragment: fix errors
+[33m9ae2fa6[m HEAD@{27}: commit: add ScrollView to ``fragment_add_subject_page``
+[33m6d736a8[m HEAD@{28}: commit: add ``postSubject()``
+[33m6aad147[m HEAD@{29}: commit: add dto's: GroupResponse, SendRequest, RequestDataDto
+[33m7e9e59e[m HEAD@{30}: commit: edit LecturerTimetablePageFragment:getTimetable()
+[33md543c22[m HEAD@{31}: commit: edit LecturerTimetableAdapter & DayOfWeekAdapter
+[33m91a5437[m HEAD@{32}: commit: add ``DateDto``, edit ``ClassDto``
+[33m7b71575[m HEAD@{33}: checkout: moving from feature/timetable-53-3-users to feature/timetable-53-6-lecturer_tt
+[33m8d9e96c[m HEAD@{34}: checkout: moving from feature/timetable-53-6-lecturer_tt to feature/timetable-53-3-users
+[33m7b71575[m HEAD@{35}: commit: edit Lecturer fragments
+[33m597e2af[m HEAD@{36}: commit: rename: TimeTableClient -> TimetableClient
+[33m8da5643[m HEAD@{37}: commit: add TimetableApi
+[33m40d2833[m HEAD@{38}: commit: add dto: TimetableResponse
+[33m0bf2471[m HEAD@{39}: commit: add adapters: DayOfWeekAdapter,
+[33mac97a4d[m HEAD@{40}: commit: add dto: StartTimeDto, ClassDto, TimetableResponse
+[33mbc60e9b[m HEAD@{41}: checkout: moving from feature/timetable-53 to feature/timetable-53-6-lecturer_tt
+[33mbc60e9b[m HEAD@{42}: merge origin/feature/timetable-53: Fast-forward
+[33me5c1e29[m HEAD@{43}: merge origin/feature/timetable-53-4-groups: Fast-forward
+[33m9f13fbe[m HEAD@{44}: checkout: moving from feature/timetable-53-4-groups to feature/timetable-53
+[33me5c1e29[m HEAD@{45}: checkout: moving from feature/timetable-53 to feature/timetable-53-4-groups
+[33m9f13fbe[m HEAD@{46}: checkout: moving from feature/timetable-53-4-groups to feature/timetable-53
+[33me5c1e29[m HEAD@{47}: commit: edit ``GroupListPageFragment``, ``GroupListAdapter``
+[33mf9ff828[m HEAD@{48}: commit: edit ``FacultyListPageFragment``
+[33m82c626c[m HEAD@{49}: commit: edit ``CreateGroupPageFragment``: add addGroup
+[33m7085a4e[m HEAD@{50}: commit: edit fragment_create_group fragment_group_list_page
+[33m96da7d4[m HEAD@{51}: commit: edit dto: ``GroupDto``
+[33m3f3f82a[m HEAD@{52}: commit: add dto: ``UserResponse``
+[33m03a7151[m HEAD@{53}: commit: add ``UserApi``: getHeadman()
+[33m0beeb87[m HEAD@{54}: commit: edit ``group_list_item``: edit sizes
+[33m210add3[m HEAD@{55}: commit: edit ``nav_graph``: add screens
+[33m4a585bb[m HEAD@{56}: commit: edit ``Group``: fix path
+[33m1883e64[m HEAD@{57}: merge origin/feature/timetable-53-4-groups: Merge made by the 'ort' strategy.
+[33mbbd0903[m HEAD@{58}: rebase (finish): returning to refs/heads/feature/timetable-53-4-groups
+[33mbbd0903[m HEAD@{59}: rebase (pick): add ``GroupListAdapter``
+[33m9401330[m HEAD@{60}: rebase (pick): add ``GroupApi``
+[33me1ae9dc[m HEAD@{61}: rebase (pick): add dto's: ``GroupDto``, ``GroupResponseDto``
+[33m9f13fbe[m HEAD@{62}: rebase (start): checkout feature/timetable-53
+[33m5c0a15a[m HEAD@{63}: checkout: moving from feature/timetable-53 to feature/timetable-53-4-groups
+[33m9f13fbe[m HEAD@{64}: merge origin/feature/timetable-53: Fast-forward
+[33m2b261dd[m HEAD@{65}: merge feature/timetable-53-5-faculties: Fast-forward
+[33m5c0de8e[m HEAD@{66}: checkout: moving from feature/timetable-53-3-users to feature/timetable-53
+[33m8d9e96c[m HEAD@{67}: checkout: moving from feature/timetable-53-5-faculties to feature/timetable-53-3-users
+[33m2b261dd[m HEAD@{68}: commit: edit ``UnivMainPageFragment``: navigate to facList
+[33m3b3c4d1[m HEAD@{69}: commit: edit ``UnivListPageFragment``: add bundle univId
+[33m1e1d421[m HEAD@{70}: commit: edit ``CreateFacultyPageFragment``: add ``add()``
+[33mba9a575[m HEAD@{71}: commit: edit ``FacultyListPageFragment``: add CRUD impl
+[33mf04fe01[m HEAD@{72}: commit: edit ``FacultyApi``: fix methods annotations
+[33m1547aae[m HEAD@{73}: commit: add ``CreateFacultyDto``
+[33md7f551c[m HEAD@{74}: commit: edit ``nav_graph``: add screens
+[33mf085638[m HEAD@{75}: commit: add ``update_faculty_dialog``
+[33m483d962[m HEAD@{76}: commit: add ``FacultyListAdapter``
+[33mc86c111[m HEAD@{77}: commit: add dto: ``FacultyDto`` & ``FacultyResponseDto``
+[33m77970ea[m HEAD@{78}: commit: add ``FacultyApi``: add CRUD methods
+[33m5c0de8e[m HEAD@{79}: checkout: moving from feature/timetable-53 to feature/timetable-53-5-faculties
+[33m5c0de8e[m HEAD@{80}: checkout: moving from feature/timetable-53-3-users to feature/timetable-53
+[33m8d9e96c[m HEAD@{81}: commit: edit ``nav_graph``: add screens
+[33m20b3094[m HEAD@{82}: commit: edit ``fragment_user_list_page``: field type
+[33mab5a2b0[m HEAD@{83}: commit: edit ``CreateUserInfoFragment``
+[33mbba2704[m HEAD@{84}: commit: edit``CreateUserAuthFragment``: add ``send()``
+[33m613df8c[m HEAD@{85}: commit: edit ``UserListAdapter``: edit fields
+[33m6b06213[m HEAD@{86}: commit: edit ``UserListPageFragment``: add ``getUsers()``
+[33mc22b18f[m HEAD@{87}: commit: edit ``UserDisplayDto`` & ``UserResponseDto``
+[33m1f72b0b[m HEAD@{88}: commit: edit ``UserApi``: add ``addUser()``
+[33m3ed835e[m HEAD@{89}: commit: add ``Cre
