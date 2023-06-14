@@ -294,7 +294,7 @@ class MoveClassTimePageFragment : Fragment() {
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 println("Ошибка")
-                println(t)
+                showDialog("Ошибка")
             }
         })
     }
