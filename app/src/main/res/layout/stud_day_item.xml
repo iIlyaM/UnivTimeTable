@@ -29,6 +29,7 @@
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/studWeekType"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/weekDateView"

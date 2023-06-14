@@ -63,24 +63,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addAudienceText" />
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editEquipmentText"
+        style="@style/adminTextInputLayoutStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="32dp"
+        android:textColorHint="@color/black"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+        app:cardCornerRadius="10dp"
         android:background="@drawable/rect_border"
-        android:drawablePadding="16dp"
-        android:ems="10"
-        android:hint="@string/equipment"
-        android:inputType="text"
-        android:padding="16dp"
-        android:textSize="24sp"
-        android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editCapacityText" />
+        app:layout_constraintTop_toBottomOf="@+id/editCapacityText" >
+
+        <AutoCompleteTextView
+            android:id="@+id/editEquipmentAutoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:hint="@string/equipment"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:popupBackground="#DDEAF6"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/confirmCreateAudienceBtn"

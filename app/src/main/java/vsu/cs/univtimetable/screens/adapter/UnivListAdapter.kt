@@ -67,7 +67,7 @@ class UnivListAdapter(
 
     override fun onBindViewHolder(holder: UnivViewHolder, position: Int) {
         val obj = univs[position]
-        holder.univNameView.text = obj.universityName
+        holder.univNameView.text = abbreviateUniversityName(obj.universityName).toUpperCase()
         holder.cityNameView.text = obj.city
         holder.settingsBtn.setOnClickListener { view ->
             listener.onEditClick(univs[position])
@@ -80,5 +80,16 @@ class UnivListAdapter(
 
     override fun getItemCount(): Int {
         return univs.size
+    }
+
+    private fun abbreviateUniversityName(fullName: String): String {
+        val words = fullName.split(" ")
+        val abbreviation = StringBuilder()
+        for (word in words) {
+            if (word.isNotBlank()) {
+                abbreviation.append(word[0])
+            }
+        }
+        return abbreviation.toString()
     }
 }

@@ -217,6 +217,26 @@ class MoveClassTimePageFragment : Fragment() {
         dayTimeAutoCompleteTextView: AutoCompleteTextView,
         weekTypeAutoCompleteTextView: AutoCompleteTextView
     ) {
+        if (dayAutoCompleteTextView.text.isEmpty()) {
+            dayAutoCompleteTextView.error = "Выберите исходную дату переносимого занятия"
+            return
+        }
+        if (classTimeAutoCompleteTextView.text.isEmpty()) {
+            classTimeAutoCompleteTextView.error = "Выберите исходное время переносимого занятия"
+            return
+        }
+        if (audienceAutoCompleteTextView.text.isEmpty()) {
+            audienceAutoCompleteTextView.error = "Выберите аудиторию для переноса"
+            return
+        }
+        if (dayTimeAutoCompleteTextView.text.isEmpty()) {
+            dayTimeAutoCompleteTextView.error = "Выберите день и время для переноса"
+            return
+        }
+        if (weekTypeAutoCompleteTextView.text.isEmpty()) {
+            weekTypeAutoCompleteTextView.error = "Выберите тип недели, на которую будет перенос "
+            return
+        }
         dayTimeAutoCompleteTextView.setSelection(0)
         val token: String? = SessionManager.getToken(requireContext())
         val keyDto = DayTime(
@@ -256,9 +276,18 @@ class MoveClassTimePageFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     Log.d("API Request successful", "Получили ${response.code()}")
-                    showToastNotification()
+                    showToastNotification("Занятие перенесено")
                     findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
                 } else {
+                    if (response.code() == 400) {
+                        showDialog("Аудитория занята для переноса")
+                    }
+                    if (response.code() == 403) {
+                        showDialog("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showDialog("Неверный username пользователя")
+                    }
                     Log.d("Перенос не произошёл", "Получили ${response.code()}")
                 }
             }
@@ -275,7 +304,6 @@ class MoveClassTimePageFragment : Fragment() {
 
         Log.d("API Request failed", "${token}")
         val call = timetableApi.getMoveClassData("Bearer ${token}")
-
 
         call.enqueue(object : Callback<MoveClassResponse> {
             override fun onResponse(
@@ -298,9 +326,7 @@ class MoveClassTimePageFragment : Fragment() {
                         subjectCompleteView.setAdapter(adapter)
                     }
                 } else {
-                    if (response.code() == 400) {
-                        showDialog()
-                    }
+                    showToastNotification("Расписание ещё не сформировано")
                     Log.d("Не успешно", "Получили ${response.code()}")
                 }
             }
@@ -400,9 +426,7 @@ class MoveClassTimePageFragment : Fragment() {
                 strToAudienceNum["${aud.audienceNumber}, мест: ${aud.capacity}"] =
                     aud.audienceNumber
             }
-
         }
-
     }
 
     private fun checkEquipment(
@@ -486,26 +510,26 @@ class MoveClassTimePageFragment : Fragment() {
         return set.toMutableList()
     }
 
-    private fun showToastNotification() {
+    private fun showToastNotification(message: String) {
         val duration = Toast.LENGTH_LONG
 
-        val toast = Toast.makeText(requireContext(), "Занятие перенесено", duration)
+        val toast = Toast.makeText(requireContext(), message, duration)
         toast.show()
         val handler = Handler()
         handler.postDelayed({ toast.cancel() }, 1500)
     }
 
-    private fun showDialog() {
+    private fun showDialog(msg: String) {
         val builder = AlertDialog.Builder(requireContext())
 
-        builder.setMessage("Расписание ещё не сформировано")
+        builder.setMessage(msg)
         val alert = builder.create()
         alert.show()
         alert.window?.setGravity(Gravity.BOTTOM)
 
         Handler().postDelayed({
             alert.dismiss()
-        }, 2000)
+        }, 1500)
         findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
     }
 }

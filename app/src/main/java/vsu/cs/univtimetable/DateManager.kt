@@ -65,7 +65,6 @@ class DateManager {
             val now = Calendar.getInstance()
             val weekday = week.indexOf(day) + 1
 
-
             val days = (Calendar.SATURDAY - (weekPointer + 1) - (Calendar.SATURDAY - weekday))
             now.add(Calendar.DAY_OF_YEAR, days)
 

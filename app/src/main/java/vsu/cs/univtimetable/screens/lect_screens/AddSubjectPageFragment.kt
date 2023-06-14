@@ -3,6 +3,7 @@ package vsu.cs.univtimetable.screens.lect_screens
 import android.app.AlertDialog
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
@@ -97,7 +99,7 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
 
         val groupAdapter = ArrayAdapter(requireContext(), R.layout.subj_item, groupList)
         selectGroupAutoCompleteText.setAdapter(groupAdapter)
-        var items = arrayOfNulls<String>(equipList.size)
+        val items = arrayOfNulls<String>(equipList.size)
         equipListView.setOnClickListener {
             showEquipmentDialog(equipList.toArray(items))
         }
@@ -128,6 +130,26 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
         val classType: String = classTypeCompleteView.text.toString()
         val group: String = selectGroupAutoCompleteText.text.toString()
 
+        if (editSubjectNameText.text.isEmpty())
+        {
+            editSubjectNameText.error = "Введите название предмета"
+            return
+        }
+        if (classTypeCompleteView.text.isEmpty())
+        {
+            classTypeCompleteView.error = "Выберите тип предмета"
+            return
+        }
+        if (selectGroupAutoCompleteText.text.isEmpty())
+        {
+            selectGroupAutoCompleteText.error = "Выберите группы"
+            return
+        }
+        if (editHoursCountText.text.isEmpty() || (hours<=0 || hours > 9)) {
+            editHoursCountText.error = "Введите количество часов в пределах от 0 до 9"
+            return
+        }
+
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
 
@@ -135,7 +157,7 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
             "Bearer ${token}",
             SendRequest(
                 subject,
-                groupMap.get(group)!!,
+                groupMap[group]!!,
                 hours,
                 classType,
                 chosenEquipment,
@@ -150,7 +172,16 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
             ) {
                 if (response.isSuccessful) {
                     Log.d("API Request Successful", "${response.code()}")
+                    showToastNotification("Заявка отправлена")
                 } else {
+                    if(response.code() == 403){
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
+                    if(response.code() == 404){
+                        showToastNotification("Id переданной группы не было найдено/\n" +
+                                "Переданного инвентаря не существует в базе/\n" +
+                                "Неверный username пользователя")
+                    }
                     println("Не успешно")
                 }
             }
@@ -195,6 +226,7 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
                         groupList.add(str)
                         groupMap[str] = group
                     }
+                    //TODO:
                 } else {
                     println("Не успешно")
                 }
@@ -254,4 +286,12 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
         builder.create().show()
     }
 
+    private fun showToastNotification(message: String) {
+        val duration = Toast.LENGTH_LONG
+
+        val toast = Toast.makeText(requireContext(), message, duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 1500)
+    }
 }

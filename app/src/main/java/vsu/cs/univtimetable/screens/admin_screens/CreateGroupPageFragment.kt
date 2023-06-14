@@ -1,6 +1,7 @@
 package vsu.cs.univtimetable.screens.admin_screens
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -134,6 +136,28 @@ class CreateGroupPageFragment : Fragment() {
         groupNumField: EditText,
         amountField: EditText
     ) {
+        if (courses.text.isEmpty())
+        {
+            courses.error = "Выберите номер курса"
+            return
+        }
+        if (headmanView.text.isEmpty())
+        {
+            headmanView.error = "Выберите старосту"
+            return
+        }
+        if (groupNumField.text.isEmpty() || groupNumField.text.toString().toInt() < 0)
+        {
+            groupNumField.error = "Введите номер группы"
+            return
+        }
+        if (amountField.text.isEmpty() || amountField.text.toString().toInt() < 0 ||
+            amountField.text.toString().toInt() > 100) {
+            amountField.error = "Введите численность группы"
+            return
+        }
+
+
         val groupNum: String = groupNumField.text.toString()
         val amount: String = amountField.text.toString()
         var course = 0
@@ -175,8 +199,18 @@ class CreateGroupPageFragment : Fragment() {
                     Log.d("API Request Successful", "${response.code()}")
 
                     findNavController().navigate(R.id.action_createGroupPageFragment_to_groupListPageFragment)
+                    showToastNotification("Группа успешно создана")
                 } else {
                     println("Не успешно, ошибка = ${response.code()}")
+                    if (response.code() == 400) {
+                        showToastNotification("Такая группа на этом факультете уже существует")
+                    }
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showToastNotification("Cтароста для группы по переданному id не был найден")
+                    }
                 }
             }
 
@@ -204,6 +238,7 @@ class CreateGroupPageFragment : Fragment() {
                 call: Call<List<UserDisplayDto>>,
                 response: Response<List<UserDisplayDto>>
             ) {
+                //TODO: showToastNotification
                 if (response.isSuccessful) {
                     Log.d("API Request successful", "Получили ${response.code()}")
                     val dataResponse = response.body()
@@ -219,6 +254,7 @@ class CreateGroupPageFragment : Fragment() {
                         ArrayAdapter(requireContext(), R.layout.subj_item, headmans)
                     headmanView.setAdapter(headmenAdapter)
                 } else {
+                    showToastNotification("Не получилось назначить старосту группы")
                     println("Не успешно")
                 }
 
@@ -304,5 +340,14 @@ class CreateGroupPageFragment : Fragment() {
                 println(t)
             }
         })
+    }
+
+    private fun showToastNotification(message: String) {
+        val duration = Toast.LENGTH_LONG
+
+        val toast = Toast.makeText(requireContext(), message, duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 1500)
     }
 }

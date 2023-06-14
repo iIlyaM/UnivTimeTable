@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
@@ -97,6 +96,9 @@ class GenerateTimetablePageFragment : Fragment() {
                     }
                 } else {
                     println("Не успешно")
+                    if (response.code() == 403){
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
                 }
             }
 
@@ -124,6 +126,16 @@ class GenerateTimetablePageFragment : Fragment() {
                     Log.d("API Request Successful", "${response.code()}")
                     showToastNotification("Расписание сформировано")
                 } else {
+                    if (response.code() == 400) {
+                        showToastNotification("Расписание не может быть составлено,\n" +
+                                "Расписание уже было составлено")
+                    }
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showToastNotification("Неверный username пользователя")
+                    }
                     println("Не успешно")
                     Log.d("Не успешно", "Ошибка, код - ${response.code()}")
                 }
@@ -153,6 +165,12 @@ class GenerateTimetablePageFragment : Fragment() {
                     Log.d("API Request Successful", "${response.code()}")
                     showToastNotification("Расписание очищено")
                 } else {
+                    if (response.code() == 404) {
+                        showToastNotification("Неверный username пользователя")
+                    }
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
                     println("Не успешно")
                 }
             }

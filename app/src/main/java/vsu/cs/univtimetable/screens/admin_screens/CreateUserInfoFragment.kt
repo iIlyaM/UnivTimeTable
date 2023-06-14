@@ -1,6 +1,7 @@
 package vsu.cs.univtimetable.screens.admin_screens
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -128,6 +130,7 @@ class CreateUserInfoFragment : Fragment() {
         val fullName = fullNameText.text.toString()
         if (fullName.isEmpty()) {
             fullNameText.error = "Введите имя пользователя"
+            showToastNotification("Пожалуйста, заполните имя пользователя")
             return
         }
         val role = roleTextInputLayout.text.toString()
@@ -267,22 +270,15 @@ class CreateUserInfoFragment : Fragment() {
         facId: Long?
     ): Boolean {
         var isValid = true;
-        if (role == "HEADMAN") {
+        if (role == "HEADMAN" || role == "LECTURER") {
             if (univId == null) {
                 univTextInputLayout.error = "Выберите университет"
+                showToastNotification("Пожалуйста, заполните все поля")
                 isValid = false;
             }
             if (facId == null) {
                 facultyTextInputLayout.error = "Выберите факультет"
-                isValid = false;
-            }
-        } else if (role == "LECTURER") {
-            if (univId == null) {
-                univTextInputLayout.error = "Выберите университет"
-                isValid = false;
-            }
-            if (facId == null) {
-                facultyTextInputLayout.error = "Выберите факультет"
+                showToastNotification("Пожалуйста, заполните все поля")
                 isValid = false;
             }
         }
@@ -399,4 +395,12 @@ class CreateUserInfoFragment : Fragment() {
         }
     }
 
+    private fun showToastNotification (message: String) {
+        val duration = Toast.LENGTH_LONG
+
+        val toast = Toast.makeText(requireContext(), message, duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 1500)
+    }
 }

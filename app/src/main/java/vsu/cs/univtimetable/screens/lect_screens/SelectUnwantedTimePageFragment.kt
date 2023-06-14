@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import vsu.cs.univtimetable.DateManager
-import vsu.cs.univtimetable.Day
+import vsu.cs.univtimetable.dto.Day
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.dto.ImpossibleTimeDto
 import vsu.cs.univtimetable.screens.adapter.DayAdapter

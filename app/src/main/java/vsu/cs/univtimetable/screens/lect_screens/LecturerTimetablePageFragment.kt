@@ -77,10 +77,10 @@ class LecturerTimetablePageFragment : Fragment() {
 
         toLeftView = view.findViewById(R.id.toLeftView)
         toRightView = view.findViewById(R.id.toRightView)
-        if(getCurrDayOfWeek() == "Воскресенье") {
+        if (getCurrDayOfWeek() == "Воскресенье") {
             toRightView.visibility = View.INVISIBLE
         }
-        if(getCurrDayOfWeek() == "Понедельник") {
+        if (getCurrDayOfWeek() == "Понедельник") {
             toLeftView.visibility = View.INVISIBLE
         }
 
@@ -135,10 +135,16 @@ class LecturerTimetablePageFragment : Fragment() {
                     }
                     weekPointer = WEEK_DAYS.indexOf(getCurrDayOfWeek())
                     tempWeekPointer = weekPointer
-                     getDayTimetable(timetable, weekType, getCurrDayOfWeek())
+                    getDayTimetable(timetable, weekType, getCurrDayOfWeek())
                 } else {
                     if (response.code() == 400) {
-                        showDialog()
+                        showDialog("Расписание ещё не сформировано")
+                    }
+                    if (response.code() == 403) {
+                        showDialog("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showDialog("Неверный username пользователя")
                     }
                     Log.d("ошибка", "Получили ошибку - ${response.code()}")
                     Log.d("ошибка", "с ошибкой пришло - ${response.body()}")
@@ -173,10 +179,16 @@ class LecturerTimetablePageFragment : Fragment() {
                             input.copyTo(output)
                         }
                     }
-                    showToastNotification()
+                    showToastNotification("Файл сохранён")
                 } else {
                     if (response.code() == 400) {
-                        showDialog()
+                        showDialog("Расписание ещё не сформировано")
+                    }
+                    if (response.code() == 403) {
+                        showDialog("Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        showDialog("Неверный username пользователя")
                     }
                     Log.d("ошибка", "Получили ошибку - ${response.code()}")
                     Log.d("ошибка", "с ошибкой пришло - ${response.body()}")
@@ -190,13 +202,14 @@ class LecturerTimetablePageFragment : Fragment() {
         })
     }
 
-    private fun showToastNotification() {
+    private fun showToastNotification(message: String) {
         val duration = Toast.LENGTH_LONG
 
-        val toast = Toast.makeText(requireContext(), "Файл сохранён", duration)
+        val toast = Toast.makeText(requireContext(), message, duration)
         toast.show()
         val handler = Handler()
-        handler.postDelayed({ toast.cancel() }, 500)
+        handler.postDelayed({ toast.cancel() }, 1500)
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -218,7 +231,8 @@ class LecturerTimetablePageFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getCurrDayOfWeek(): String {
-        val currDay = LocalDate.now().dayOfWeek.getDisplayName(TextStyle.FULL, Locale("ru")).capitalize()
+        val currDay =
+            LocalDate.now().dayOfWeek.getDisplayName(TextStyle.FULL, Locale("ru")).capitalize()
         currDayInd = WEEK_DAYS.toList().indexOf(currDay)
         return currDay
     }
@@ -257,17 +271,17 @@ class LecturerTimetablePageFragment : Fragment() {
         lectWeekView.adapter = dayAdapter
     }
 
-    private fun showDialog() {
+    private fun showDialog(msg: String) {
         val builder = AlertDialog.Builder(requireContext())
 
-        builder.setMessage("Расписание ещё не сформировано")
+        builder.setMessage(msg)
         val alert = builder.create()
         alert.show()
         alert.window?.setGravity(Gravity.BOTTOM)
 
         Handler().postDelayed({
             alert.dismiss()
-        }, 2000)
+        }, 1500)
         findNavController().navigate(R.id.action_lecturerTimetablePageFragment_to_lecturerMainPageFragment)
 
     }

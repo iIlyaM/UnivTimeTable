@@ -1,16 +1,15 @@
 package vsu.cs.univtimetable.screens.admin_screens
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
 import retrofit2.Call
@@ -35,8 +34,6 @@ class CreateUniversityFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_create_university, container, false)
         val view = inflater.inflate(R.layout.fragment_create_university, container, false)
         val confirmBtn = view.findViewById<AppCompatButton>(R.id.confirmAddUnivBtn)
         val univField = view.findViewById<EditText>(R.id.editUnivNameText)
@@ -61,6 +58,16 @@ class CreateUniversityFragment : Fragment() {
     private fun addUniversity(univField: EditText, city: EditText) {
         val univName: String = univField.text.toString()
         val cityName:String = city.text.toString()
+        if (univField.text.isEmpty())
+        {
+            univField.error = "Введите название университета"
+            return
+        }
+        if (city.text.isEmpty())
+        {
+            city.error = "Введите город"
+            return
+        }
 
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
@@ -77,10 +84,15 @@ class CreateUniversityFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     Log.d("API Request Successful", "${response.code()}")
-                    showDialog(univName, response.code())
+                    showToastNotification("Университет успешно добавлен")
                 } else {
+                    if (response.code() == 400) {
+                        showToastNotification("Такой университет уже существует")
+                    }
+                    if (response.code() == 403) {
+                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    }
                     println("Не успешно")
-                    showDialog(univName, response.code())
                 }
             }
 
@@ -93,28 +105,37 @@ class CreateUniversityFragment : Fragment() {
         city.text.clear()
     }
 
-    private fun showDialog(univName: String, code: Int) {
-        val builder = AlertDialog.Builder(requireContext())
-        if (code == 201) {
-            builder.setMessage("${univName} добавлен")
-            val alert = builder.create()
-            alert.show()
-            alert.window?.setGravity(Gravity.BOTTOM)
+//    private fun showDialog(univName: String, code: Int) {
+//        val builder = AlertDialog.Builder(requireContext())
+//        if (code == 201) {
+//            builder.setMessage("${univName} добавлен")
+//            val alert = builder.create()
+//            alert.show()
+//            alert.window?.setGravity(Gravity.BOTTOM)
+//
+//            Handler().postDelayed({
+//                alert.dismiss()
+//            }, 2000)
+//        }
+//        if(code == 400) {
+//            builder.setMessage("${univName} уже есть в списке")
+//            val alert = builder.create()
+//            alert.show()
+//            alert.window?.setGravity(Gravity.BOTTOM)
+//
+//            Handler().postDelayed({
+//                alert.dismiss()
+//            }, 2000)
+//        }
+//    }
 
-            Handler().postDelayed({
-                alert.dismiss()
-            }, 2000)
-        }
-        if(code == 400) {
-            builder.setMessage("${univName} уже есть в списке")
-            val alert = builder.create()
-            alert.show()
-            alert.window?.setGravity(Gravity.BOTTOM)
+    private fun showToastNotification (message: String) {
+        val duration = Toast.LENGTH_LONG
 
-            Handler().postDelayed({
-                alert.dismiss()
-            }, 2000)
-        }
+        val toast = Toast.makeText(requireContext(), message, duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 1500)
     }
 
 }
