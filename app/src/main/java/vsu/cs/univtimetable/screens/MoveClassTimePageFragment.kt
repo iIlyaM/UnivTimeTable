@@ -215,6 +215,29 @@ class MoveClassTimePageFragment : Fragment() {
         dayTimeAutoCompleteTextView: AutoCompleteTextView,
         weekTypeAutoCompleteTextView: AutoCompleteTextView
     ) {
+        if (dayAutoCompleteTextView.text.isEmpty())
+        {
+            dayAutoCompleteTextView.error = "Выберите исходную дату переносимого занятия"
+            return
+        }
+        if (classTimeAutoCompleteTextView.text.isEmpty())
+        {
+            classTimeAutoCompleteTextView.error = "Выберите исходное время переносимого занятия"
+            return
+        }
+        if (audienceAutoCompleteTextView.text.isEmpty() || audienceAutoCompleteTextView.text.toString().toInt() < 0)
+        {
+            audienceAutoCompleteTextView.error = "Выберите аудиторию для переноса"
+            return
+        }
+        if (dayTimeAutoCompleteTextView.text.isEmpty()) {
+            dayTimeAutoCompleteTextView.error = "Выберите день и время для переноса"
+            return
+        }
+        if (weekTypeAutoCompleteTextView.text.isEmpty()) {
+            weekTypeAutoCompleteTextView.error = "Выберите тип недели, на которую будет перенос "
+            return
+        }
         dayTimeAutoCompleteTextView.setSelection(0)
         val token: String? = SessionManager.getToken(requireContext())
         val keyDto = DayTime(

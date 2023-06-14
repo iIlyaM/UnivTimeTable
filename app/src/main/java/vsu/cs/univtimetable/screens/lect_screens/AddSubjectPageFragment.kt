@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -118,6 +119,26 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
         val hours: Int = editHoursCountText.text.toString().toInt()
         val classType: String = classTypeCompleteView.text.toString()
         val group: String = selectGroupAutoCompleteText.text.toString()
+
+        if (editSubjectNameText.text.isEmpty())
+        {
+            editSubjectNameText.error = "Введите название предмета"
+            return
+        }
+        if (classTypeCompleteView.text.isEmpty())
+        {
+            classTypeCompleteView.error = "Выберите тип предмета"
+            return
+        }
+        if (selectGroupAutoCompleteText.text.isEmpty())
+        {
+            selectGroupAutoCompleteText.error = "Выберите группы"
+            return
+        }
+        if (editHoursCountText.text.isEmpty() || (hours<=0 || hours > 9)) {
+            editHoursCountText.error = "Введите количество часов в пределах от 0 до 9"
+            return
+        }
 
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
