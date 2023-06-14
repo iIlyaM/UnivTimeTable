@@ -1,11 +1,9 @@
 package vsu.cs.univtimetable.screens.headman_screens
 
-import android.app.AlertDialog
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +19,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import vsu.cs.univtimetable.DateManager
+import vsu.cs.univtimetable.DateManager.Companion.WEEK_DAYS
+import vsu.cs.univtimetable.DateManager.Companion.checkWeekType
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
@@ -28,8 +28,8 @@ import vsu.cs.univtimetable.api.TimetableApi
 import vsu.cs.univtimetable.dto.ClassDto
 import vsu.cs.univtimetable.dto.DateDto
 import vsu.cs.univtimetable.dto.TimetableResponse
-import vsu.cs.univtimetable.screens.adapter.DayOfWeekAdapter
 import vsu.cs.univtimetable.screens.adapter.HeadmanTimetableAdapter
+import vsu.cs.univtimetable.screens.adapter.StudentDayOfWeekAdapter
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
@@ -38,7 +38,7 @@ class StudentTimeTablePageFragment : Fragment() {
     private lateinit var timetableApi: TimetableApi
     private lateinit var recyclerView: RecyclerView
     private lateinit var lectWeekView: RecyclerView
-    private lateinit var dayAdapter: DayOfWeekAdapter
+    private lateinit var dayAdapter: StudentDayOfWeekAdapter
     private lateinit var timeTableAdapter: HeadmanTimetableAdapter
     private lateinit var toLeftView: ImageView
     private lateinit var toRightView: ImageView
@@ -116,11 +116,12 @@ class StudentTimeTablePageFragment : Fragment() {
                     var weekType = ""
                     println(dataResponse)
                     if (dataResponse != null) {
-                        weekType = DateManager.checkWeekType()
+                        weekType = checkWeekType()
                         timetable = dataResponse.classes[weekType]!!
                     }
-                    getDayTimetable(timetable, weekType, getCurrDayOfWeek())
+                    weekPointer = WEEK_DAYS.indexOf(getCurrDayOfWeek())
                     tempWeekPointer = weekPointer
+                    getDayTimetable(timetable, weekType, getCurrDayOfWeek())
                 } else {
                     if (response.code() == 400) {
                         showToastNotification("Расписание ещё не сформировано")
@@ -150,8 +151,6 @@ class StudentTimeTablePageFragment : Fragment() {
         dayOfWeek: String
     ) {
 
-//        weekPointer = WEEK_DAYS.indexOf(dayOfWeek)
-
         timeTableAdapter = HeadmanTimetableAdapter(
             requireContext(),
             timetable[dayOfWeek]!!
@@ -170,9 +169,9 @@ class StudentTimeTablePageFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getNextDay(rightImg: ImageView, leftImg: ImageView) {
-        val week = DateManager.WEEK_DAYS.toList()
+        val week = WEEK_DAYS.toList()
         tempWeekPointer++
-        getDayTimetable(timetable, DateManager.checkWeekType(), week[tempWeekPointer])
+        getDayTimetable(timetable, checkWeekType(), week[tempWeekPointer])
         if (tempWeekPointer == 1) {
             leftImg.visibility = View.VISIBLE
         } else
@@ -183,9 +182,9 @@ class StudentTimeTablePageFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getPrevDay(rightImg: ImageView, leftImg: ImageView) {
-        val week = DateManager.WEEK_DAYS.toList()
+        val week = WEEK_DAYS.toList()
         tempWeekPointer--
-        getDayTimetable(timetable, DateManager.checkWeekType(), week[tempWeekPointer])
+        getDayTimetable(timetable, checkWeekType(), week[tempWeekPointer])
         if (tempWeekPointer == week.size - 2) {
             rightImg.visibility = View.VISIBLE
         } else
@@ -195,7 +194,7 @@ class StudentTimeTablePageFragment : Fragment() {
     }
 
     private fun setDayAdapter(weekType: String, day: String) {
-        dayAdapter = DayOfWeekAdapter(
+        dayAdapter = StudentDayOfWeekAdapter(
             requireContext(),
             DateDto(DateManager.getDayOfWeek(day, weekPointer), weekType)
         )

@@ -1,6 +1,7 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.admin_screens
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +9,13 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,7 +28,6 @@ import vsu.cs.univtimetable.api.UserApi
 import vsu.cs.univtimetable.dto.GroupDto
 import vsu.cs.univtimetable.dto.UserCreateRequest
 import vsu.cs.univtimetable.dto.UserDisplayDto
-import vsu.cs.univtimetable.dto.UserResponse
 
 
 class CreateGroupPageFragment : Fragment() {

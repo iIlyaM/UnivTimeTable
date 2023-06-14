@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class LecturerNameAdapter(private val lecturers: List<String>) : RecyclerView.Adapter<LecturerNameAdapter.ViewHolder>() {
+class LecturerNameAdapter(private val lecturers: List<String>) :
+    RecyclerView.Adapter<LecturerNameAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_2, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(android.R.layout.simple_list_item_2, parent, false)
         return ViewHolder(view)
     }
 

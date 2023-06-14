@@ -48,7 +48,7 @@ class HeadmanTimetableAdapter(
         val timetableItem = timetableItems[position]
         holder.lectTimeView.text = "${timetableItem.startTime.dropLast(3)} - ${timetableItem.endTime.dropLast(3)}"
         holder.subjNameView.text = timetableItem.subjectName
-        holder.audienceNumView.text = timetableItem.audience.toString()
+        holder.audienceNumView.text = "ауд.№: ${timetableItem.audience}"
         holder.classTypeView.text = timetableItem.typeOfClass
     }
 

@@ -51,9 +51,9 @@ class LecturerTimetableAdapter(
         val timetableItem = timetableItems[position]
         holder.lectTimeView.text = "${timetableItem.startTime.dropLast(3)} - ${timetableItem.endTime.dropLast(3)}"
         holder.subjNameView.text = timetableItem.subjectName
-        holder.courseNumberView.text = timetableItem.courseNumber.toString()
+        holder.courseNumberView.text = "${timetableItem.courseNumber} курс"
         holder.audienceNumView.text = timetableItem.audience.toString()
         holder.classTypeView.text = timetableItem.typeOfClass
-        holder.lectGroupNumberView.text = timetableItem.groupsNumber.toString()
+        holder.lectGroupNumberView.text = "Гр.: ${timetableItem.groupsNumber.joinToString()}"
     }
 }

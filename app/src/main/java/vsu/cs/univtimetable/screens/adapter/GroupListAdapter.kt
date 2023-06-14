@@ -78,8 +78,20 @@ class GroupListAdapter(
             holder.headmanNameView.text = "Староста: не назначен"
 
         } else {
-            holder.headmanNameView.text = "Староста: ${group.headman.fullName}"
+            holder.headmanNameView.text = "Староста: \n ${getHeadmanShortName(group.headman.fullName)}"
         }
         holder.studentsCountView.text = "Студентов:${group.studentsAmount}"
+    }
+
+    private fun getHeadmanShortName(fullName: String): String {
+        val parts = fullName.split(" ")
+        val shortenedParts = parts.mapIndexed { index, part ->
+            if (index == 0) {
+                part
+            } else {
+                "${part.first()}."
+            }
+        }
+         return shortenedParts.joinToString(" ")
     }
 }
