@@ -24,6 +24,7 @@ import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.GroupApi
 import vsu.cs.univtimetable.api.UserApi
 import vsu.cs.univtimetable.dto.GroupDto
+import vsu.cs.univtimetable.dto.UserCreateRequest
 import vsu.cs.univtimetable.dto.UserDisplayDto
 
 
@@ -34,13 +35,16 @@ class CreateGroupPageFragment : Fragment() {
     private lateinit var searchView: SearchView
 
     private var headmans: ArrayList<String> = arrayListOf()
-    private lateinit var courseMap: Map<String, Int>
     private val coursesList =
         listOf("1к. бак.", "2к. бак.", "3к. бак.", "4к. бак.", "1к. маг.", "2к. маг.")
     private val courseNums = listOf(1, 2, 3, 4, 5, 6)
 
+    private val courseMap: Map<String, Int> = coursesList.zip(courseNums).toMap()
+
     private var headmanMap: MutableMap<String, UserDisplayDto> = mutableMapOf()
-    private var headmanList: List<UserDisplayDto> = listOf()
+    private var headmanList: ArrayList<UserDisplayDto> = arrayListOf()
+
+    private lateinit var possibleHeadman: UserCreateRequest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,18 +92,40 @@ class CreateGroupPageFragment : Fragment() {
         val groupNumField = view.findViewById<EditText>(R.id.editGroupText)
         val studAmountField = view.findViewById<EditText>(R.id.editAmountText)
 
+        setFieldsIfEdit(
+            courseTypeCompleteView,
+            groupNumField,
+            headmenTypeCompleteView,
+            studAmountField
+        )
 
         val confirmBtn = view.findViewById<AppCompatButton>(R.id.confirmCreateGroupBtn)
         confirmBtn.setOnClickListener {
-            addGroup(courseTypeCompleteView, headmenTypeCompleteView, groupNumField, studAmountField)
+            addGroup(
+                courseTypeCompleteView,
+                headmenTypeCompleteView,
+                groupNumField,
+                studAmountField
+            )
         }
+        headmanList.add(
+            UserDisplayDto(
+                -1,
+                "",
+                "Нет старосты",
+                "",
+                "",
+                "",
+                -1
+            )
+        )
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHeadmen()
-        courseMap = coursesList.zip(courseNums).toMap()
+        setHeadmen(view.findViewById<AutoCompleteTextView>(R.id.editHeadmanAutoCompleteText))
     }
 
     private fun addGroup(
@@ -117,18 +143,28 @@ class CreateGroupPageFragment : Fragment() {
         }
         var headmanItem = headmanMap[headmanView.text.toString()]
         var headmen: UserDisplayDto? = null
-        if (headmanItem != null) {
+        if (headmanItem != null && headmanItem.fullName != "Нет старосты") {
             headmen = headmanItem
         }
 
         val token: String? = SessionManager.getToken(requireContext())
-        Log.d("API Request failed", "${token}")
 
-        val call = groupApi.addGroup(
-            "Bearer ${token}",
-            getFacultyId(),
-            GroupDto(null, groupNum.toInt(), course, amount.toInt(), headmen)
-        )
+        val editable = arguments?.getBoolean("editable");
+        val call: Call<Void>;
+        if (editable != null && editable) {
+            val id = arguments?.getLong("id") ?: -1
+            call = groupApi.editGroup(
+                "Bearer ${token}",
+                id,
+                GroupDto(id, groupNum.toInt(), course, amount.toInt(), headmen)
+            )
+        } else {
+            call = groupApi.addGroup(
+                "Bearer ${token}",
+                getFacultyId(),
+                GroupDto(null, groupNum.toInt(), course, amount.toInt(), headmen)
+            )
+        }
 
         call.enqueue(object : Callback<Void> {
             override fun onResponse(
@@ -137,6 +173,8 @@ class CreateGroupPageFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     Log.d("API Request Successful", "${response.code()}")
+
+                    findNavController().navigate(R.id.action_createGroupPageFragment_to_groupListPageFragment)
                 } else {
                     println("Не успешно, ошибка = ${response.code()}")
                 }
@@ -154,7 +192,7 @@ class CreateGroupPageFragment : Fragment() {
     }
 
 
-    private fun setHeadmen() {
+    private fun setHeadmen(headmanView: AutoCompleteTextView) {
         val token: String? = SessionManager.getToken(requireContext())
 
         Log.d("API Request failed", "${token}")
@@ -171,12 +209,15 @@ class CreateGroupPageFragment : Fragment() {
                     val dataResponse = response.body()
                     println(dataResponse)
                     if (dataResponse != null) {
-                        headmanList = dataResponse.toList()
+                        headmanList.addAll(dataResponse)
                     }
                     for (headman in headmanList) {
                         headmanMap[headman.fullName] = headman
                         headmans.add(headman.fullName)
                     }
+                    val headmenAdapter =
+                        ArrayAdapter(requireContext(), R.layout.subj_item, headmans)
+                    headmanView.setAdapter(headmenAdapter)
                 } else {
                     println("Не успешно")
                 }
@@ -197,5 +238,71 @@ class CreateGroupPageFragment : Fragment() {
             facultyId = id
         }
         return facultyId
+    }
+
+    private fun setFieldsIfEdit(
+        course: AutoCompleteTextView,
+        group: EditText,
+        headman: AutoCompleteTextView,
+        studentsAmount: EditText
+    ) {
+        val editable = arguments?.getBoolean("editable");
+        if (editable != null && editable) {
+            val courseNumber = arguments?.getInt("courseNumber")
+            for (entry in courseMap) {
+                if (entry.value == courseNumber) {
+                    course.setText(entry.key)
+                    val courseAdapter =
+                        ArrayAdapter(requireContext(), R.layout.subj_item, coursesList)
+                    course.setAdapter(courseAdapter)
+                    break;
+                }
+            }
+            group.setText(arguments?.getInt("groupNumber").toString())
+            studentsAmount.setText(arguments?.getInt("studentsAmount").toString())
+            val headmanId = arguments?.getInt("headmanId")
+            if (headmanId != null && headmanId != -1) {
+                getUser(headmanId, headman)
+            }
+        }
+    }
+
+    private fun getUser(headmanId: Int, headman: AutoCompleteTextView) {
+        val token: String? = SessionManager.getToken(requireContext())
+        val call = userApi.getUser("Bearer ${token}", headmanId.toLong())
+        call.enqueue(object : Callback<UserCreateRequest> {
+            override fun onResponse(
+                call: Call<UserCreateRequest>,
+                response: Response<UserCreateRequest>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("API Request successful", "Получили ${response.code()}")
+                    val dataResponse = response.body()
+                    println(dataResponse)
+                    if (dataResponse != null) {
+                        possibleHeadman = dataResponse
+                        headmanList.add(
+                            UserDisplayDto(
+                                dataResponse.id,
+                                dataResponse.role,
+                                dataResponse.fullName,
+                                dataResponse.city,
+                                "",
+                                "",
+                                dataResponse.groupId?.toInt() ?: -1
+                            )
+                        )
+                        headman.setText(dataResponse.fullName)
+                    }
+                } else {
+                    println("Не успешно")
+                }
+            }
+
+            override fun onFailure(call: Call<UserCreateRequest>, t: Throwable) {
+                println("Ошибка")
+                println(t)
+            }
+        })
     }
 }

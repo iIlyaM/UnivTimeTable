@@ -229,7 +229,7 @@
     </fragment>
     <fragment
         android:id="@+id/groupListPageFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.GroupListPageFragment"
+        android:name="vsu.cs.univtimetable.screens.GroupListPageFragment"
         android:label="fragment_group_list_page"
         tools:layout="@layout/fragment_group_list_page" >
         <action

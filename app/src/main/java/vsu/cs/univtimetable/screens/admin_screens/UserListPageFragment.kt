@@ -124,7 +124,6 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
         val bundle = Bundle()
 
         val token: String? = SessionManager.getToken(requireContext())
-        Log.d("API Request failed", "${token}")
         val call = userApi.getUser("Bearer ${token}", user.id.toLong())
 
         call.enqueue(object : Callback<UserCreateRequest> {

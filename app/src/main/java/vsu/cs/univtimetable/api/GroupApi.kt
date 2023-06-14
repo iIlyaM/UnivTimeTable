@@ -25,17 +25,17 @@ interface GroupApi {
     ): Call<GroupResponseDto>
 
     @Headers("Content-Type: application/json")
-    @GET("/faculty/group/{id}")
+    @GET("faculty/group/{id}")
     fun getGroup(
         @Header("Authorization") basicToken: String,
-        @Path("facultyId") id: Int,
+        @Path("id") id: Long,
     ): Call<GroupDto>
 
     @Headers("Content-Type: application/json")
-    @PUT("faculty/{facultyId}/group")
+    @PUT("faculty/group/{id}")
     fun editGroup(
         @Header("Authorization") basicToken: String,
-        @Path("facultyId") id: Int,
+        @Path("id") id: Long,
         @Body group: GroupDto
     ): Call<Void>
 
@@ -48,9 +48,9 @@ interface GroupApi {
     ): Call<Void>
 
     @Headers("Content-Type: application/json")
-    @DELETE("universities/{id}")
+    @DELETE("faculty/group/{id}")
     fun deleteGroups(
         @Header("Authorization") basicToken: String,
-        @Path("id") id: Int
+        @Path("id") id: Long
     ): Call<Void>
 }
