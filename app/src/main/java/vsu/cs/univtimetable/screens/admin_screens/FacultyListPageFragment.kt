@@ -70,6 +70,8 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
             getFaculties(null, order)
         }
 
+//        val facItem = view.findViewById<>(R.id.facultyRecyclerView)
+
         val addFacultyBtn = view.findViewById<AppCompatButton>(R.id.addNewFacultyBtn)
         addFacultyBtn.setOnClickListener {
             val bundle = Bundle()

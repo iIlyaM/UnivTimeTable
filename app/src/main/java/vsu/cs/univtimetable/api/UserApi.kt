@@ -13,7 +13,6 @@ import retrofit2.http.Query
 import vsu.cs.univtimetable.dto.CreateUserResponse
 import vsu.cs.univtimetable.dto.UserCreateRequest
 import vsu.cs.univtimetable.dto.UserDisplayDto
-import vsu.cs.univtimetable.dto.UserResponse
 import vsu.cs.univtimetable.dto.UserResponseDto
 
 interface UserApi {
