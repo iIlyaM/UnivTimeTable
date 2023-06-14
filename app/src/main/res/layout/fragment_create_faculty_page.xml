@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.CreateFacultyPageFragment">
+    tools:context=".screens.admin_screens.CreateFacultyPageFragment">
 
     <View
         android:id="@+id/topView"
@@ -61,4 +61,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editFacultyNameText" />
 
+    <ImageButton
+        android:id="@+id/prevPageButton"
+        android:layout_width="91dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/admin_bg"
+        android:contentDescription="Go to theprevious page"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/mainPageButton"
+        android:layout_width="91dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="140dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/admin_bg"
+        android:contentDescription="Go to theprevious page"
+        android:src="@drawable/ic_home"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

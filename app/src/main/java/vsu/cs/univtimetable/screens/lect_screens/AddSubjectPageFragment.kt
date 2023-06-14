@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
@@ -74,6 +75,16 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
         classTypeCompleteView.setOnItemClickListener { parent, view2, position, id ->
             val selectedItem = parent.getItemAtPosition(position) as String
 
+        }
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_addSubjectPageFragment_to_selectUnwantedTimePageFragment)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_addSubjectPageFragment_to_lecturerMainPageFragment)
         }
 
         val groupTextInputLayout =

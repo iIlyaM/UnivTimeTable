@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.HeadmanMainPageFragment">
+    tools:context=".screens.headman_screens.HeadmanMainPageFragment">
 
 
     <View
@@ -60,5 +60,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lookTimeTableBtn" />
 
+    <ImageButton
+        android:id="@+id/headmanLogoutBtn"
+        android:layout_width="86dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/headman_log_out"
+        android:src="@drawable/ic_logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/topView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

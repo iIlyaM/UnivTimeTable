@@ -1,8 +1,9 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.admin_screens
 
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,7 @@ import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,34 +21,44 @@ import retrofit2.Response
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
-import vsu.cs.univtimetable.api.UnivApi
-import vsu.cs.univtimetable.dto.UnivDto
-import vsu.cs.univtimetable.dto.UnivResponseDto
-import vsu.cs.univtimetable.screens.adapter.OnUnivItemClickListener
-import vsu.cs.univtimetable.screens.adapter.UnivListAdapter
+import vsu.cs.univtimetable.api.FacultyApi
+import vsu.cs.univtimetable.dto.FacultyDto
+import vsu.cs.univtimetable.dto.FacultyResponseDto
+import vsu.cs.univtimetable.screens.adapter.FacultyListAdapter
+import vsu.cs.univtimetable.screens.adapter.OnFacultiesItemClickListener
 
-class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
+class FacultyListPageFragment : Fragment(), OnFacultiesItemClickListener {
 
-    private lateinit var univApi: UnivApi
+    private lateinit var facultyApi: FacultyApi
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: UnivListAdapter
+    private lateinit var adapter: FacultyListAdapter
     private lateinit var searchView: SearchView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        univApi = TimetableClient.getClient().create(UnivApi::class.java)
+        facultyApi = TimetableClient.getClient().create(FacultyApi::class.java)
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_univ_list_page, container, false)
-        recyclerView = view.findViewById(R.id.univsList)
+        val view = inflater.inflate(R.layout.fragment_faculty_list_page, container, false)
+        recyclerView = view.findViewById(R.id.facultyRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val sortBtn = view.findViewById<ImageButton>(R.id.sortButton)
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_facultyListPageFragment_to_univListPageFragment)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_facultyListPageFragment_to_adminMainPageFragment)
+        }
+
+        val sortBtn = view.findViewById<ImageButton>(R.id.sortFacultyListBtn)
         var order = "ASC"
         sortBtn.setOnClickListener {
             order = if (order.equals("ASC")) {
@@ -55,21 +66,30 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
             } else {
                 "ASC"
             }
-            getUniversities(null, order)
+            getFaculties(null, order)
         }
 
-        val addUnivBtn = view.findViewById<AppCompatButton>(R.id.addNewUnivBtn)
-        addUnivBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_univListPageFragment_to_createUniversityFragment3)
+        val addFacultyBtn = view.findViewById<AppCompatButton>(R.id.addNewFacultyBtn)
+        addFacultyBtn.setOnClickListener {
+            val id = arguments?.getInt("univId")
+            val bundle = Bundle()
+            if (id != null) {
+                bundle.putInt("univId", id)
+            }
+            findNavController().navigate(
+                R.id.action_facultyListPageFragment_to_createFacultyPageFragment,
+                bundle
+            )
         }
 
         return view
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getUniversities(null, null)
-        searchView = view.findViewById(R.id.enterUnivName)
+        getFaculties(null, null)
+        searchView = view.findViewById(R.id.searchFacultyView)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -77,7 +97,7 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
-                    getUniversities(newText, null)
+                    getFaculties(newText, null)
                 }
 
                 return true
@@ -85,14 +105,12 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
         })
     }
 
-    override fun onEditClick(univ: UnivDto) {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.update_univ_dialog, null)
-        val editUnivName = dialogView.findViewById<AppCompatEditText>(R.id.updUnivName)
-        val editUnivCity = dialogView.findViewById<AppCompatEditText>(R.id.updUnivCity)
-        val btnUpdate = dialogView.findViewById<AppCompatButton>(R.id.updateUnivBtn)
+    override fun onEditClick(faculty: FacultyDto) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.update_faculty_dialog, null)
+        val editFacultyName = dialogView.findViewById<AppCompatEditText>(R.id.updFacultyName)
+        val btnUpdate = dialogView.findViewById<AppCompatButton>(R.id.updateFacultyBtn)
 
-        editUnivName?.setText(univ.universityName)
-        editUnivCity?.setText(univ.city)
+        editFacultyName?.setText(faculty.name)
 
         val builder = AlertDialog.Builder(context)
         builder.setView(dialogView)
@@ -101,12 +119,11 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
 
         btnUpdate.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View?) {
-                val id = univ.id
-                val univName = editUnivName?.text.toString()
-                val city = editUnivCity?.text.toString()
-                update(UnivDto(id, univName, city)) { code ->
+                val id = faculty.id
+                val name = editFacultyName?.text.toString()
+                update(FacultyDto(id, name)) { code ->
                     if (code == 200) {
-                        getUniversities(null, null)
+                        getFaculties(null, null)
                     }
                 }
                 alertDialog.dismiss()
@@ -114,15 +131,15 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
         })
     }
 
-    override fun onDeleteClick(univ: UnivDto) {
+    override fun onDeleteClick(faculty: FacultyDto) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Удаление университета")
-            .setMessage("Вы уверены что хотите удалить ${univ.universityName} из списка?")
+            .setMessage("Вы уверены что хотите удалить ${faculty.name} из списка?")
             .setCancelable(true)
             .setPositiveButton("Удалить") { _, _ ->
-                delete(univ.id.toInt()) { code ->
+                delete(faculty.id) { code ->
                     if (code == 200) {
-                        getUniversities(null, null)
+                        getFaculties(null, null)
                     }
                 }
             }
@@ -134,22 +151,24 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
         builder.show()
     }
 
-    override fun onItemClick(id: Int) {
+    override fun onItemClick(facultyId: Int) {
         val bundle = Bundle()
-        bundle.putInt("univId", id)
+        bundle.putInt("facultyId", facultyId)
+        bundle.putInt("univId", getUnivId())
+
         findNavController().navigate(
-            R.id.action_univListPageFragment_to_univMainPageFragment,
+            R.id.action_facultyListPageFragment_to_groupListPageFragment,
             bundle
         )
     }
 
-    private fun update(updatedUniversity: UnivDto, callback: (Int) -> Unit) {
+    private fun update(updatedFaculty: FacultyDto, callback: (Int) -> Unit) {
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
-        val call = univApi.editUniversity(
+        val call = facultyApi.editFaculty(
             "Bearer ${token}",
-            updatedUniversity.id.toInt(),
-            updatedUniversity
+            updatedFaculty.id,
+            updatedFaculty
         )
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
@@ -173,7 +192,7 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
     private fun delete(id: Int, callback: (Int) -> Unit) {
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
-        val call = univApi.deleteUniversity(
+        val call = facultyApi.deleteFaculty(
             "Bearer ${token}", id
         )
         call.enqueue(object : Callback<Void> {
@@ -192,42 +211,49 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
         })
     }
 
-    private fun getUniversities(param: String?, order: String?) {
+    private fun getFaculties(name: String?, order: String?) {
         val token: String? = SessionManager.getToken(requireContext())
+
         Log.d("API Request failed", "${token}")
-        val call = univApi.getUniversities("Bearer ${token}", param, order)
+        val universityId = getUnivId()
+        val call = facultyApi.getFaculties("Bearer ${token}", universityId, name, order)
 
 
-        call.enqueue(object : Callback<UnivResponseDto> {
+        call.enqueue(object : Callback<FacultyResponseDto> {
             override fun onResponse(
-                call: Call<UnivResponseDto>,
-                response: Response<UnivResponseDto>
+                call: Call<FacultyResponseDto>,
+                response: Response<FacultyResponseDto>
             ) {
                 if (response.isSuccessful) {
                     Log.d("API Request successful", "Получили ${response.code()}")
                     val dataResponse = response.body()
                     println(dataResponse)
                     if (dataResponse != null) {
-                        adapter = UnivListAdapter(
+                        adapter = FacultyListAdapter(
                             requireContext(),
-                            dataResponse.universitiesPage.contents,
-                            this@UnivListPageFragment
+                            dataResponse.facultiesPage.contents,
+                            this@FacultyListPageFragment
                         )
                     }
                     recyclerView.adapter = adapter
-
                 } else {
                     println("Не успешно")
                 }
             }
 
-            override fun onFailure(call: Call<UnivResponseDto>, t: Throwable) {
+            override fun onFailure(call: Call<FacultyResponseDto>, t: Throwable) {
                 println("Ошибка")
                 println(t)
             }
         })
     }
+
+    private fun getUnivId(): Int {
+        val id = arguments?.getInt("univId")
+        var univId: Int = 0
+        if (id != null) {
+            univId = id
+        }
+        return univId
+    }
 }
-
-
-

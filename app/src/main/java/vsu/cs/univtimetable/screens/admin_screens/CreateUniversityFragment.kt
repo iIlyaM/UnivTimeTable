@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.admin_screens
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -10,7 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
+import androidx.navigation.fragment.findNavController
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,6 +41,16 @@ class CreateUniversityFragment : Fragment() {
         val confirmBtn = view.findViewById<AppCompatButton>(R.id.confirmAddUnivBtn)
         val univField = view.findViewById<EditText>(R.id.editUnivNameText)
         val city = view.findViewById<EditText>(R.id.editCityText)
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_createUniversityFragment_to_univListPageFragment)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_createUniversityFragment_to_adminMainPageFragment)
+        }
 
         confirmBtn.setOnClickListener {
             addUniversity(univField, city)

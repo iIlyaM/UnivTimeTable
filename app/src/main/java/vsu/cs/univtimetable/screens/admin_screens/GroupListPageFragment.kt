@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.admin_screens
 
 import android.os.Bundle
 import android.util.Log
@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +34,9 @@ class GroupListPageFragment : Fragment(), OnGroupItemClickListener {
     private lateinit var searchByCourseView: SearchView
     private lateinit var searchByGroupView: SearchView
 
+    private var universityId = 0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         groupApi = TimetableClient.getClient().create(GroupApi::class.java)
@@ -46,9 +51,22 @@ class GroupListPageFragment : Fragment(), OnGroupItemClickListener {
         recyclerView = view.findViewById(R.id.groupRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+
         val addGroupBtn = view.findViewById<AppCompatButton>(R.id.addNewGroupBtn)
         addGroupBtn.setOnClickListener {
             sendId()
+        }
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putInt("univId", universityId)
+            findNavController().navigate(R.id.action_groupListPageFragment_to_facultyListPageFragment, bundle)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_groupListPageFragment_to_adminMainPageFragment)
         }
 
         return view
@@ -56,6 +74,7 @@ class GroupListPageFragment : Fragment(), OnGroupItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        universityId = getUnivId()
         getGroups(null, null, null)
         searchByCourseView = view.findViewById(R.id.searchByCourseView)
 

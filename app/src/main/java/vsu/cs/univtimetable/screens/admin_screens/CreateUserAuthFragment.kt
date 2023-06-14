@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.admin_screens
 
 import android.os.Bundle
 import android.util.Patterns
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -24,6 +25,16 @@ class CreateUserAuthFragment : Fragment() {
         val cityField = view.findViewById<EditText>(R.id.editUserCity)
         val pwdField = view.findViewById<EditText>(R.id.editTextTextPassword2)
         val btn = view.findViewById<AppCompatButton>(R.id.confirmBtn)
+
+        val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
+        prevPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_createUserAuthFragment_to_userListPageFragment)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_createUserAuthFragment_to_adminMainPageFragment)
+        }
 
         setFieldsIfEdit(emailField, pwdField, loginField, cityField)
 

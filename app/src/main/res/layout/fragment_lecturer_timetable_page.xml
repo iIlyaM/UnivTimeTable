@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.LecturerTimetablePageFragment">
+    tools:context=".screens.lect_screens.LecturerTimetablePageFragment">
 
     <View
         android:id="@+id/topView"
@@ -28,17 +28,15 @@
         android:id="@+id/downloadLectTTBtn"
         android:layout_width="90dp"
         android:layout_height="40dp"
-        android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/lecturer_bg"
         android:text="@string/download"
         android:textAllCaps="false"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lecturerRecyclerView"
@@ -84,6 +82,18 @@
         android:src="@drawable/ic_arrow_right"
         app:layout_constraintStart_toEndOf="@+id/lectWeekView"
         app:layout_constraintTop_toBottomOf="@+id/waveView" />
+
+    <ImageButton
+        android:id="@+id/prevPageButton"
+        android:layout_width="91dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/lecturer_bg"
+        android:contentDescription="Go to the previous page"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

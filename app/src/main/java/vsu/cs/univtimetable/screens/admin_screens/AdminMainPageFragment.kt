@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens
+package vsu.cs.univtimetable.screens.admin_screens
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
 import vsu.cs.univtimetable.R
+import vsu.cs.univtimetable.SessionManager
 
 
 class AdminMainPageFragment : Fragment() {
@@ -26,6 +27,17 @@ class AdminMainPageFragment : Fragment() {
         }
         usersBtn.setOnClickListener {
             findNavController().navigate(R.id.action_adminMainPageFragment_to_userListPageFragment)
+        }
+
+        val univsButton = view.findViewById<AppCompatButton>(R.id.univsButton)
+        univsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_adminMainPageFragment_to_univListPageFragment)
+        }
+
+        val adminLogoutBtn = view.findViewById<ImageButton>(R.id.adminLogoutBtn)
+        adminLogoutBtn.setOnClickListener {
+            SessionManager.clearData(requireContext())
+             findNavController().navigate(R.id.action_adminMainPageFragment_to_loginFragment)
         }
 
         return view
