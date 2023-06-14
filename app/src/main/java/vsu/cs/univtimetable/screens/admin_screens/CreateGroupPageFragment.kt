@@ -136,6 +136,28 @@ class CreateGroupPageFragment : Fragment() {
         groupNumField: EditText,
         amountField: EditText
     ) {
+        if (courses.text.isEmpty())
+        {
+            courses.error = "Выберите номер курса"
+            return
+        }
+        if (headmanView.text.isEmpty())
+        {
+            headmanView.error = "Выберите старосту"
+            return
+        }
+        if (groupNumField.text.isEmpty() || groupNumField.text.toString().toInt() < 0)
+        {
+            groupNumField.error = "Введите номер группы"
+            return
+        }
+        if (amountField.text.isEmpty() || amountField.text.toString().toInt() < 0 ||
+            amountField.text.toString().toInt() > 100) {
+            amountField.error = "Введите численность группы"
+            return
+        }
+
+
         val groupNum: String = groupNumField.text.toString()
         val amount: String = amountField.text.toString()
         var course = 0

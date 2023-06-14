@@ -60,6 +60,16 @@ class CreateUniversityFragment : Fragment() {
     private fun addUniversity(univField: EditText, city: EditText) {
         val univName: String = univField.text.toString()
         val cityName:String = city.text.toString()
+        if (univField.text.isEmpty())
+        {
+            univField.error = "Введите название университета"
+            return
+        }
+        if (city.text.isEmpty())
+        {
+            city.error = "Введите город"
+            return
+        }
 
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
@@ -85,7 +95,6 @@ class CreateUniversityFragment : Fragment() {
                         showToastNotification("Недостаточно прав доступа для выполнения")
                     }
                     println("Не успешно")
-//                    showDialog(univName, response.code())
                 }
             }
 
