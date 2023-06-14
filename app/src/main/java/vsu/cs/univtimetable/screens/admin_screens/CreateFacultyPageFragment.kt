@@ -62,6 +62,11 @@ class CreateFacultyPageFragment : Fragment() {
     private fun addFaculty(facultyField: EditText) {
         val name: String = facultyField.text.toString()
 
+        if (facultyField.text.isEmpty())
+        {
+            facultyField.error = "Введите название факультета"
+            return
+        }
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
 
