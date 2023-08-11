@@ -51,6 +51,7 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
     private var roles = mutableSetOf<String>()
     private var cities = mutableSetOf<String>()
     private var searchItem: String = ""
+    private var searchParams = mutableListOf<String?>(null, null ,null)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,26 +74,30 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
         }
 
         refreshFilterBtn.setOnClickListener {
-            getUsers(null, null, null, null)
+            searchParams = mutableListOf<String?>(null, null, null)
+            getUsers(searchParams, null)
         }
 
 
         univBtn = view.findViewById(R.id.sortUnivBtn)
         univBtn.setOnClickListener {
             showRadioButtonDialog("Выберите ВУЗ", univs.toList()) { selectedValue ->
-                getUsers(selectedValue, null, null, null)
+                searchParams[0] = selectedValue
+                getUsers(searchParams, null)
             }
         }
         roleBtn = view.findViewById(R.id.sortRoleBtn)
         roleBtn.setOnClickListener {
             showRadioButtonDialog("Выберите роль", roles.toList()) { selectedValue ->
-                getUsers(null, selectedValue, null, null)
+                searchParams[1] = selectedValue
+                getUsers(searchParams, null)
             }
         }
         cityBtn = view.findViewById(R.id.sortByCityBtn)
         cityBtn.setOnClickListener {
             showRadioButtonDialog("Выберите город", cities.toList()) { selectedValue ->
-                getUsers(null, null, selectedValue, null)
+                searchParams[2] = selectedValue
+                getUsers(searchParams, null)
             }
         }
 
@@ -105,7 +110,7 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                getUsers(searchUniv, searchRole, searchCity, newText)
+                getUsers(searchParams, newText)
                 return false
             }
         })
@@ -119,7 +124,7 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getUsers(null, null, null, null)
+        getUsers(searchParams, null)
     }
 
     override fun onEditClick(user: UserDisplayDto) {
@@ -175,7 +180,7 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
             .setPositiveButton("Удалить") { _, _ ->
                 delete(user.id) { code ->
                     if (code == 200) {
-                        getUsers(null, null, null, null)
+                        getUsers(searchParams, null)
                     }
                 }
             }
@@ -187,10 +192,18 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
         builder.show()
     }
 
-    private fun getUsers(university: String?, role: String?, city: String?, name: String?) {
+    //    mutableListOf<String?
+//university: String?, role: String?, city: String?, name: String?
+    private fun getUsers(searchParams: MutableList<String?>, name: String?) {
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
-        val call = userApi.getUsers("Bearer ${token}", university, role, city, name)
+        val call = userApi.getUsers(
+            "Bearer ${token}",
+            searchParams[0],
+            searchParams[1],
+            searchParams[2],
+            name
+        )
 
         call.enqueue(object : Callback<UserResponseDto> {
             override fun onResponse(
@@ -312,7 +325,7 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
 //        Snackbar.make(requireView(), msg, Snackbar.LENGTH_SHORT).show()
 //    }
 
-    private fun showToastNotification (message: String) {
+    private fun showToastNotification(message: String) {
         val duration = Toast.LENGTH_LONG
 
         val toast = Toast.makeText(requireContext(), message, duration)
