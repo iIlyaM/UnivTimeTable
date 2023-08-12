@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import android.widget.ImageButton
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
@@ -81,9 +82,24 @@ class CreateUserInfoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_create_user_info, container, false)
         val view = inflater.inflate(R.layout.fragment_create_user_info, container, false)
+        val tilUniv = view.findViewById<TextInputLayout>(R.id.editUnivText)
+        tilUniv.boxStrokeColor =
+            ContextCompat.getColor(requireContext(), R.color.adminsColor)
+        tilUniv.setBoxStrokeColorStateList(ContextCompat.getColorStateList(requireContext(), R.color.admin_selector)!!)
+        tilUniv.boxStrokeWidth = resources.getDimensionPixelSize(R.dimen.new_stroke_width)
+
+        val tilFaculty = view.findViewById<TextInputLayout>(R.id.editFacultyText)
+        tilFaculty.boxStrokeColor =
+            ContextCompat.getColor(requireContext(), R.color.adminsColor)
+        tilFaculty.setBoxStrokeColorStateList(ContextCompat.getColorStateList(requireContext(), R.color.admin_selector)!!)
+        tilFaculty.boxStrokeWidth = resources.getDimensionPixelSize(R.dimen.new_stroke_width)
+
+        val tilGroupNum = view.findViewById<TextInputLayout>(R.id.editGroupNumText)
+        tilGroupNum.boxStrokeColor =
+            ContextCompat.getColor(requireContext(), R.color.adminsColor)
+        tilGroupNum.setBoxStrokeColorStateList(ContextCompat.getColorStateList(requireContext(), R.color.admin_selector)!!)
+        tilGroupNum.boxStrokeWidth = resources.getDimensionPixelSize(R.dimen.new_stroke_width)
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {

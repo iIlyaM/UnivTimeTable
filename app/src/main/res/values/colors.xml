@@ -7,5 +7,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="back">#5AA895</color>
 
-    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#5AA895</color>
+<!--    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#5AA895</color>-->
 </resources>

@@ -50,7 +50,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/rect_border"
         android:textColorHint="@color/black"
         app:boxCornerRadiusBottomEnd="10dp"
         app:boxCornerRadiusBottomStart="10dp"
@@ -111,10 +110,12 @@
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/editFullNameText" />-->
-
+<!--style="@style/adminTextInputLayoutStyle"-->
+<!--style="@style/MyTextInputLayout_overlay"-->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editUnivText"
-        style="@style/adminTextInputLayoutStyle"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        app:boxStrokeColor="@color/adminsColor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -126,7 +127,6 @@
         app:boxCornerRadiusTopEnd="10dp"
         app:boxCornerRadiusTopStart="10dp"
         app:cardCornerRadius="10dp"
-        android:background="@drawable/rect_border"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editFullNameText" >
@@ -134,7 +134,7 @@
         <AutoCompleteTextView
             android:id="@+id/editUnivAutoCompleteTextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:inputType="none"
             android:hint="@string/univ"
             android:paddingTop="16dp"
@@ -177,7 +177,6 @@
         app:boxCornerRadiusTopEnd="10dp"
         app:boxCornerRadiusTopStart="10dp"
         app:cardCornerRadius="10dp"
-        android:background="@drawable/rect_border"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editUnivText" >
@@ -195,25 +194,6 @@
             android:textSize="24sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-<!--    <EditText-->
-<!--        android:id="@+id/editGroupNumText"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="32dp"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:layout_marginEnd="32dp"-->
-<!--        android:background="@drawable/rect_border"-->
-<!--        android:drawablePadding="16dp"-->
-<!--        android:ems="10"-->
-<!--        android:hint="@string/groupNum"-->
-<!--        android:inputType="text"-->
-<!--        android:padding="16dp"-->
-<!--        android:textSize="24sp"-->
-<!--        android:textStyle="normal"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/editFacultyText" />-->
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editGroupNumText"
         style="@style/adminTextInputLayoutStyle"
@@ -228,7 +208,6 @@
         app:boxCornerRadiusTopEnd="10dp"
         app:boxCornerRadiusTopStart="10dp"
         app:cardCornerRadius="10dp"
-        android:background="@drawable/rect_border"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editFacultyText" >
