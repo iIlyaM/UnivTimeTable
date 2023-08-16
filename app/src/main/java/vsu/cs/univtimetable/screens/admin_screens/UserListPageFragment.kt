@@ -16,6 +16,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,6 +38,7 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: UserListAdapter
     private lateinit var searchView: SearchView
+    private val userViewModel: UserViewModel by activityViewModels()
 
     private lateinit var roleBtn: Button
     private lateinit var univBtn: Button
@@ -51,12 +54,13 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
     private var roles = mutableSetOf<String>()
     private var cities = mutableSetOf<String>()
     private var searchItem: String = ""
-    private var searchParams = mutableListOf<String?>(null, null ,null)
+    private var searchParams = mutableListOf<String?>(null, null, null)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userApi = TimetableClient.getClient().create(UserApi::class.java)
+        adapter = UserListAdapter(requireContext(), mutableListOf(), this)
     }
 
     override fun onCreateView(
@@ -64,6 +68,7 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_user_list_page, container, false)
+
         recyclerView = view.findViewById(R.id.usersRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         val addUser = view.findViewById<AppCompatButton>(R.id.addNewUserBtn)
@@ -124,7 +129,13 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         getUsers(searchParams, null)
+
+        userViewModel.userList.observe(viewLifecycleOwner) {
+            adapter.users = it
+        }
+
     }
 
     override fun onEditClick(user: UserDisplayDto) {

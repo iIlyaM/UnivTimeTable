@@ -189,19 +189,32 @@
                     android:textSize="24sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/confUserInfoBtn"
-                android:layout_width="145dp"
-                android:layout_height="40dp"
+<!--            <androidx.appcompat.widget.AppCompatButton-->
+<!--                android:id="@+id/confUserInfoBtn"-->
+<!--                android:layout_width="145dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginStart="32dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_marginEnd="32dp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:background="@drawable/admin_bg"-->
+<!--                android:text="@string/confirm"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textSize="18sp"-->
+<!--                android:textStyle="bold" />-->
+
+            <include
+                android:id="@+id/create_user_btn"
+                layout="@layout/btn_create_user"
+                android:layout_width="240dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="32dp"
                 android:layout_gravity="center"
-                android:background="@drawable/admin_bg"
-                android:text="@string/confirm"
-                android:textAllCaps="false"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+            </include>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -231,7 +244,6 @@
                     android:contentDescription="Go to theprevious page"
                     android:src="@drawable/ic_home"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/confUserInfoBtn"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <Space

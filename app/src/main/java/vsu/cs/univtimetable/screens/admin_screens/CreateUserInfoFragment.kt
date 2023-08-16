@@ -12,13 +12,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import vsu.cs.univtimetable.BtnLoadingProgressbar
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
@@ -28,12 +31,14 @@ import vsu.cs.univtimetable.dto.FacultyResponse
 import vsu.cs.univtimetable.dto.GroupDto
 import vsu.cs.univtimetable.dto.UnivResponse
 import vsu.cs.univtimetable.dto.UserCreateRequest
+import vsu.cs.univtimetable.dto.UserDisplayDto
 
 
 class CreateUserInfoFragment : Fragment() {
 
     private lateinit var userApi: UserApi
     private lateinit var createUserResponse: CreateUserResponse
+    private lateinit var userViewModel: UserViewModel
     private val roleType =
         arrayOf("HEADMAN", "ADMIN", "LECTURER")
 
@@ -83,6 +88,9 @@ class CreateUserInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_create_user_info, container, false)
+
+        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+
         val tilUniv = view.findViewById<TextInputLayout>(R.id.editUnivText)
         tilUniv.boxStrokeColor =
             ContextCompat.getColor(requireContext(), R.color.adminsColor)
@@ -129,7 +137,9 @@ class CreateUserInfoFragment : Fragment() {
             groupTextInputLayout.error = null
         }
 
-        view.findViewById<Button>(R.id.confUserInfoBtn).setOnClickListener {
+        view.findViewById<LinearLayout>(R.id.create_user_btn).setOnClickListener {
+            val progressbar = BtnLoadingProgressbar(it)
+            progressbar.setLoading()
             createUser(view.findViewById(R.id.editFullNameText))
         }
         return view
@@ -154,20 +164,32 @@ class CreateUserInfoFragment : Fragment() {
             roleTextInputLayout.error = "Выберите роль"
             return
         }
-        val univId = if (univMap[univTextInputLayout.text.toString()] != null) {
-            univMap[univTextInputLayout.text.toString()]?.id
+        var univName: String
+        var univId: Long?
+        if (univMap[univTextInputLayout.text.toString()] != null) {
+            univId = univMap[univTextInputLayout.text.toString()]?.id
+            univName =  univMap[univTextInputLayout.text.toString()]?.universityName!!
         } else {
-            null
+            univId = null
+            univName = ""
         }
-        val facId = if (facultyMap[facultyTextInputLayout.text.toString()] != null) {
-            facultyMap[facultyTextInputLayout.text.toString()]?.id
+        var facId: Long?
+        var facName: String
+        if (facultyMap[facultyTextInputLayout.text.toString()] != null) {
+            facId = facultyMap[facultyTextInputLayout.text.toString()]?.id
+            facName = facultyMap[facultyTextInputLayout.text.toString()]?.name!!
         } else {
-            null
+            facId = null
+            facName = ""
         }
-        val groupId = if (groupMap[groupTextInputLayout.text.toString()] != null) {
-            groupMap[groupTextInputLayout.text.toString()]?.id
+        var groupId:Long?
+        var groupNum:Int
+        if (groupMap[groupTextInputLayout.text.toString()] != null) {
+            groupId = groupMap[groupTextInputLayout.text.toString()]?.id
+            groupNum = groupMap[groupTextInputLayout.text.toString()]?.groupNumber!!
         } else {
-            null
+            groupId = null
+            groupNum = 0
         }
         if (!validUserInfo(role, univId, facId)) {
             return
@@ -176,7 +198,7 @@ class CreateUserInfoFragment : Fragment() {
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
         val editable = arguments?.getBoolean("editable")
-        val tempPass: String?;
+        val tempPass: String?
         tempPass = if (password.isEmpty()) {
             null
         } else {
@@ -215,6 +237,15 @@ class CreateUserInfoFragment : Fragment() {
                 response: Response<Void>
             ) {
                 if (response.isSuccessful) {
+                    userViewModel.addUser(UserDisplayDto(
+                        id,
+                        role,
+                        fullName,
+                        city,
+                        univName,
+                        facName,
+                        groupNum
+                        ))
                     Log.d("API Request successful", "Получили ${response.code()}")
                 } else {
                     println("Не успешно")
@@ -330,7 +361,7 @@ class CreateUserInfoFragment : Fragment() {
         }
         val groupId = arguments?.getLong("group")
         if (groupId != null && groupId != -1L) {
-            val group = groupList.firstOrNull { it.id == groupId };
+            val group = groupList.firstOrNull { it.id == groupId }
             for ((key, mapValue) in groupMap) {
                 if (mapValue.id == group?.id) {
                     groupTextInputLayout.setText(key, false)
@@ -385,7 +416,7 @@ class CreateUserInfoFragment : Fragment() {
 
     private fun roleInputValid(view: View, role: String) {
         when (role) {
-            "LECTURER" -> {
+            "Преподаватель" -> {
                 view.findViewById<TextInputLayout>(R.id.editUnivText).visibility = View.VISIBLE
                 view.findViewById<TextInputLayout>(R.id.editFacultyText).visibility = View.VISIBLE
                 view.findViewById<TextInputLayout>(R.id.editGroupNumText).visibility =
@@ -393,7 +424,7 @@ class CreateUserInfoFragment : Fragment() {
                 groupTextInputLayout.text = null
             }
 
-            "ADMIN" -> {
+            "Администратор" -> {
                 view.findViewById<TextInputLayout>(R.id.editUnivText).visibility = View.INVISIBLE
                 univTextInputLayout.text = null
                 view.findViewById<TextInputLayout>(R.id.editFacultyText).visibility = View.INVISIBLE

@@ -84,5 +84,4 @@ class UserListAdapter (
     override fun getItemCount(): Int {
         return users.size
     }
-
 }
