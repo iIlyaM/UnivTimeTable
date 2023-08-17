@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens.admin_screens
+package vsu.cs.univtimetable.screens.admin_screens.users
 
 import android.os.Bundle
 import android.os.Handler
@@ -16,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,20 +24,23 @@ import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.UserApi
-import vsu.cs.univtimetable.dto.UserCreateRequest
-import vsu.cs.univtimetable.dto.UserDisplayDto
-import vsu.cs.univtimetable.dto.UserResponseDto
-import vsu.cs.univtimetable.screens.adapter.OnUserItemClickListener
+import vsu.cs.univtimetable.dto.user.UserCreateRequest
+import vsu.cs.univtimetable.dto.user.UserDisplayDto
+import vsu.cs.univtimetable.dto.user.UserResponseDto
+import vsu.cs.univtimetable.repository.UserRepository
+import vsu.cs.univtimetable.screens.adapter.OnUserDeleteInterface
+import vsu.cs.univtimetable.screens.adapter.OnUserEditInterface
 import vsu.cs.univtimetable.screens.adapter.UserListAdapter
+import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
 import java.util.concurrent.atomic.AtomicReference
 
-class UserListPageFragment : Fragment(), OnUserItemClickListener {
+class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterface {
 
     private lateinit var userApi: UserApi
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: UserListAdapter
     private lateinit var searchView: SearchView
-    private val userViewModel: UserViewModel by activityViewModels()
+    private lateinit var userViewModel: UserViewModel
 
     private lateinit var roleBtn: Button
     private lateinit var univBtn: Button
@@ -57,20 +59,27 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
     private var searchParams = mutableListOf<String?>(null, null, null)
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        userApi = TimetableClient.getClient().create(UserApi::class.java)
-        adapter = UserListAdapter(requireContext(), mutableListOf(), this)
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//    }
+    //Продумать обработку в случае если token закончится
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_user_list_page, container, false)
+        userApi = TimetableClient.getClient().create(UserApi::class.java)
+        val token = SessionManager.getToken(requireContext())!!
+        val userRepository = UserRepository(userApi, token)
+        userViewModel =
+            ViewModelProvider(
+                requireActivity(),
+                UnivViewModelFactory(userRepository, token)
+            )[UserViewModel::class.java]
 
         recyclerView = view.findViewById(R.id.usersRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        initRV(recyclerView)
         val addUser = view.findViewById<AppCompatButton>(R.id.addNewUserBtn)
         val refreshFilterBtn = view.findViewById<AppCompatButton>(R.id.refreshFilterBtn)
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
@@ -130,121 +139,58 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        userViewModel.userList.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
         getUsers(searchParams, null)
 
-        userViewModel.userList.observe(viewLifecycleOwner) {
-            adapter.users = it
-        }
-
     }
 
-    override fun onEditClick(user: UserDisplayDto) {
-        val bundle = Bundle()
-
-        val token: String? = SessionManager.getToken(requireContext())
-        val call = userApi.getUser("Bearer ${token}", user.id.toLong())
-
-        call.enqueue(object : Callback<UserCreateRequest> {
-            override fun onResponse(
-                call: Call<UserCreateRequest>,
-                response: Response<UserCreateRequest>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d("API Request successful", "Получили ${response.code()}")
-                    val dataResponse = response.body()
-                    println(dataResponse)
-                    if (dataResponse != null) {
-                        bundle.putInt("id", dataResponse.id)
-                        bundle.putBoolean("editable", true)
-                        bundle.putString("role", dataResponse.role)
-                        bundle.putString("fullName", dataResponse.fullName)
-                        bundle.putString("login", dataResponse.username)
-                        bundle.putString("email", dataResponse.email)
-                        bundle.putString("city", dataResponse.city)
-                        bundle.putString("password", dataResponse.password)
-                        bundle.putLong("univId", dataResponse.universityId ?: -1L)
-                        bundle.putLong("facultyId", dataResponse.facultyId ?: -1L)
-                        bundle.putLong("group", dataResponse.groupId ?: -1L)
-
-                        findNavController().navigate(
-                            R.id.action_userListPageFragment_to_createUserAuthFragment,
-                            bundle
-                        )
-                    }
-                } else {
-                    println("Не успешно")
-                }
-            }
-
-            override fun onFailure(call: Call<UserCreateRequest>, t: Throwable) {
-                println("Ошибка")
-                println(t)
-            }
-        })
-    }
-
-    override fun onDeleteClick(user: UserDisplayDto) {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Удаление пользователя")
-            .setMessage("Вы уверены что хотите удалить ${user.fullName} из списка?")
-            .setCancelable(true)
-            .setPositiveButton("Удалить") { _, _ ->
-                delete(user.id) { code ->
-                    if (code == 200) {
-                        getUsers(searchParams, null)
-                    }
-                }
-            }
-            .setNegativeButton(
-                "Отмена"
-            ) { _, _ ->
-            }
-        builder.create()
-        builder.show()
-    }
 
     //    mutableListOf<String?
 //university: String?, role: String?, city: String?, name: String?
     private fun getUsers(searchParams: MutableList<String?>, name: String?) {
         val token: String? = SessionManager.getToken(requireContext())
-        Log.d("API Request failed", "${token}")
-        val call = userApi.getUsers(
-            "Bearer ${token}",
+//        Log.d("API Request failed", "${token}")
+//        val call = userApi.getUsers(
+//            "Bearer ${token}",
+//            searchParams[0],
+//            searchParams[1],
+//            searchParams[2],
+//            name
+//        )
+
+        userViewModel.getAllUsers(
             searchParams[0],
             searchParams[1],
             searchParams[2],
             name
         )
 
-        call.enqueue(object : Callback<UserResponseDto> {
-            override fun onResponse(
-                call: Call<UserResponseDto>,
-                response: Response<UserResponseDto>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d("API Request successful", "Получили ${response.code()}")
-                    val dataResponse = response.body()
-                    println(dataResponse)
-                    if (dataResponse != null) {
-                        adapter = UserListAdapter(
-                            requireContext(),
-                            dataResponse.usersPage.contents,
-                            this@UserListPageFragment
-                        )
-                        getSearchItems(dataResponse.usersPage.contents)
-                    }
-                    recyclerView.adapter = adapter
-
-                } else {
-                    println("Не успешно")
-                }
-            }
-
-            override fun onFailure(call: Call<UserResponseDto>, t: Throwable) {
-                println("Ошибка")
-                println(t)
-            }
-        })
+//        call.enqueue(object : Callback<UserResponseDto> {
+//            override fun onResponse(
+//                call: Call<UserResponseDto>,
+//                response: Response<UserResponseDto>
+//            ) {
+//                if (response.isSuccessful) {
+//                    Log.d("API Request successful", "Получили ${response.code()}")
+//                    val dataResponse = response.body()
+//                    println(dataResponse)
+//                    if (dataResponse != null) {
+//                        userViewModel.getAllUsers(dataResponse.usersPage.contents)
+//                        getSearchItems(dataResponse.usersPage.contents)
+//                    }
+//
+//                } else {
+//                    println("Не успешно")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<UserResponseDto>, t: Throwable) {
+//                println("Ошибка")
+//                println(t)
+//            }
+//        })
     }
 
     private fun getUser(id: Long) {
@@ -286,6 +232,7 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Log.d("API Request okay", "Удалили ${response.code()}")
+                    Log.d("Delete", "Удалили ${id}")
                     showToastNotification("Пользователь успешно удален")
                 } else {
                     if (response.code() == 403) {
@@ -354,4 +301,80 @@ class UserListPageFragment : Fragment(), OnUserItemClickListener {
             cities.add(userDto.city)
         }
     }
+
+    override fun onEditClick(userId: Int) {
+        val bundle = Bundle()
+
+        val token: String? = SessionManager.getToken(requireContext())
+        val call = userApi.getUser("Bearer ${token}", userId.toLong())
+
+        call.enqueue(object : Callback<UserCreateRequest> {
+            override fun onResponse(
+                call: Call<UserCreateRequest>,
+                response: Response<UserCreateRequest>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("API Request successful", "Получили ${response.code()}")
+                    val dataResponse = response.body()
+                    println(dataResponse)
+                    if (dataResponse != null) {
+                        bundle.putInt("id", dataResponse.id)
+                        bundle.putBoolean("editable", true)
+                        bundle.putString("role", dataResponse.role)
+                        bundle.putString("fullName", dataResponse.fullName)
+                        bundle.putString("login", dataResponse.username)
+                        bundle.putString("email", dataResponse.email)
+                        bundle.putString("city", dataResponse.city)
+                        bundle.putString("password", dataResponse.password)
+                        bundle.putLong("univId", dataResponse.universityId ?: -1L)
+                        bundle.putLong("facultyId", dataResponse.facultyId ?: -1L)
+                        bundle.putLong("group", dataResponse.groupId ?: -1L)
+
+                        findNavController().navigate(
+                            R.id.action_userListPageFragment_to_createUserAuthFragment,
+                            bundle
+                        )
+                    }
+                } else {
+                    println("Не успешно")
+                }
+            }
+
+            override fun onFailure(call: Call<UserCreateRequest>, t: Throwable) {
+                println("Ошибка")
+                println(t)
+            }
+        })
+    }
+
+    override fun onDeleteClick(userId: Int) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Удаление пользователя")
+            .setMessage("Вы уверены что хотите удалить из списка?")
+            .setCancelable(true)
+            .setPositiveButton("Удалить") { _, _ ->
+                delete(userId) { code ->
+                    if (code == 200) {
+                        getUsers(searchParams, null)
+                    }
+                }
+            }
+            .setNegativeButton(
+                "Отмена"
+            ) { _, _ ->
+            }
+        builder.create()
+        builder.show()
+    }
+
+    private fun initRV(rv: RecyclerView) {
+        adapter = UserListAdapter(
+            this@UserListPageFragment,
+            this@UserListPageFragment
+        )
+        rv.layoutManager = LinearLayoutManager(requireContext())
+        rv.adapter = adapter
+    }
+
+
 }

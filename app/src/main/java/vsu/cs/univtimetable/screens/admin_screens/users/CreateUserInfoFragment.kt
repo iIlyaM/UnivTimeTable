@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens.admin_screens
+package vsu.cs.univtimetable.screens.admin_screens.users
 
 import android.os.Bundle
 import android.os.Handler
@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import android.widget.ImageButton
@@ -26,12 +25,13 @@ import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.UserApi
-import vsu.cs.univtimetable.dto.CreateUserResponse
-import vsu.cs.univtimetable.dto.FacultyResponse
-import vsu.cs.univtimetable.dto.GroupDto
-import vsu.cs.univtimetable.dto.UnivResponse
-import vsu.cs.univtimetable.dto.UserCreateRequest
-import vsu.cs.univtimetable.dto.UserDisplayDto
+import vsu.cs.univtimetable.dto.user.CreateUserResponse
+import vsu.cs.univtimetable.dto.faculty.FacultyResponse
+import vsu.cs.univtimetable.dto.group.GroupDto
+import vsu.cs.univtimetable.dto.univ.UnivResponse
+import vsu.cs.univtimetable.dto.user.UserCreateRequest
+import vsu.cs.univtimetable.repository.UserRepository
+import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
 
 
 class CreateUserInfoFragment : Fragment() {
@@ -89,24 +89,45 @@ class CreateUserInfoFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_create_user_info, container, false)
 
-        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+        val token = SessionManager.getToken(requireContext())!!
+        val userRepository = UserRepository(userApi, token)
+        userViewModel =
+            ViewModelProvider(
+                requireActivity(),
+                UnivViewModelFactory(userRepository, token)
+            )[UserViewModel::class.java]
 
         val tilUniv = view.findViewById<TextInputLayout>(R.id.editUnivText)
         tilUniv.boxStrokeColor =
             ContextCompat.getColor(requireContext(), R.color.adminsColor)
-        tilUniv.setBoxStrokeColorStateList(ContextCompat.getColorStateList(requireContext(), R.color.admin_selector)!!)
+        tilUniv.setBoxStrokeColorStateList(
+            ContextCompat.getColorStateList(
+                requireContext(),
+                R.color.admin_selector
+            )!!
+        )
         tilUniv.boxStrokeWidth = resources.getDimensionPixelSize(R.dimen.new_stroke_width)
 
         val tilFaculty = view.findViewById<TextInputLayout>(R.id.editFacultyText)
         tilFaculty.boxStrokeColor =
             ContextCompat.getColor(requireContext(), R.color.adminsColor)
-        tilFaculty.setBoxStrokeColorStateList(ContextCompat.getColorStateList(requireContext(), R.color.admin_selector)!!)
+        tilFaculty.setBoxStrokeColorStateList(
+            ContextCompat.getColorStateList(
+                requireContext(),
+                R.color.admin_selector
+            )!!
+        )
         tilFaculty.boxStrokeWidth = resources.getDimensionPixelSize(R.dimen.new_stroke_width)
 
         val tilGroupNum = view.findViewById<TextInputLayout>(R.id.editGroupNumText)
         tilGroupNum.boxStrokeColor =
             ContextCompat.getColor(requireContext(), R.color.adminsColor)
-        tilGroupNum.setBoxStrokeColorStateList(ContextCompat.getColorStateList(requireContext(), R.color.admin_selector)!!)
+        tilGroupNum.setBoxStrokeColorStateList(
+            ContextCompat.getColorStateList(
+                requireContext(),
+                R.color.admin_selector
+            )!!
+        )
         tilGroupNum.boxStrokeWidth = resources.getDimensionPixelSize(R.dimen.new_stroke_width)
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
@@ -164,32 +185,20 @@ class CreateUserInfoFragment : Fragment() {
             roleTextInputLayout.error = "Выберите роль"
             return
         }
-        var univName: String
-        var univId: Long?
-        if (univMap[univTextInputLayout.text.toString()] != null) {
-            univId = univMap[univTextInputLayout.text.toString()]?.id
-            univName =  univMap[univTextInputLayout.text.toString()]?.universityName!!
+        val univId = if (univMap[univTextInputLayout.text.toString()] != null) {
+            univMap[univTextInputLayout.text.toString()]?.id
         } else {
-            univId = null
-            univName = ""
+            null
         }
-        var facId: Long?
-        var facName: String
-        if (facultyMap[facultyTextInputLayout.text.toString()] != null) {
-            facId = facultyMap[facultyTextInputLayout.text.toString()]?.id
-            facName = facultyMap[facultyTextInputLayout.text.toString()]?.name!!
+        val facId = if (facultyMap[facultyTextInputLayout.text.toString()] != null) {
+            facultyMap[facultyTextInputLayout.text.toString()]?.id
         } else {
-            facId = null
-            facName = ""
+            null
         }
-        var groupId:Long?
-        var groupNum:Int
-        if (groupMap[groupTextInputLayout.text.toString()] != null) {
-            groupId = groupMap[groupTextInputLayout.text.toString()]?.id
-            groupNum = groupMap[groupTextInputLayout.text.toString()]?.groupNumber!!
+        val groupId = if (groupMap[groupTextInputLayout.text.toString()] != null) {
+            groupMap[groupTextInputLayout.text.toString()]?.id
         } else {
-            groupId = null
-            groupNum = 0
+            null
         }
         if (!validUserInfo(role, univId, facId)) {
             return
@@ -198,13 +207,26 @@ class CreateUserInfoFragment : Fragment() {
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
         val editable = arguments?.getBoolean("editable")
-        val tempPass: String?
+        val tempPass: String?;
         tempPass = if (password.isEmpty()) {
             null
         } else {
             password
         }
-        val user = UserCreateRequest(
+//        val user = UserCreateRequest(
+//            0,
+//            role,
+//            fullName,
+//            login,
+//            email,
+//            city,
+//            tempPass,
+//            univId,
+//            facId,
+//            groupId
+//        )
+
+        userViewModel.addUser(
             0,
             role,
             fullName,
@@ -215,48 +237,39 @@ class CreateUserInfoFragment : Fragment() {
             univId,
             facId,
             groupId
-        );
-        val call: Call<Void>;
-        if (editable != null && editable) {
-            val id = arguments?.getInt("id") ?: -1
-            user.id = arguments?.getInt("id") ?: -1
-            call = userApi.editUser(
-                "Bearer ${token}",
-                id,
-                user
-            )
-        } else {
-            call = userApi.addUser(
-                "Bearer ${token}",
-                user
-            )
-        }
-        call.enqueue(object : Callback<Void> {
-            override fun onResponse(
-                call: Call<Void>,
-                response: Response<Void>
-            ) {
-                if (response.isSuccessful) {
-                    userViewModel.addUser(UserDisplayDto(
-                        id,
-                        role,
-                        fullName,
-                        city,
-                        univName,
-                        facName,
-                        groupNum
-                        ))
-                    Log.d("API Request successful", "Получили ${response.code()}")
-                } else {
-                    println("Не успешно")
-                }
-            }
-
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                println("Ошибка")
-                println(t)
-            }
-        })
+        )
+//        val call: Call<Void>;
+//        if (editable != null && editable) {
+//            val id = arguments?.getInt("id") ?: -1
+//            user.id = arguments?.getInt("id") ?: -1
+//            call = userApi.editUser(
+//                "Bearer ${token}",
+//                id,
+//                user
+//            )
+//        } else {
+//            call = userApi.addUser(
+//                "Bearer ${token}",
+//                user
+//            )
+//        }
+//        call.enqueue(object : Callback<Void> {
+//            override fun onResponse(
+//                call: Call<Void>,
+//                response: Response<Void>
+//            ) {
+//                if (response.isSuccessful) {
+//                    Log.d("API Request successful", "Получили ${response.code()}")
+//                } else {
+//                    println("Не успешно")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<Void>, t: Throwable) {
+//                println("Ошибка")
+//                println(t)
+//            }
+//        })
 
         findNavController().navigate(R.id.action_createUserInfoFragment_to_userListPageFragment)
     }
@@ -442,7 +455,7 @@ class CreateUserInfoFragment : Fragment() {
         }
     }
 
-    private fun showToastNotification (message: String) {
+    private fun showToastNotification(message: String) {
         val duration = Toast.LENGTH_LONG
 
         val toast = Toast.makeText(requireContext(), message, duration)
