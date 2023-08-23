@@ -30,18 +30,18 @@ interface UserApi {
 
     @Headers("Content-Type: application/json")
     @GET("user/{id}")
-    fun getUser(
+    suspend fun getUser(
         @Header("Authorization") basicToken: String,
         @Path("id") id: Long
-    ): Call<UserCreateRequest>
+    ): Response<UserCreateRequest>
 
     @Headers("Content-Type: application/json")
     @PUT("user/{id}")
-    fun editUser(
+    suspend fun editUser(
         @Header("Authorization") basicToken: String,
         @Path("id") id: Int,
         @Body userDto: UserCreateRequest
-    ): Call<Void>
+    ): Response<ResponseBody>
 
     @Headers("Content-Type: application/json")
     @DELETE("user/{id}")
@@ -59,9 +59,9 @@ interface UserApi {
 
     @Headers("Content-Type: application/json")
     @GET("user/create")
-    fun createUserInfo(
+    suspend fun createUserInfo(
         @Header("Authorization") basicToken: String
-    ): Call<CreateUserResponse>
+    ): Response<CreateUserResponse>
 //
 //    @Headers("Content-Type: application/json")
 //    @DELETE("universities/{id}")

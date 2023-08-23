@@ -8,6 +8,9 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
+import retrofit2.Response
+import vsu.cs.univtimetable.dto.user.CreateUserResponse
 import vsu.cs.univtimetable.dto.user.UserCreateRequest
 import vsu.cs.univtimetable.dto.user.UserDisplayDto
 import vsu.cs.univtimetable.repository.UserRepository
@@ -28,16 +31,20 @@ class UserViewModel(
     private val token: String
 ) : ViewModel() {
     private val _userList = MutableLiveData<List<UserDisplayDto>>()
+    private val _user = MutableLiveData<UserCreateRequest>()
+    private val _userInfo = MutableLiveData<CreateUserResponse>()
     val userList: LiveData<List<UserDisplayDto>> get() = _userList
+    val user: LiveData<UserCreateRequest> get() = _user
+    val userInfo: LiveData<CreateUserResponse> get() =  _userInfo
 
     private val _errorMsg = MutableLiveData<String>()
-    private val errorMsg: LiveData<String> = _errorMsg
+    val errorMsg: LiveData<String> = _errorMsg
 
     private val _loading = MutableLiveData<String>()
     private val loading: LiveData<String> = _loading
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        onError("Exception handled: ${throwable.localizedMessage}")
+        onError(200)
     }
 
 
@@ -61,7 +68,33 @@ class UserViewModel(
             if (response.isSuccessful) {
                 _userList.postValue(response.body()?.usersPage?.contents)
             } else {
-                onError("Error: ${response.message()}")
+                onError(response.code())
+            }
+        }
+    }
+
+    fun getUser(
+        id: Long
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = userRepository.getUser(
+                id
+            )
+            if (response.isSuccessful) {
+                _user.postValue(response.body())
+            } else {
+                onError(response.code())
+            }
+        }
+    }
+
+    fun getUserInfo() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = userRepository.createUserInfo()
+            if (response.isSuccessful) {
+                _userInfo.postValue(response.body())
+            } else {
+                onError(response.code())
             }
         }
     }
@@ -96,12 +129,55 @@ class UserViewModel(
             if (response.isSuccessful) {
                 getAllUsers(null, null, null, null)
             } else {
-                onError("Error: ${response.message()}")
+                onError(response.code())
             }
         }
     }
 
-    private fun onError(msg: String) {
+    fun editUser(
+        id: Int,
+        role: String,
+        fullName: String,
+        username: String,
+        email: String,
+        city: String,
+        password: String?,
+        universityId: Long?,
+        facultyId: Long?,
+        groupId: Long?
+    ) {
+        viewModelScope.launch {
+            val response = userRepository.editUser(
+                id,
+                UserCreateRequest(
+                    id,
+                    role,
+                    fullName,
+                    username,
+                    email,
+                    city,
+                    password,
+                    universityId,
+                    facultyId,
+                    groupId
+                )
+            )
+            if (response.isSuccessful) {
+                getAllUsers(null, null, null, null)
+            } else {
+                onError(response.code())
+            }
+        }
+    }
+
+    private fun onError(code: Int) {
+        var msg: String = " "
+        if (code == 403) {
+            msg = "Недостаточно прав доступа для выполнения"
+        }
+        if (code == 404) {
+            msg = "Пользователь по переданному id не был найден"
+        }
         _errorMsg.postValue(msg)
     }
 }
