@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens.admin_screens
+package vsu.cs.univtimetable.screens.admin_screens.univ
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -9,9 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Toast
+import android.widget.SearchView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,8 +23,8 @@ import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.UnivApi
-import vsu.cs.univtimetable.dto.UnivDto
-import vsu.cs.univtimetable.dto.UnivResponseDto
+import vsu.cs.univtimetable.dto.univ.UnivDto
+import vsu.cs.univtimetable.dto.univ.UnivResponseDto
 import vsu.cs.univtimetable.screens.adapter.OnUnivItemClickListener
 import vsu.cs.univtimetable.screens.adapter.UnivListAdapter
 
@@ -48,6 +48,7 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
         val view = inflater.inflate(R.layout.fragment_univ_list_page, container, false)
         recyclerView = view.findViewById(R.id.univsList)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        searchView = view.findViewById(R.id.enterUnivName)
 
         val sortBtn = view.findViewById<ImageButton>(R.id.sortButton)
         var order = "ASC"
@@ -76,7 +77,6 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getUniversities(null, null)
-        searchView = view.findViewById(R.id.enterUnivName)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -165,7 +165,7 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
                     showToastNotification("Университет успешно обновлен")
                     val code = response.code()
                 } else {
-                    if(response.code() == 400) {
+                    if (response.code() == 400) {
                         showToastNotification("Такой университет уже существует")
                     }
                     if (response.code() == 403) {
@@ -252,7 +252,7 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
         })
     }
 
-    private fun showToastNotification (message: String) {
+    private fun showToastNotification(message: String) {
         val duration = Toast.LENGTH_LONG
 
         val toast = Toast.makeText(requireContext(), message, duration)
