@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens.admin_screens
+package vsu.cs.univtimetable.screens.admin_screens.univ
 
 import android.os.Bundle
 import android.os.Handler
@@ -11,19 +11,20 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.UnivApi
-import vsu.cs.univtimetable.dto.CreateUnivDto
+import vsu.cs.univtimetable.dto.univ.CreateUnivDto
+import vsu.cs.univtimetable.repository.UnivRepository
 
 class CreateUniversityFragment : Fragment() {
 
     private lateinit var univApi: UnivApi
+    private lateinit var univViewModel: UnivViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +40,18 @@ class CreateUniversityFragment : Fragment() {
         val univField = view.findViewById<EditText>(R.id.editUnivNameText)
         val city = view.findViewById<EditText>(R.id.editCityText)
 
+        val token = SessionManager.getToken(requireContext())!!
+        val univRepository = UnivRepository(univApi, token)
+
+        univViewModel =
+            ViewModelProvider(
+                requireActivity(),
+                UnivViewModelFactory(univRepository, token)
+            )[UnivViewModel::class.java]
+
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
-            findNavController().navigate(R.id.action_createUniversityFragment_to_univListPageFragment)
+            findNavController().popBackStack()
         }
 
         val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
@@ -71,36 +81,37 @@ class CreateUniversityFragment : Fragment() {
 
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
+        univViewModel.addUniversity(CreateUnivDto(univName, cityName))
 
-        val call = univApi.addUniversity(
-            "Bearer ${token}",
-            CreateUnivDto(univName, cityName)
-        )
-
-        call.enqueue(object : Callback<Void> {
-            override fun onResponse(
-                call: Call<Void>,
-                response: Response<Void>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d("API Request Successful", "${response.code()}")
-                    showToastNotification("Университет успешно добавлен")
-                } else {
-                    if (response.code() == 400) {
-                        showToastNotification("Такой университет уже существует")
-                    }
-                    if (response.code() == 403) {
-                        showToastNotification("Недостаточно прав доступа для выполнения")
-                    }
-                    println("Не успешно")
-                }
-            }
-
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                println("Ошибка")
-                println(t)
-            }
-        })
+//        val call = univApi.addUniversity(
+//            "Bearer ${token}",
+//            CreateUnivDto(univName, cityName)
+//        )
+//
+//        call.enqueue(object : Callback<Void> {
+//            override fun onResponse(
+//                call: Call<Void>,
+//                response: Response<Void>
+//            ) {
+//                if (response.isSuccessful) {
+//                    Log.d("API Request Successful", "${response.code()}")
+//                    showToastNotification("Университет успешно добавлен")
+//                } else {
+//                    if (response.code() == 400) {
+//                        showToastNotification("Такой университет уже существует")
+//                    }
+//                    if (response.code() == 403) {
+//                        showToastNotification("Недостаточно прав доступа для выполнения")
+//                    }
+//                    println("Не успешно")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<Void>, t: Throwable) {
+//                println("Ошибка")
+//                println(t)
+//            }
+//        })
         univField.text.clear()
         city.text.clear()
     }
