@@ -2,6 +2,7 @@ package vsu.cs.univtimetable.screens.admin_screens.univ
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import vsu.cs.univtimetable.repository.UnivRepository
 import vsu.cs.univtimetable.repository.UserRepository
 import vsu.cs.univtimetable.screens.admin_screens.users.UserViewModel
 import java.lang.IllegalArgumentException
@@ -17,6 +18,10 @@ class UnivViewModelFactory(
                 userRepository = repository as UserRepository
             ) as T
 
+            modelClass.isAssignableFrom(UnivViewModel::class.java) -> UnivViewModel(
+                token = token,
+                univRepository = repository as UnivRepository
+            ) as T
             else -> throw IllegalArgumentException("No such ViewModel")
         }
     }
