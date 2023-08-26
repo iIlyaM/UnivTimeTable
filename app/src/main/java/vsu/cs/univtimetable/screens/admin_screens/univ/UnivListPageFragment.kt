@@ -3,7 +3,6 @@ package vsu.cs.univtimetable.screens.admin_screens.univ
 import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,27 +12,31 @@ import android.widget.SearchView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.UnivApi
 import vsu.cs.univtimetable.dto.univ.UnivDto
-import vsu.cs.univtimetable.dto.univ.UnivResponseDto
-import vsu.cs.univtimetable.screens.adapter.OnUnivItemClickListener
+import vsu.cs.univtimetable.repository.UnivRepository
+import vsu.cs.univtimetable.screens.adapter.OnUnivClickInterface
+import vsu.cs.univtimetable.screens.adapter.OnUnivDeleteInterface
+import vsu.cs.univtimetable.screens.adapter.OnUnivEditInterface
 import vsu.cs.univtimetable.screens.adapter.UnivListAdapter
+import vsu.cs.univtimetable.screens.adapter.UserListAdapter
 
-class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
+class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterface,
+    OnUnivClickInterface {
 
     private lateinit var univApi: UnivApi
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: UnivListAdapter
     private lateinit var searchView: SearchView
+    private lateinit var univViewModel: UnivViewModel
+    private var alertDialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +50,17 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_univ_list_page, container, false)
         recyclerView = view.findViewById(R.id.univsList)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        initRV(recyclerView)
         searchView = view.findViewById(R.id.enterUnivName)
+
+        val token = SessionManager.getToken(requireContext())!!
+        val univRepository = UnivRepository(univApi, token)
+
+        univViewModel =
+            ViewModelProvider(
+                requireActivity(),
+                UnivViewModelFactory(univRepository, token)
+            )[UnivViewModel::class.java]
 
         val sortBtn = view.findViewById<ImageButton>(R.id.sortButton)
         var order = "ASC"
@@ -76,6 +88,12 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        univViewModel.univList.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
+        univViewModel.errorMsg.observe(viewLifecycleOwner) {
+        }
         getUniversities(null, null)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -92,55 +110,6 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
         })
     }
 
-    override fun onEditClick(univ: UnivDto) {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.update_univ_dialog, null)
-        val editUnivName = dialogView.findViewById<AppCompatEditText>(R.id.updUnivName)
-        val editUnivCity = dialogView.findViewById<AppCompatEditText>(R.id.updUnivCity)
-        val btnUpdate = dialogView.findViewById<AppCompatButton>(R.id.updateUnivBtn)
-
-        editUnivName?.setText(univ.universityName)
-        editUnivCity?.setText(univ.city)
-
-        val builder = AlertDialog.Builder(context)
-        builder.setView(dialogView)
-        val alertDialog = builder.create()
-        alertDialog.show()
-
-        btnUpdate.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View?) {
-                val id = univ.id
-                val univName = editUnivName?.text.toString()
-                val city = editUnivCity?.text.toString()
-                update(UnivDto(id, univName, city)) { code ->
-                    if (code == 200) {
-                        getUniversities(null, null)
-                    }
-                }
-                alertDialog.dismiss()
-            }
-        })
-    }
-
-    override fun onDeleteClick(univ: UnivDto) {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Удаление университета")
-            .setMessage("Вы уверены что хотите удалить ${univ.universityName} из списка?")
-            .setCancelable(true)
-            .setPositiveButton("Удалить") { _, _ ->
-                delete(univ.id.toInt()) { code ->
-                    if (code == 200) {
-                        getUniversities(null, null)
-                    }
-                }
-            }
-            .setNegativeButton(
-                "Отмена"
-            ) { _, _ ->
-            }
-        builder.create()
-        builder.show()
-    }
-
     override fun onItemClick(id: Int) {
         val bundle = Bundle()
         bundle.putInt("univId", id)
@@ -150,106 +119,109 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
         )
     }
 
-    private fun update(updatedUniversity: UnivDto, callback: (Int) -> Unit) {
-        val token: String? = SessionManager.getToken(requireContext())
-        Log.d("API Request failed", "${token}")
-        val call = univApi.editUniversity(
-            "Bearer ${token}",
-            updatedUniversity.id.toInt(),
-            updatedUniversity
-        )
-        call.enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                if (response.isSuccessful) {
-                    Log.d("API Request okay", "Обновили ${response.code()}")
-                    showToastNotification("Университет успешно обновлен")
-                    val code = response.code()
-                } else {
-                    if (response.code() == 400) {
-                        showToastNotification("Такой университет уже существует")
-                    }
-                    if (response.code() == 403) {
-                        showToastNotification("Недостаточно прав доступа для выполнения")
-                    }
-                    if (response.code() == 404) {
-                        showToastNotification("Университет по переданному id не был найден")
-                    }
-                    Log.d("API Request failed", "${response.code()}")
-                    Log.d("API Request failed", "${response.body()}")
-                    Log.d("API Request failed", "${response.errorBody()}")
-                }
-                callback(response.code())
-            }
-
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                // Обработка ошибки
-            }
-        })
+    private fun update(id: Int, updatedUniversity: UnivDto) {
+        univViewModel.editUniversity(id, updatedUniversity)
+//        val token: String? = SessionManager.getToken(requireContext())
+//        Log.d("API Request failed", "${token}")
+//        val call = univApi.editUniversity(
+//            "Bearer ${token}",
+//            updatedUniversity.id.toInt(),
+//            updatedUniversity
+//        )
+//        call.enqueue(object : Callback<Void> {
+//            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+//                if (response.isSuccessful) {
+//                    Log.d("API Request okay", "Обновили ${response.code()}")
+//                    showToastNotification("Университет успешно обновлен")
+//                    val code = response.code()
+//                } else {
+//                    if (response.code() == 400) {
+//                        showToastNotification("Такой университет уже существует")
+//                    }
+//                    if (response.code() == 403) {
+//                        showToastNotification("Недостаточно прав доступа для выполнения")
+//                    }
+//                    if (response.code() == 404) {
+//                        showToastNotification("Университет по переданному id не был найден")
+//                    }
+//                    Log.d("API Request failed", "${response.code()}")
+//                    Log.d("API Request failed", "${response.body()}")
+//                    Log.d("API Request failed", "${response.errorBody()}")
+//                }
+//                callback(response.code())
+//            }
+//
+//            override fun onFailure(call: Call<Void>, t: Throwable) {
+//                // Обработка ошибки
+//            }
+//        })
     }
 
-    private fun delete(id: Int, callback: (Int) -> Unit) {
+    private fun delete(id: Int) {
         val token: String? = SessionManager.getToken(requireContext())
-        Log.d("API Request failed", "${token}")
-        val call = univApi.deleteUniversity(
-            "Bearer ${token}", id
-        )
-        call.enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                if (response.isSuccessful) {
-                    Log.d("API Request okay", "Удалили ${response.code()}")
-                    showToastNotification("Университет успешно удален")
-                } else {
-                    if (response.code() == 403) {
-                        showToastNotification("Недостаточно прав доступа для выполнения")
-                    }
-                    if (response.code() == 404) {
-                        showToastNotification("Университет по переданному id не был найден")
-                    }
-                    Log.d("API Request failed", "${response.code()}")
-                }
-                callback(response.code())
-            }
-
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                // Обработка ошибки
-            }
-        })
+        univViewModel.deleteUniversity(id)
+//        Log.d("API Request failed", "${token}")
+//        val call = univApi.deleteUniversity(
+//            "Bearer ${token}", id
+//        )
+//        call.enqueue(object : Callback<Void> {
+//            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+//                if (response.isSuccessful) {
+//                    Log.d("API Request okay", "Удалили ${response.code()}")
+//                    showToastNotification("Университет успешно удален")
+//                } else {
+//                    if (response.code() == 403) {
+//                        showToastNotification("Недостаточно прав доступа для выполнения")
+//                    }
+//                    if (response.code() == 404) {
+//                        showToastNotification("Университет по переданному id не был найден")
+//                    }
+//                    Log.d("API Request failed", "${response.code()}")
+//                }
+//                callback(response.code())
+//            }
+//
+//            override fun onFailure(call: Call<Void>, t: Throwable) {
+//                // Обработка ошибки
+//            }
+//        })
     }
 
     private fun getUniversities(param: String?, order: String?) {
-        val token: String? = SessionManager.getToken(requireContext())
-        Log.d("API Request failed", "${token}")
-        val call = univApi.getUniversities("Bearer ${token}", param, order)
-
-
-        call.enqueue(object : Callback<UnivResponseDto> {
-            override fun onResponse(
-                call: Call<UnivResponseDto>,
-                response: Response<UnivResponseDto>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d("API Request successful", "Получили ${response.code()}")
-                    val dataResponse = response.body()
-                    println(dataResponse)
-                    if (dataResponse != null) {
-                        adapter = UnivListAdapter(
-                            requireContext(),
-                            dataResponse.universitiesPage.contents,
-                            this@UnivListPageFragment
-                        )
-                    }
-                    recyclerView.adapter = adapter
-
-                } else {
-                    println("Не успешно")
-                }
-            }
-
-            override fun onFailure(call: Call<UnivResponseDto>, t: Throwable) {
-                println("Ошибка")
-                println(t)
-            }
-        })
+        univViewModel.getUniversities(param, order)
+//        val token: String? = SessionManager.getToken(requireContext())
+//        Log.d("API Request failed", "${token}")
+//        val call = univApi.getUniversities("Bearer ${token}", param, order)
+//
+//
+//        call.enqueue(object : Callback<UnivResponseDto> {
+//            override fun onResponse(
+//                call: Call<UnivResponseDto>,
+//                response: Response<UnivResponseDto>
+//            ) {
+//                if (response.isSuccessful) {
+//                    Log.d("API Request successful", "Получили ${response.code()}")
+//                    val dataResponse = response.body()
+//                    println(dataResponse)
+//                    if (dataResponse != null) {
+//                        adapter = UnivListAdapter(
+//                            requireContext(),
+//                            dataResponse.universitiesPage.contents,
+//                            this@UnivListPageFragment
+//                        )
+//                    }
+//                    recyclerView.adapter = adapter
+//
+//                } else {
+//                    println("Не успешно")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<UnivResponseDto>, t: Throwable) {
+//                println("Ошибка")
+//                println(t)
+//            }
+//        })
     }
 
     private fun showToastNotification(message: String) {
@@ -259,6 +231,65 @@ class UnivListPageFragment : Fragment(), OnUnivItemClickListener {
         toast.show()
         val handler = Handler()
         handler.postDelayed({ toast.cancel() }, 1500)
+    }
+
+    override fun onEditClick(id: Int) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.update_univ_dialog, null)
+        val editUnivName = dialogView.findViewById<AppCompatEditText>(R.id.updUnivName)
+        val editUnivCity = dialogView.findViewById<AppCompatEditText>(R.id.updUnivCity)
+        val btnUpdate = dialogView.findViewById<AppCompatButton>(R.id.updateUnivBtn)
+
+        univViewModel.getUniversity(id.toLong())
+        univViewModel.univ.observe(viewLifecycleOwner) {
+            editUnivName?.setText(it.universityName)
+            editUnivCity?.setText(it.city)
+        }
+
+
+        val builder = AlertDialog.Builder(context)
+        builder.setView(dialogView)
+        val alertDialog = builder.create()
+        alertDialog.show()
+
+        btnUpdate.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(view: View?) {
+                val univName = editUnivName?.text.toString()
+                val city = editUnivCity?.text.toString()
+                update(id, UnivDto(id.toLong(), univName, city))
+                getUniversities(null, null)
+                alertDialog.dismiss()
+            }
+        })
+//        if (dialogView.parent != null) {
+//            (dialogView.parent as ViewGroup).removeView(dialogView) // <- fix
+//        }
+    }
+
+    override fun onDeleteClick(id: Int) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Удаление университета")
+            .setMessage("Вы уверены что хотите удалить  из списка?")
+            .setCancelable(true)
+            .setPositiveButton("Удалить") { _, _ ->
+                delete(id)
+                getUniversities(null, null)
+            }
+            .setNegativeButton(
+                "Отмена"
+            ) { _, _ ->
+            }
+        builder.create()
+        builder.show()
+    }
+
+    private fun initRV(rv: RecyclerView) {
+        adapter = UnivListAdapter(
+            this@UnivListPageFragment,
+            this@UnivListPageFragment,
+            this@UnivListPageFragment
+        )
+        rv.layoutManager = LinearLayoutManager(requireContext())
+        rv.adapter = adapter
     }
 }
 
