@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens.admin_screens
+package vsu.cs.univtimetable.screens.admin_screens.faculty
 
 import android.os.Bundle
 import android.os.Handler
@@ -11,19 +11,20 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.FacultyApi
-import vsu.cs.univtimetable.dto.CreateFacultyDto
+import vsu.cs.univtimetable.dto.univ.CreateFacultyDto
+import vsu.cs.univtimetable.repository.FacultyRepository
+import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
 
 class CreateFacultyPageFragment : Fragment() {
 
     private lateinit var facultyApi: FacultyApi
+    private lateinit var facultyViewModel: FacultyViewModel
     private var universityId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,11 +41,25 @@ class CreateFacultyPageFragment : Fragment() {
         val facultyNameField = view.findViewById<EditText>(R.id.editFacultyNameText)
         val confirmBtn = view.findViewById<AppCompatButton>(R.id.confirmFacultyCreateBtn)
 
+        val token = SessionManager.getToken(requireContext())!!
+        val facultyRepository = FacultyRepository(facultyApi, token)
+
+        facultyViewModel =
+            ViewModelProvider(
+                requireActivity(),
+                UnivViewModelFactory(facultyRepository, token)
+            )[FacultyViewModel::class.java]
+
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt("univId", universityId)
             findNavController().navigate(R.id.action_createFacultyPageFragment_to_facultyListPageFragment, bundle)
+        }
+
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_createFacultyPageFragment_to_adminMainPageFragment)
         }
 
 
@@ -62,8 +77,7 @@ class CreateFacultyPageFragment : Fragment() {
     private fun addFaculty(facultyField: EditText) {
         val name: String = facultyField.text.toString()
 
-        if (facultyField.text.isEmpty())
-        {
+        if (facultyField.text.isEmpty()) {
             facultyField.error = "Введите название факультета"
             return
         }
@@ -73,43 +87,41 @@ class CreateFacultyPageFragment : Fragment() {
         val id = arguments?.getInt("univId")
 
         if (id != null) {
-            val call = facultyApi.addFaculty(
-                "Bearer ${token}",
-                id,
-                CreateFacultyDto(name)
-            )
-
-            call.enqueue(object : Callback<Void> {
-                override fun onResponse(
-                    call: Call<Void>,
-                    response: Response<Void>
-                ) {
-                    if (response.isSuccessful) {
-                        Log.d("API Request Successful", "${response.code()}")
-                        showToastNotification("Факультет успешно создан")
-                    } else {
-                        println("Не успешно")
-                        if (response.code() == 400) {
-                            showToastNotification("Такой факультет в этом университете уже существует")
-                        }
-                        if (response.code() == 403) {
-                            showToastNotification("Недостаточно прав доступа для выполнения")
-                        }
-                        if (response.code() == 404) {
-                            showToastNotification("Университет по переданному id для добавления факульета не был найден")
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    println("Ошибка")
-                    println(t)
-                }
-            })
+            facultyViewModel.addFaculty(id, CreateFacultyDto(name))
+            showToastNotification("Факультет успешно создан")
+//
+//            call.enqueue(object : Callback<Void> {
+//                override fun onResponse(
+//                    call: Call<Void>,
+//                    response: Response<Void>
+//                ) {
+//                    if (response.isSuccessful) {
+//                        Log.d("API Request Successful", "${response.code()}")
+//                        showToastNotification("Факультет успешно создан")
+//                    } else {
+//                        println("Не успешно")
+//                        if (response.code() == 400) {
+//                            showToastNotification("Такой факультет в этом университете уже существует")
+//                        }
+//                        if (response.code() == 403) {
+//                            showToastNotification("Недостаточно прав доступа для выполнения")
+//                        }
+//                        if (response.code() == 404) {
+//                            showToastNotification("Университет по переданному id для добавления факульета не был найден")
+//                        }
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<Void>, t: Throwable) {
+//                    println("Ошибка")
+//                    println(t)
+//                }
+//            })
+//            facultyField.text.clear()
+//        }
             facultyField.text.clear()
+
         }
-
-
     }
 
     private fun showToastNotification(message: String) {
