@@ -95,11 +95,25 @@
 
                 <ImageButton
                     android:id="@+id/prevPageButton"
-                    android:layout_width="91dp"
+                    android:layout_width="85dp"
                     android:layout_height="40dp"
                     android:background="@drawable/admin_bg"
                     android:contentDescription="Go to theprevious page"
                     android:src="@drawable/ic_arrow_back"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content" />
+
+                <ImageButton
+                    android:id="@+id/mainPageButton"
+                    android:layout_width="85dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/admin_bg"
+                    android:contentDescription="Go to theprevious page"
+                    android:src="@drawable/ic_home"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -120,7 +134,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.9"
                     app:layout_constraintStart_toStartOf="parent" />
-
             </LinearLayout>
 
 
