@@ -12,17 +12,12 @@ import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.Toast
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
 import com.google.android.material.textfield.TextInputLayout
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import vsu.cs.univtimetable.BtnLoadingProgressbar
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
@@ -31,7 +26,6 @@ import vsu.cs.univtimetable.dto.user.CreateUserResponse
 import vsu.cs.univtimetable.dto.faculty.FacultyResponse
 import vsu.cs.univtimetable.dto.group.GroupDto
 import vsu.cs.univtimetable.dto.univ.UnivResponse
-import vsu.cs.univtimetable.dto.user.UserCreateRequest
 import vsu.cs.univtimetable.repository.UserRepository
 import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
 
@@ -162,7 +156,6 @@ class CreateUserInfoFragment : Fragment() {
             groupTextInputLayout.error = null
         }
 
-        setFieldsIfEdit(view)
         createBtn = view.findViewById<CircularProgressButton>(R.id.create_user_btn)
         createBtn.setOnClickListener {
 //            val progressbar = BtnLoadingProgressbar(it)
@@ -343,11 +336,10 @@ class CreateUserInfoFragment : Fragment() {
 
     private fun getUserInfo(view: View) {
         val token: String? = SessionManager.getToken(requireContext())
+
         userViewModel.getUserInfo()
-
-
-
         userViewModel.userInfo.observe(viewLifecycleOwner) {
+            Log.d("INFO", it.toString())
             roleList = ArrayList(it.roles)
             univList = ArrayList(it.universityResponses)
             for (univ in univList) {

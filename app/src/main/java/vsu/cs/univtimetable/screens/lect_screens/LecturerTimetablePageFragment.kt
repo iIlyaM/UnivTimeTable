@@ -29,9 +29,9 @@ import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.TimetableApi
-import vsu.cs.univtimetable.dto.ClassDto
-import vsu.cs.univtimetable.dto.DateDto
-import vsu.cs.univtimetable.dto.TimetableResponse
+import vsu.cs.univtimetable.dto.classes.ClassDto
+import vsu.cs.univtimetable.dto.datetime.DateDto
+import vsu.cs.univtimetable.dto.classes.TimetableResponse
 import vsu.cs.univtimetable.screens.adapter.DayOfWeekAdapter
 import vsu.cs.univtimetable.screens.adapter.LecturerTimetableAdapter
 import java.io.File

@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens.admin_screens
+package vsu.cs.univtimetable.screens.admin_screens.audience
 
 import android.os.Bundle
 import android.os.Handler
@@ -22,7 +22,7 @@ import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.AudienceApi
-import vsu.cs.univtimetable.dto.CreateAudienceRequest
+import vsu.cs.univtimetable.dto.univ.CreateAudienceRequest
 
 
 class CreateAudiencePageFragment : Fragment() {

@@ -25,11 +25,11 @@ import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.TimetableApi
-import vsu.cs.univtimetable.dto.AudienceToMoveResponse
-import vsu.cs.univtimetable.dto.ClassDto
-import vsu.cs.univtimetable.dto.DayTime
-import vsu.cs.univtimetable.dto.MoveClassRequest
-import vsu.cs.univtimetable.dto.MoveClassResponse
+import vsu.cs.univtimetable.dto.univ.AudienceToMoveResponse
+import vsu.cs.univtimetable.dto.classes.ClassDto
+import vsu.cs.univtimetable.dto.datetime.DayTime
+import vsu.cs.univtimetable.dto.classes.MoveClassRequest
+import vsu.cs.univtimetable.dto.classes.MoveClassResponse
 
 class MoveClassTimePageFragment : Fragment() {
 

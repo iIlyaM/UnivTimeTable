@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.dto
+package vsu.cs.univtimetable.dto.univ
 
 import com.google.gson.annotations.SerializedName
 

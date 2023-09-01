@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
-import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import retrofit2.Call
@@ -20,8 +19,8 @@ import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.UserAuthApi
-import vsu.cs.univtimetable.dto.AuthRequestDto
-import vsu.cs.univtimetable.dto.AuthResponseDto
+import vsu.cs.univtimetable.dto.auth.AuthRequestDto
+import vsu.cs.univtimetable.dto.auth.AuthResponseDto
 import vsu.cs.univtimetable.utils.NavigationManager
 
 

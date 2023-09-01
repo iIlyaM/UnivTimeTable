@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens.admin_screens
+package vsu.cs.univtimetable.screens.admin_screens.faculty
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -33,17 +33,20 @@ class FacultyMainPageFragment : Fragment() {
             findNavController().navigate(R.id.action_facultyMainPageFragment_to_adminMainPageFragment)
         }
 
-        val createAudienceBtn = view.findViewById<AppCompatButton>(R.id.addAudienceBtn)
-        createAudienceBtn.setOnClickListener {
+        val audienceBtn = view.findViewById<AppCompatButton>(R.id.addAudienceBtn)
+        audienceBtn.setOnClickListener {
             findNavController().navigate(
                 R.id.action_facultyMainPageFragment_to_createAudiencePageFragment,
                 bundle
             )
         }
 
-        val createGroupBtn = view.findViewById<AppCompatButton>(R.id.addGroupBtn)
-        createGroupBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_facultyMainPageFragment_to_createGroupPageFragment)
+        val groupBtn = view.findViewById<AppCompatButton>(R.id.addGroupBtn)
+        groupBtn.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_facultyMainPageFragment_to_groupListPageFragment,
+                bundle
+            )
         }
 
         return view
