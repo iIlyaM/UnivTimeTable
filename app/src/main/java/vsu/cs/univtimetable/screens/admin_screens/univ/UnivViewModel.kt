@@ -50,7 +50,6 @@ class UnivViewModel(
     fun addUniversity(
         university: CreateUnivDto
     ) {
-
         viewModelScope.launch {
             val response = univRepository.addUniversity(university)
             if (response.isSuccessful) {
@@ -80,7 +79,6 @@ class UnivViewModel(
         id: Int,
         university: UnivDto
     ) {
-
         viewModelScope.launch {
             val response = univRepository.editUniversity(id, university)
             if (response.isSuccessful) {

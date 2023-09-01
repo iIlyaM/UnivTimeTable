@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable.screens.admin_screens
+package vsu.cs.univtimetable.screens.admin_screens.univ
 
 import android.os.Bundle
 import android.view.LayoutInflater

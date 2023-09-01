@@ -26,7 +26,6 @@ import vsu.cs.univtimetable.screens.adapter.OnUnivClickInterface
 import vsu.cs.univtimetable.screens.adapter.OnUnivDeleteInterface
 import vsu.cs.univtimetable.screens.adapter.OnUnivEditInterface
 import vsu.cs.univtimetable.screens.adapter.UnivListAdapter
-import vsu.cs.univtimetable.screens.adapter.UserListAdapter
 
 class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterface,
     OnUnivClickInterface {
@@ -73,6 +72,11 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
             getUniversities(null, order)
         }
 
+        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
+        mainPageButton.setOnClickListener {
+            findNavController().navigate(R.id.action_univListPageFragment_to_adminMainPageFragment)
+        }
+
         val addUnivBtn = view.findViewById<AppCompatButton>(R.id.addNewUnivBtn)
         addUnivBtn.setOnClickListener {
             findNavController().navigate(R.id.action_univListPageFragment_to_createUniversityFragment)
@@ -80,7 +84,7 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
-            findNavController().navigate(R.id.action_univListPageFragment_to_adminMainPageFragment)
+            findNavController().popBackStack()
         }
 
         return view
