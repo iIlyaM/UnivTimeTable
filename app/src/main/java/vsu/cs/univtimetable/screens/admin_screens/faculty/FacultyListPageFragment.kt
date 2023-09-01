@@ -63,7 +63,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigate(R.id.action_facultyListPageFragment_to_univListPageFragment)
         }
 
         val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
@@ -169,7 +169,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
         bundle.putInt("univId", getUnivId())
 
         findNavController().navigate(
-            R.id.action_facultyListPageFragment_to_groupListPageFragment,
+            R.id.action_facultyListPageFragment_to_facultyMainPageFragment,
             bundle
         )
     }

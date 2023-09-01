@@ -84,7 +84,7 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigate(R.id.action_univListPageFragment_to_adminMainPageFragment)
         }
 
         return view
@@ -164,68 +164,10 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
     private fun delete(id: Int) {
         val token: String? = SessionManager.getToken(requireContext())
         univViewModel.deleteUniversity(id)
-//        Log.d("API Request failed", "${token}")
-//        val call = univApi.deleteUniversity(
-//            "Bearer ${token}", id
-//        )
-//        call.enqueue(object : Callback<Void> {
-//            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request okay", "Удалили ${response.code()}")
-//                    showToastNotification("Университет успешно удален")
-//                } else {
-//                    if (response.code() == 403) {
-//                        showToastNotification("Недостаточно прав доступа для выполнения")
-//                    }
-//                    if (response.code() == 404) {
-//                        showToastNotification("Университет по переданному id не был найден")
-//                    }
-//                    Log.d("API Request failed", "${response.code()}")
-//                }
-//                callback(response.code())
-//            }
-//
-//            override fun onFailure(call: Call<Void>, t: Throwable) {
-//                // Обработка ошибки
-//            }
-//        })
     }
 
     private fun getUniversities(param: String?, order: String?) {
         univViewModel.getUniversities(param, order)
-//        val token: String? = SessionManager.getToken(requireContext())
-//        Log.d("API Request failed", "${token}")
-//        val call = univApi.getUniversities("Bearer ${token}", param, order)
-//
-//
-//        call.enqueue(object : Callback<UnivResponseDto> {
-//            override fun onResponse(
-//                call: Call<UnivResponseDto>,
-//                response: Response<UnivResponseDto>
-//            ) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request successful", "Получили ${response.code()}")
-//                    val dataResponse = response.body()
-//                    println(dataResponse)
-//                    if (dataResponse != null) {
-//                        adapter = UnivListAdapter(
-//                            requireContext(),
-//                            dataResponse.universitiesPage.contents,
-//                            this@UnivListPageFragment
-//                        )
-//                    }
-//                    recyclerView.adapter = adapter
-//
-//                } else {
-//                    println("Не успешно")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<UnivResponseDto>, t: Throwable) {
-//                println("Ошибка")
-//                println(t)
-//            }
-//        })
     }
 
     private fun showToastNotification(message: String) {
@@ -264,9 +206,6 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
                 alertDialog.dismiss()
             }
         })
-//        if (dialogView.parent != null) {
-//            (dialogView.parent as ViewGroup).removeView(dialogView) // <- fix
-//        }
     }
 
     override fun onDeleteClick(id: Int) {
