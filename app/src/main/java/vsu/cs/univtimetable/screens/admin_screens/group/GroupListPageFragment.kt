@@ -1,7 +1,9 @@
 package vsu.cs.univtimetable.screens.admin_screens.group
 
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.os.Bundle
+import android.os.Handler
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
@@ -9,14 +11,15 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import android.widget.SearchView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+import kotlinx.coroutines.delay
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
@@ -26,6 +29,7 @@ import vsu.cs.univtimetable.screens.adapter.GroupListAdapter
 import vsu.cs.univtimetable.screens.adapter.OnGroupDeleteClickInterface
 import vsu.cs.univtimetable.screens.adapter.OnGroupEditClickInterface
 import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
+import vsu.cs.univtimetable.utils.Status
 
 class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDeleteClickInterface {
 
@@ -36,6 +40,7 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
     private lateinit var searchByCourseView: SearchView
     private lateinit var searchByGroupView: SearchView
     private lateinit var groupViewModel: GroupViewModel
+    private lateinit var pDialog: ProgressDialog
 
 
     private var courseSearch: Int? = null
@@ -59,6 +64,7 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
         recyclerView = view.findViewById(R.id.groupRecyclerView)
         initRV(recyclerView)
 
+        pDialog = ProgressDialog(context)
         val token = SessionManager.getToken(requireContext())!!
         val groupRepository = GroupRepository(groupApi, token)
 
@@ -86,7 +92,8 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
             val bundle = Bundle()
-            bundle.putInt("univId", universityId)
+            bundle.putInt("facultyId", getFacultyId())
+            bundle.putInt("univId", getUnivId())
             findNavController().navigate(
                 R.id.action_groupListPageFragment_to_facultyListPageFragment,
                 bundle
@@ -107,7 +114,7 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
             adapter.submitList(it)
         }
         groupViewModel.errorMsg.observe(viewLifecycleOwner) {
-
+            showToastNotification(it)
         }
         getGroups(null, null, null)
         universityId = getUnivId()
@@ -147,93 +154,89 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
     }
 
     override fun onEditClick(groupId: Long) {
-        groupViewModel.getGroup(groupId)
-        sendGroupData()
-    }
-
-    private fun sendGroupData() {
         val bundle = Bundle()
-        groupViewModel.group.observe(viewLifecycleOwner) {
-            bundle.putLong("id", it!!.id ?: -1L)
-            bundle.putBoolean("editable", true)
-            bundle.putInt("groupNumber", it.groupNumber)
-            bundle.putInt("courseNumber", it.courseNumber)
-            bundle.putInt("studentsAmount", it.studentsAmount)
-            bundle.putInt("headmanId", it.headman?.id ?: -1)
-            bundle.putInt("facultyId", getFacultyId())
-
-            findNavController().navigate(
-                R.id.action_groupListPageFragment_to_createGroupPageFragment,
-                bundle
-            )
-        }
+        groupViewModel.getGroup(groupId)
+        bundle.putInt("facultyId", getFacultyId())
+        bundle.putInt("univId", getUnivId())
+        bundle.putLong("id", groupId)
+        bundle.putBoolean("editable", true)
+        findNavController().navigate(
+            R.id.action_groupListPageFragment_to_createGroupPageFragment,
+            bundle
+        )
     }
-
-//    fun <T> LiveData<T>.observeOnce(observer: (T) -> Unit) {
-//        observeForever(object: Observer<T> {
-//            override fun onChanged(value: T) {
-//                removeObserver(this)
-//                observer(value)
-//            }
-//        })
-//    }
-//
-//    private fun <T> LiveData<T>.observeOnce(owner: LifecycleOwner, observer: (T) -> Unit) {
-//        observe(owner, object: Observer<T> {
-//            override fun onChanged(value: T) {
-//                removeObserver(this)
-//                observer(value)
-//            }
-//        })
-//    }
 
     override fun onDeleteClick(groupId: Long) {
         val builder = AlertDialog.Builder(requireContext())
-        groupViewModel.getGroup(groupId)
-        var courseNumber: Int = 0
-        var groupNumber: Int = 0
-        groupViewModel.group.observe(viewLifecycleOwner) {
-            courseNumber = it!!.courseNumber
-            groupNumber = it.groupNumber
+        groupViewModel.getGroup(groupId).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        builder.setTitle("Удаление группы")
+                            .setMessage(
+                                "Вы уверены что хотите удалить группу курса: ${it.data!!.courseNumber}, " +
+                                        "номер: ${it.data.groupNumber} из списка?"
+                            )
+                            .setCancelable(true)
+                            .setPositiveButton("Удалить") { _, _ ->
+                                delete(groupId)
+                                getGroups(null, null, null)
+                            }
+                            .setNegativeButton(
+                                "Отмена"
+                            ) { _, _ ->
+                            }
+                        builder.create()
+                        builder.show()
+                    }
+
+                    Status.ERROR -> {}
+                    Status.LOADING -> {
+                        setLoadingDialog()
+                    }
+                }
+            }
         }
-        builder.setTitle("Удаление группы")
-            .setMessage(
-                "Вы уверены что хотите удалить группу курса: ${courseNumber}, " +
-                        "номер: $groupNumber из списка?"
-            )
-            .setCancelable(true)
-            .setPositiveButton("Удалить") { _, _ ->
-                delete(groupId)
-                getGroups(null, null, null)
-            }
-            .setNegativeButton(
-                "Отмена"
-            ) { _, _ ->
-            }
-        builder.create()
-        builder.show()
+//        var courseNumber: Int = 0
+//        var groupNumber: Int = 0
+//        groupViewModel.groupIMmutable.observe(viewLifecycleOwner) {
+//            courseNumber = it!!.courseNumber
+//            groupNumber = it.groupNumber
+//        }
+//        builder.setTitle("Удаление группы")
+//            .setMessage(
+//                "Вы уверены что хотите удалить группу курса: ${courseNumber}, " +
+//                        "номер: $groupNumber из списка?"
+//            )
+//            .setCancelable(true)
+//            .setPositiveButton("Удалить") { _, _ ->
+//                delete(groupId)
+//                getGroups(null, null, null)
+//            }
+//            .setNegativeButton(
+//                "Отмена"
+//            ) { _, _ ->
+//            }
+//        builder.create()
+//        builder.show()
     }
 
     private fun delete(id: Long) {
-
-        groupViewModel.deleteGroups(id, getFacultyId())
-//        val call = groupApi.deleteGroups(
-//            "Bearer ${token}", id
-//        )
-//        call.enqueue(object : Callback<Void> {
-//            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request okay", "Удалили ${response.code()}")
-//                } else {
-//                    Log.d("API Request failed", "${response.code()}")
-//                }
-//                callback(response.code())
-//            }
-//
-//            override fun onFailure(call: Call<Void>, t: Throwable) {
-//                // Обработка ошибки
-//            }
-//        })
+        groupViewModel.deleteGroups(id, getFacultyId()).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        pDialog.dismiss()
+                    }
+                    Status.ERROR -> {
+                        pDialog.dismiss()
+                    }
+                    Status.LOADING -> {
+                        setLoadingDialog()
+                    }
+                }
+            }
+        }
     }
 
 
@@ -245,14 +248,23 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
         }
         return univId
     }
-//    @Query("course") course: Int?,
-//    @Query("order") order: String?,
-//    @Query("groupNumber") groupNumber: Int?,
 
     private fun getGroups(course: Int?, order: String?, groupNumber: Int?) {
-        val token: String? = SessionManager.getToken(requireContext())
-
-        groupViewModel.getGroups(getFacultyId(), course, order, groupNumber)
+        groupViewModel.getGroups(getFacultyId(), course, order, groupNumber).observe(viewLifecycleOwner) {
+            it?.let {
+                when(it.status) {
+                    Status.SUCCESS -> {
+                        pDialog.dismiss()
+                    }
+                    Status.ERROR -> {
+                        pDialog.dismiss()
+                    }
+                    Status.LOADING -> {
+                        setLoadingDialog()
+                    }
+                }
+            }
+        }
 //        val call = groupApi.getGroups("Bearer ${token}", getFacultyId(), course, order, groupNumber)
 
 //        call.enqueue(object : Callback<GroupResponseDto> {
@@ -313,6 +325,26 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
         )
         rv.layoutManager = LinearLayoutManager(requireContext())
         rv.adapter = adapter
+    }
+
+    private fun setLoadingDialog() {
+        pDialog.setMessage("Загрузка...пожалуйста подождите")
+        pDialog.setCancelable(false)
+        pDialog.show()
+    }
+
+    private fun showToastNotification(message: String) {
+        val duration = Toast.LENGTH_LONG
+
+        val toast = Toast.makeText(requireContext(), message, duration)
+        toast.show()
+        val handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 1500)
+    }
+
+    private fun stopAnimation(btn: CircularProgressButton) {
+        btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.admin_bg)
+        btn.revertAnimation()
     }
 
 

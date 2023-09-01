@@ -1,8 +1,8 @@
 package vsu.cs.univtimetable.screens.admin_screens.group
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +11,6 @@ import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -19,9 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
 import com.google.android.material.textfield.TextInputLayout
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
@@ -34,6 +30,7 @@ import vsu.cs.univtimetable.repository.GroupRepository
 import vsu.cs.univtimetable.repository.UserRepository
 import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
 import vsu.cs.univtimetable.screens.admin_screens.users.UserViewModel
+import vsu.cs.univtimetable.utils.Status
 
 
 class CreateGroupPageFragment : Fragment() {
@@ -44,6 +41,7 @@ class CreateGroupPageFragment : Fragment() {
     private lateinit var groupViewModel: GroupViewModel
     private lateinit var userViewModel: UserViewModel
     private lateinit var confirmBtn: CircularProgressButton
+    private lateinit var pDialog: ProgressDialog
 
     private var headmans: MutableSet<String> = mutableSetOf()
     private val coursesList =
@@ -101,8 +99,11 @@ class CreateGroupPageFragment : Fragment() {
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
-//            findNavController().navigate(R.id.action_createGroupPageFragment_to_groupListPageFragment)
-            findNavController().popBackStack()
+            val bundle = Bundle()
+            bundle.putInt("facultyId", getFacultyId())
+            bundle.putInt("univId", arguments?.getInt("univId")!!)
+            findNavController().navigate(R.id.action_createGroupPageFragment_to_groupListPageFragment)
+//            findNavController().popBackStack()
         }
 
         val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
@@ -128,6 +129,7 @@ class CreateGroupPageFragment : Fragment() {
         headmanTextInputLayout.boxStrokeWidth =
             resources.getDimensionPixelSize(R.dimen.new_stroke_width)
 
+        pDialog = ProgressDialog(context)
 
         val headmenTypeCompleteView =
             view.findViewById<AutoCompleteTextView>(R.id.editHeadmanAutoCompleteText)
@@ -157,17 +159,17 @@ class CreateGroupPageFragment : Fragment() {
                 studAmountField
             )
         }
-//        headmanList.add(
-//            UserDisplayDto(
-//                -1,
-//                "",
-//                "Нет старосты",
-//                "",
-//                "",
-//                "",
-//                -1
-//            )
-//        )
+        headmanList.add(
+            UserDisplayDto(
+                -1,
+                "",
+                "Нет старосты",
+                "",
+                "",
+                "",
+                -1
+            )
+        )
 
         return view
     }
@@ -176,7 +178,6 @@ class CreateGroupPageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setHeadmen(view.findViewById(R.id.editHeadmanAutoCompleteText))
         groupViewModel.errorMsg.observe(viewLifecycleOwner) {
-            showToastNotification(it)
         }
     }
 
@@ -236,139 +237,90 @@ class CreateGroupPageFragment : Fragment() {
                 id,
                 getFacultyId(),
                 GroupDto(id, groupNum.toInt(), course, amount.toInt(), headmen)
-            )
+            ).observe(viewLifecycleOwner) {
+                it?.let {
+                    when (it.status) {
+                        Status.SUCCESS -> {
+                            stopAnimation(confirmBtn)
+                            showToastNotification("Информация о группе изменена")
+                        }
 
-            setHeadmen(headmanView)
-//            call = groupApi.editGroup(
-//                "Bearer ${token}",
-//                id,
-//                GroupDto(id, groupNum.toInt(), course, amount.toInt(), headmen)
-//            )
+                        Status.ERROR -> {
+                            showToastNotification(it.message.toString())
+                            stopAnimation(confirmBtn)
+                        }
+
+                        Status.LOADING -> {}
+                    }
+                }
+            }
+//            setHeadmen(headmanView)
         } else {
             groupViewModel.addGroup(
                 getFacultyId(),
                 GroupDto(null, groupNum.toInt(), course, amount.toInt(), headmen)
-            )
-            stopAnimation(confirmBtn)
-//            call = groupApi.addGroup(
-//                "Bearer ${token}",
-//                getFacultyId(),
-//                GroupDto(null, groupNum.toInt(), course, amount.toInt(), headmen)
-//            )
-        }
+            ).observe(viewLifecycleOwner) {
+                it?.let {
+                    when (it.status) {
+                        Status.SUCCESS -> {
+                            groupNumField.text.clear()
+                            amountField.text.clear()
+                            courses.text.clear()
+                            headmanView.text.clear()
+                            val bundle = Bundle()
+                            bundle.putInt("facultyId", getFacultyId())
+                            showToastNotification("Группа № ${groupNum.toInt()} курс ${course} добавлена")
+                            findNavController().navigate(
+                                R.id.action_createGroupPageFragment_to_groupListPageFragment,
+                                bundle
+                            )
+                            stopAnimation(confirmBtn)
+                        }
 
-//        call.enqueue(object : Callback<Void> {
-//            override fun onResponse(
-//                call: Call<Void>,
-//                response: Response<Void>
-//            ) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request Successful", "${response.code()}")
-//
-//                    findNavController().navigate(R.id.action_createGroupPageFragment_to_groupListPageFragment)
-//                    showToastNotification("Группа успешно создана")
-//                } else {
-//                    println("Не успешно, ошибка = ${response.code()}")
-//                    if (response.code() == 400) {
-//                        showToastNotification("Такая группа на этом факультете уже существует")
-//                    }
-//                    if (response.code() == 403) {
-//                        showToastNotification("Недостаточно прав доступа для выполнения")
-//                    }
-//                    if (response.code() == 404) {
-//                        showToastNotification("Cтароста для группы по переданному id не был найден")
-//                    }
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<Void>, t: Throwable) {
-//                println("Ошибка")
-//                println(t)
-//            }
-//        })
-        groupNumField.text.clear()
-        amountField.text.clear()
-        courses.text.clear()
-        headmanView.text.clear()
-        val bundle = Bundle()
-        bundle.putInt("facultyId", getFacultyId())
-        findNavController().navigate(
-            R.id.action_createGroupPageFragment_to_groupListPageFragment,
-            bundle
-        )
+                        Status.ERROR -> {
+                            stopAnimation(confirmBtn)
+                        }
+
+                        Status.LOADING -> {
+
+                        }
+                    }
+                }
+            }
+            stopAnimation(confirmBtn)
+        }
     }
 
 
     private fun setHeadmen(headmanView: AutoCompleteTextView) {
-        val token: String? = SessionManager.getToken(requireContext())
+        userViewModel.getFreeHeadmen(getFacultyId()).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        if (it.data != null) {
+                            headmanList.addAll(it.data)
+                        }
+                        for (headman in headmanList) {
+                            headmanMap[headman.fullName] = headman
+                            headmans.add(headman.fullName)
+                        }
+                        val headmenAdapter =
+                            ArrayAdapter(
+                                requireContext(),
+                                R.layout.subj_item,
+                                headmans.toTypedArray()
+                            )
+                        headmanView.setAdapter(headmenAdapter)
+                    }
 
-//        Log.d("API Request", "${token}")
-
-        headmans.clear()
-        headmanMap.clear()
-        headmanList.clear()
-        headmanList.add(
-            UserDisplayDto(
-                -1,
-                "",
-                "Нет старосты",
-                "",
-                "",
-                "",
-                -1
-            )
-        )
-
-        userViewModel.getFreeHeadmen(getFacultyId())
-        userViewModel.freeHeadmenList.observe(viewLifecycleOwner) {
-            if (it != null) {
-                headmanList.addAll(it)
+                    Status.ERROR -> {
+                        showToastNotification(it.message.toString())
+                    }
+                    Status.LOADING -> {}
+                }
             }
-
-            for (headman in headmanList) {
-                headmanMap[headman.fullName] = headman
-                headmans.add(headman.fullName)
-            }
-            val headmenAdapter =
-                ArrayAdapter(requireContext(), R.layout.subj_item, headmans.toTypedArray())
-            headmanView.setAdapter(headmenAdapter)
         }
-
-
-//        val call = userApi.getFreeHeadmen("Bearer ${token}", getFacultyId())
-//
-//        call.enqueue(object : Callback<List<UserDisplayDto>> {
-//            override fun onResponse(
-//                call: Call<List<UserDisplayDto>>,
-//                response: Response<List<UserDisplayDto>>
-//            ) {
-//                //TODO: showToastNotification
-//                if (response.isSuccessful) {
-//                    Log.d("API Request successful", "Получили ${response.code()}")
-//                    val dataResponse = response.body()
-//                    println(dataResponse)
-//                    if (dataResponse != null) {
-//                        headmanList.addAll(dataResponse)
-//                    }
-//                    for (headman in headmanList) {
-//                        headmanMap[headman.fullName] = headman
-//                        headmans.add(headman.fullName)
-//                    }
-//                    val headmenAdapter =
-//                        ArrayAdapter(requireContext(), R.layout.subj_item, headmans)
-//                    headmanView.setAdapter(headmenAdapter)
-//                } else {
-//                    showToastNotification("Не получилось назначить старосту группы")
-//                    println("Не успешно")
-//                }
-//
-//            }
-//
-//            override fun onFailure(call: Call<List<UserDisplayDto>>, t: Throwable) {
-//                println("Ошибка")
-//                println(t)
-//            }
-//        })
+//        }
     }
 
     private fun getFacultyId(): Int {
@@ -386,94 +338,91 @@ class CreateGroupPageFragment : Fragment() {
         headman: AutoCompleteTextView,
         studentsAmount: EditText
     ) {
-        val editable = arguments?.getBoolean("editable");
+        val editable = arguments?.getBoolean("editable")
         if (editable != null && editable) {
-            val courseNumber = arguments?.getInt("courseNumber")
-            for (entry in courseMap) {
-                if (entry.value == courseNumber) {
-                    course.setText(entry.key)
-                    val courseAdapter =
-                        ArrayAdapter(requireContext(), R.layout.subj_item, coursesList)
-                    course.setAdapter(courseAdapter)
-                    break;
+            groupViewModel.getGroup(arguments?.getLong("id")!!).observe(viewLifecycleOwner) {
+                it?.let {
+                    when (it.status) {
+                        Status.SUCCESS -> {
+                            pDialog.dismiss()
+                            for (entry in courseMap) {
+                                if (entry.value == it.data!!.courseNumber) {
+                                    course.setText(entry.key)
+                                    val courseAdapter =
+                                        ArrayAdapter(
+                                            requireContext(),
+                                            R.layout.subj_item,
+                                            coursesList
+                                        )
+                                    course.setAdapter(courseAdapter)
+                                    break
+                                }
+                            }
+                            group.setText(it.data!!.groupNumber.toString())
+                            studentsAmount.setText(it.data.studentsAmount.toString())
+                            setUser(it.data.headman?.id?.toLong() ?: -1L, headman)
+                        }
+
+                        Status.ERROR -> {
+                            pDialog.dismiss()
+                            showToastNotification(it.message.toString())
+                        }
+
+                        Status.LOADING -> {
+                            setLoadingDialog()
+                        }
+                    }
                 }
-            }
-            group.setText(arguments?.getInt("groupNumber").toString())
-            studentsAmount.setText(arguments?.getInt("studentsAmount").toString())
-            val headmanId = arguments?.getInt("headmanId")
-            if (headmanId != null && headmanId != -1) {
-                getUser(headmanId, headman)
             }
         }
     }
 
-    private fun getUser(headmanId: Int, headmanView: AutoCompleteTextView) {
-        userViewModel.getUser(headmanId.toLong())
-        userViewModel.user.observe(viewLifecycleOwner) {headman ->
-            headmanList.add(
-                UserDisplayDto(
-                    headman.id,
-                    headman.role,
-                    headman.fullName,
-                    headman.city,
-                    "",
-                    "",
-                    id.toInt() ?: -1
-                )
-            )
-            headmanView.setText(headman.fullName)
+    private fun setUser(headmanId: Long, headman: AutoCompleteTextView) {
+        userViewModel.getUser(headmanId).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        pDialog.dismiss()
+                        headman.setText(it.data!!.fullName)
+                        headmanList.add(
+                            UserDisplayDto(
+                                it.data.id,
+                                it.data.role,
+                                it.data.fullName,
+                                it.data.city,
+                                "",
+                                "",
+                                id.toInt() ?: -1
+                            )
+                        )
+                        for (head in headmanList) {
+                            headmanMap[head.fullName] = head
+                            headmans.add(head.fullName)
+                        }
+                        val headmenAdapter =
+                            ArrayAdapter(
+                                requireContext(),
+                                R.layout.subj_item,
+                                headmans.toTypedArray()
+                            )
+                        headman.setAdapter(headmenAdapter)
+                    }
+
+                    Status.ERROR -> {
+                        pDialog.dismiss()
+                        if (it.message.toString() != "Пользователь по переданному id не был найден") {
+                            showToastNotification(it.message.toString())
+                        } else {
+                            showToastNotification("Староста не установлен")
+                        }
+                    }
+
+                    Status.LOADING -> {
+                        setLoadingDialog()
+                    }
+                }
+            }
         }
-//        userViewModel.user.observe(viewLifecycleOwner) {
-//            possibleHeadman = it
-//            headmanList.add(
-//                UserDisplayDto(
-//                    it.id,
-//                    it.role,
-//                    it.fullName,
-//                    it.city,
-//                    "",
-//                    "",
-//                    it.groupId?.toInt() ?: -1
-//                )
-//            )
-//            headmanView.setText(it.fullName)
-//            setHeadmen(headmanView)
-//        }
-//        val call = userApi.getUser("Bearer ${token}", headmanId.toLong())
-//        call.enqueue(object : Callback<UserCreateRequest> {
-//            override fun onResponse(
-//                call: Call<UserCreateRequest>,
-//                response: Response<UserCreateRequest>
-//            ) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request successful", "Получили ${response.code()}")
-//                    val dataResponse = response.body()
-//                    println(dataResponse)
-//                    if (dataResponse != null) {
-//                        possibleHeadman = dataResponse
-//                        headmanList.add(
-//                            UserDisplayDto(
-//                                dataResponse.id,
-//                                dataResponse.role,
-//                                dataResponse.fullName,
-//                                dataResponse.city,
-//                                "",
-//                                "",
-//                                dataResponse.groupId?.toInt() ?: -1
-//                            )
-//                        )
-//                        headman.setText(dataResponse.fullName)
-//                    }
-//                } else {
-//                    println("Не успешно")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<UserCreateRequest>, t: Throwable) {
-//                println("Ошибка")
-//                println(t)
-//            }
-//        })
     }
 
     private fun showToastNotification(message: String) {
@@ -488,5 +437,11 @@ class CreateGroupPageFragment : Fragment() {
     private fun stopAnimation(btn: CircularProgressButton) {
         btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.admin_bg)
         btn.revertAnimation()
+    }
+
+    private fun setLoadingDialog() {
+        pDialog.setMessage("Загрузка...пожалуйста подождите")
+        pDialog.setCancelable(false)
+        pDialog.show()
     }
 }
