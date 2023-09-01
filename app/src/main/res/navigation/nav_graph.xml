@@ -214,6 +214,12 @@
         <action
             android:id="@+id/action_facultyMainPageFragment_to_facultyListPageFragment"
             app:destination="@id/facultyListPageFragment" />
+        <action
+            android:id="@+id/action_facultyMainPageFragment_to_groupListPageFragment"
+            app:destination="@id/groupListPageFragment" />
+        <action
+            android:id="@+id/action_facultyMainPageFragment_to_audienceListPageFragment"
+            app:destination="@id/audienceListPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/lecturerTimetablePageFragment"
@@ -303,6 +309,27 @@
             app:destination="@id/facultyMainPageFragment" />
         <action
             android:id="@+id/action_createAudiencePageFragment_to_adminMainPageFragment"
+            app:destination="@id/adminMainPageFragment" />
+        <action
+            android:id="@+id/action_createAudiencePageFragment_to_audienceListPageFragment"
+            app:destination="@id/audienceListPageFragment" />
+        <action
+            android:id="@+id/action_createAudiencePageFragment_to_adminMainPageFragment2"
+            app:destination="@id/adminMainPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/audienceListPageFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.audience.AudienceListPageFragment"
+        android:label="fragment_audience_list_page"
+        tools:layout="@layout/fragment_audience_list_page" >
+        <action
+            android:id="@+id/action_audienceListPageFragment_to_createAudiencePageFragment"
+            app:destination="@id/createAudiencePageFragment" />
+        <action
+            android:id="@+id/action_audienceListPageFragment_to_facultyMainPageFragment"
+            app:destination="@id/facultyMainPageFragment" />
+        <action
+            android:id="@+id/action_audienceListPageFragment_to_adminMainPageFragment"
             app:destination="@id/adminMainPageFragment" />
     </fragment>
 </navigation>
