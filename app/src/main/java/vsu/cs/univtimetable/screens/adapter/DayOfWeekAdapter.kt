@@ -1,6 +1,5 @@
 package vsu.cs.univtimetable.screens.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.dto.ClassDto
-import vsu.cs.univtimetable.dto.DateDto
+import vsu.cs.univtimetable.dto.datetime.DateDto
 
 class DayOfWeekAdapter(
     var context: Context,
