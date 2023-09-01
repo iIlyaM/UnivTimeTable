@@ -72,8 +72,8 @@ interface UserApi {
 
     @Headers("Content-Type: application/json")
     @GET("faculty/{facultyId}/headmen")
-    fun getFreeHeadmen(
+    suspend fun getFreeHeadmen(
         @Header("Authorization") basicToken: String,
         @Path("facultyId") id: Int,
-    ): Call<List<UserDisplayDto>>
+    ): Response<List<UserDisplayDto>>
 }

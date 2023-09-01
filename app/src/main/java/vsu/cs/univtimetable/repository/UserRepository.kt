@@ -2,9 +2,12 @@ package vsu.cs.univtimetable.repository
 
 import okhttp3.ResponseBody
 import retrofit2.Response
+import retrofit2.http.Header
+import retrofit2.http.Path
 import vsu.cs.univtimetable.api.UserApi
 import vsu.cs.univtimetable.dto.user.CreateUserResponse
 import vsu.cs.univtimetable.dto.user.UserCreateRequest
+import vsu.cs.univtimetable.dto.user.UserDisplayDto
 import vsu.cs.univtimetable.dto.user.UserResponseDto
 
 class UserRepository(
@@ -26,7 +29,15 @@ class UserRepository(
         return userApi.getUser(basicToken = "Bearer ${token}", id)
     }
 
-    suspend fun createUserInfo(): Response<CreateUserResponse> {
+    suspend fun getFreeHeadmen(
+        facultyId: Int,
+    ): Response<List<UserDisplayDto>> {
+        return userApi.getFreeHeadmen(basicToken = "Bearer ${token}", facultyId)
+    }
+
+    suspend fun createUserInfo(
+
+    ): Response<CreateUserResponse> {
         return userApi.createUserInfo(basicToken = "Bearer ${token}")
     }
 

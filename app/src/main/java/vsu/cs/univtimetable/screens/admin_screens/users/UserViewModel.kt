@@ -33,9 +33,13 @@ class UserViewModel(
     private val _userList = MutableLiveData<List<UserDisplayDto>>()
     private val _user = MutableLiveData<UserCreateRequest>()
     private val _userInfo = MutableLiveData<CreateUserResponse>()
+
+    private val _freeHeadmenList = MutableLiveData<List<UserDisplayDto>>()
     val userList: LiveData<List<UserDisplayDto>> get() = _userList
     val user: LiveData<UserCreateRequest> get() = _user
     val userInfo: LiveData<CreateUserResponse> get() =  _userInfo
+
+    val freeHeadmenList: LiveData<List<UserDisplayDto>> get() = _freeHeadmenList
 
     private val _errorMsg = MutableLiveData<String>()
     val errorMsg: LiveData<String> = _errorMsg
@@ -164,6 +168,21 @@ class UserViewModel(
             )
             if (response.isSuccessful) {
                 getAllUsers(null, null, null, null)
+            } else {
+                onError(response.code())
+            }
+        }
+    }
+
+    fun getFreeHeadmen(
+        facultyId: Int
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = userRepository.getFreeHeadmen(
+                facultyId
+            )
+            if (response.isSuccessful) {
+                _freeHeadmenList.postValue(response.body())
             } else {
                 onError(response.code())
             }

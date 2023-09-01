@@ -26,7 +26,6 @@ import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.UserApi
 import vsu.cs.univtimetable.dto.user.UserCreateRequest
 import vsu.cs.univtimetable.dto.user.UserDisplayDto
-import vsu.cs.univtimetable.dto.user.UserResponseDto
 import vsu.cs.univtimetable.repository.UserRepository
 import vsu.cs.univtimetable.screens.adapter.OnUserDeleteInterface
 import vsu.cs.univtimetable.screens.adapter.OnUserEditInterface
@@ -130,7 +129,7 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
         })
 
         addUser.setOnClickListener {
-            findNavController().navigate(R.id.action_userListPageFragment_to_createUserAuthFragment)
+            findNavController().navigate(R.id.action_userListPageFragment_to_createUserInfoFragment)
         }
 
         return view
@@ -141,6 +140,9 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
 
         userViewModel.userList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+            getSearchItems(it)
+        }
+        userViewModel.errorMsg.observe(viewLifecycleOwner) {
         }
         getUsers(searchParams, null)
 
@@ -166,6 +168,7 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
             searchParams[2],
             name
         )
+//        getSearchItems(list)
 
 //        call.enqueue(object : Callback<UserResponseDto> {
 //            override fun onResponse(
@@ -195,31 +198,32 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
 
     private fun getUser(id: Long) {
         val token: String? = SessionManager.getToken(requireContext())
-        Log.d("API Request failed", "${token}")
-        val call = userApi.getUser("Bearer ${token}", id.toLong())
-
-        call.enqueue(object : Callback<UserCreateRequest> {
-            override fun onResponse(
-                call: Call<UserCreateRequest>,
-                response: Response<UserCreateRequest>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d("API Request successful", "Получили ${response.code()}")
-                    val dataResponse = response.body()
-                    println(dataResponse)
-                    if (dataResponse != null) {
-                        userForEdit = dataResponse
-                    }
-                } else {
-                    println("Не успешно")
-                }
-            }
-
-            override fun onFailure(call: Call<UserCreateRequest>, t: Throwable) {
-                println("Ошибка")
-                println(t)
-            }
-        })
+        userViewModel.getUser(id)
+//        Log.d("API Request failed", "${token}")
+//        val call = userApi.getUser("Bearer ${token}", id.toLong())
+//
+//        call.enqueue(object : Callback<UserCreateRequest> {
+//            override fun onResponse(
+//                call: Call<UserCreateRequest>,
+//                response: Response<UserCreateRequest>
+//            ) {
+//                if (response.isSuccessful) {
+//                    Log.d("API Request successful", "Получили ${response.code()}")
+//                    val dataResponse = response.body()
+//                    println(dataResponse)
+//                    if (dataResponse != null) {
+//                        userForEdit = dataResponse
+//                    }
+//                } else {
+//                    println("Не успешно")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<UserCreateRequest>, t: Throwable) {
+//                println("Ошибка")
+//                println(t)
+//            }
+//        })
     }
 
     private fun delete(id: Int, callback: (Int) -> Unit) {
@@ -304,47 +308,54 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
 
     override fun onEditClick(userId: Int) {
         val bundle = Bundle()
+        bundle.putInt("id", userId)
+        bundle.putBoolean("editable", true)
+        findNavController().navigate(
+            R.id.action_userListPageFragment_to_createUserInfoFragment,
+            bundle
+        )
 
-        val token: String? = SessionManager.getToken(requireContext())
-        val call = userApi.getUser("Bearer ${token}", userId.toLong())
 
-        call.enqueue(object : Callback<UserCreateRequest> {
-            override fun onResponse(
-                call: Call<UserCreateRequest>,
-                response: Response<UserCreateRequest>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d("API Request successful", "Получили ${response.code()}")
-                    val dataResponse = response.body()
-                    println(dataResponse)
-                    if (dataResponse != null) {
-                        bundle.putInt("id", dataResponse.id)
-                        bundle.putBoolean("editable", true)
-                        bundle.putString("role", dataResponse.role)
-                        bundle.putString("fullName", dataResponse.fullName)
-                        bundle.putString("login", dataResponse.username)
-                        bundle.putString("email", dataResponse.email)
-                        bundle.putString("city", dataResponse.city)
-                        bundle.putString("password", dataResponse.password)
-                        bundle.putLong("univId", dataResponse.universityId ?: -1L)
-                        bundle.putLong("facultyId", dataResponse.facultyId ?: -1L)
-                        bundle.putLong("group", dataResponse.groupId ?: -1L)
 
-                        findNavController().navigate(
-                            R.id.action_userListPageFragment_to_createUserAuthFragment,
-                            bundle
-                        )
-                    }
-                } else {
-                    println("Не успешно")
-                }
-            }
+//        val call = userApi.getUser("Bearer ${token}", userId.toLong())
 
-            override fun onFailure(call: Call<UserCreateRequest>, t: Throwable) {
-                println("Ошибка")
-                println(t)
-            }
-        })
+//        call.enqueue(object : Callback<UserCreateRequest> {
+//            override fun onResponse(
+//                call: Call<UserCreateRequest>,
+//                response: Response<UserCreateRequest>
+//            ) {
+//                if (response.isSuccessful) {
+//                    Log.d("API Request successful", "Получили ${response.code()}")
+//                    val dataResponse = response.body()
+//                    println(dataResponse)
+//                    if (dataResponse != null) {
+//                        bundle.putInt("id", dataResponse.id)
+//                        bundle.putBoolean("editable", true)
+//                        bundle.putString("role", dataResponse.role)
+//                        bundle.putString("fullName", dataResponse.fullName)
+//                        bundle.putString("login", dataResponse.username)
+//                        bundle.putString("email", dataResponse.email)
+//                        bundle.putString("city", dataResponse.city)
+//                        bundle.putString("password", dataResponse.password)
+//                        bundle.putLong("univId", dataResponse.universityId ?: -1L)
+//                        bundle.putLong("facultyId", dataResponse.facultyId ?: -1L)
+//                        bundle.putLong("group", dataResponse.groupId ?: -1L)
+//
+//                        findNavController().navigate(
+//                            R.id.action_userListPageFragment_to_createUserInfoFragment,
+//                            bundle
+//                        )
+//                    }
+//                } else {
+//                    println("Не успешно")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<UserCreateRequest>, t: Throwable) {
+//                println("Ошибка")
+//                println(t)
+//            }
+//        })
     }
 
     override fun onDeleteClick(userId: Int) {
@@ -375,6 +386,5 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
         rv.layoutManager = LinearLayoutManager(requireContext())
         rv.adapter = adapter
     }
-
 
 }
