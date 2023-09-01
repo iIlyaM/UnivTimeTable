@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.admin_screens.CreateAudiencePageFragment">
+    tools:context=".screens.admin_screens.audience.CreateAudiencePageFragment">
 
     <View
         android:id="@+id/topView"
@@ -136,4 +136,6 @@
         android:src="@drawable/ic_home"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
