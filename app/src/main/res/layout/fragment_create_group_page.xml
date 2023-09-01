@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="80dp"
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
@@ -45,7 +45,6 @@
                 style="@style/adminTextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
                 android:hint="@string/choose_course"
                 android:textColorHint="@color/black"
                 app:boxCornerRadiusBottomEnd="10dp"
