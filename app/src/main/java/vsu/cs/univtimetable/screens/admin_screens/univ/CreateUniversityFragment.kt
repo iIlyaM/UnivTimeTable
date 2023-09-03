@@ -1,5 +1,6 @@
 package vsu.cs.univtimetable.screens.admin_screens.univ
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -11,19 +12,25 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.UnivApi
 import vsu.cs.univtimetable.dto.univ.CreateUnivDto
 import vsu.cs.univtimetable.repository.UnivRepository
+import vsu.cs.univtimetable.utils.NotificationManager
+import vsu.cs.univtimetable.utils.Status
 
 class CreateUniversityFragment : Fragment() {
 
     private lateinit var univApi: UnivApi
     private lateinit var univViewModel: UnivViewModel
+    private lateinit var pDialog: ProgressDialog
+    private lateinit var confirmBtn: CircularProgressButton
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,10 +43,10 @@ class CreateUniversityFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_create_university, container, false)
-        val confirmBtn = view.findViewById<AppCompatButton>(R.id.confirmAddUnivBtn)
+        confirmBtn = view.findViewById(R.id.confirmAddUnivBtn)
         val univField = view.findViewById<EditText>(R.id.editUnivNameText)
         val city = view.findViewById<EditText>(R.id.editCityText)
-
+        pDialog = ProgressDialog(context)
         val token = SessionManager.getToken(requireContext())!!
         val univRepository = UnivRepository(univApi, token)
 
@@ -51,7 +58,7 @@ class CreateUniversityFragment : Fragment() {
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigate(R.id.action_createUniversityFragment_to_univListPageFragment)
         }
 
         val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
@@ -60,6 +67,7 @@ class CreateUniversityFragment : Fragment() {
         }
 
         confirmBtn.setOnClickListener {
+            confirmBtn.startAnimation()
             addUniversity(univField, city)
         }
         return view
@@ -81,72 +89,35 @@ class CreateUniversityFragment : Fragment() {
 
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
-        univViewModel.addUniversity(CreateUnivDto(univName, cityName))
-
-//        val call = univApi.addUniversity(
-//            "Bearer ${token}",
-//            CreateUnivDto(univName, cityName)
-//        )
-//
-//        call.enqueue(object : Callback<Void> {
-//            override fun onResponse(
-//                call: Call<Void>,
-//                response: Response<Void>
-//            ) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request Successful", "${response.code()}")
-//                    showToastNotification("Университет успешно добавлен")
-//                } else {
-//                    if (response.code() == 400) {
-//                        showToastNotification("Такой университет уже существует")
-//                    }
-//                    if (response.code() == 403) {
-//                        showToastNotification("Недостаточно прав доступа для выполнения")
-//                    }
-//                    println("Не успешно")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<Void>, t: Throwable) {
-//                println("Ошибка")
-//                println(t)
-//            }
-//        })
-        univField.text.clear()
-        city.text.clear()
+        univViewModel.addUniversity(CreateUnivDto(univName, cityName)).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        pDialog.dismiss()
+                        stopAnimation(confirmBtn)
+                        univField.text.clear()
+                        city.text.clear()
+                        NotificationManager.showToastNotification(requireContext(), "$univName успешно добавлен")
+                        univViewModel.getUniversities(null, null)
+                    }
+                    Status.ERROR -> {
+                        pDialog.dismiss()
+                        NotificationManager.showToastNotification(
+                            requireContext(),
+                            it.message.toString()
+                        )
+                    }
+                    Status.LOADING -> {
+                        NotificationManager.setLoadingDialog(pDialog)
+                    }
+                }
+            }
+        }
     }
 
-//    private fun showDialog(univName: String, code: Int) {
-//        val builder = AlertDialog.Builder(requireContext())
-//        if (code == 201) {
-//            builder.setMessage("${univName} добавлен")
-//            val alert = builder.create()
-//            alert.show()
-//            alert.window?.setGravity(Gravity.BOTTOM)
-//
-//            Handler().postDelayed({
-//                alert.dismiss()
-//            }, 2000)
-//        }
-//        if(code == 400) {
-//            builder.setMessage("${univName} уже есть в списке")
-//            val alert = builder.create()
-//            alert.show()
-//            alert.window?.setGravity(Gravity.BOTTOM)
-//
-//            Handler().postDelayed({
-//                alert.dismiss()
-//            }, 2000)
-//        }
-//    }
-
-    private fun showToastNotification (message: String) {
-        val duration = Toast.LENGTH_LONG
-
-        val toast = Toast.makeText(requireContext(), message, duration)
-        toast.show()
-        val handler = Handler()
-        handler.postDelayed({ toast.cancel() }, 1500)
+    private fun stopAnimation(btn: CircularProgressButton) {
+        btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.admin_bg)
+        btn.revertAnimation()
     }
 
 }

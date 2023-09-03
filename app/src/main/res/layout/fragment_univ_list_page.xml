@@ -104,7 +104,7 @@
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <Space
-                    android:layout_width="8dp"
+                    android:layout_width="4dp"
                     android:layout_height="wrap_content" />
 
                 <ImageButton
@@ -123,7 +123,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/addNewUnivBtn"
-                    android:layout_width="150dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:background="@drawable/admin_bg"
                     android:text="@string/add"

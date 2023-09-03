@@ -1,13 +1,12 @@
 package vsu.cs.univtimetable.screens.admin_screens.univ
 
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.Toast
 import android.widget.SearchView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
@@ -26,6 +25,8 @@ import vsu.cs.univtimetable.screens.adapter.OnUnivClickInterface
 import vsu.cs.univtimetable.screens.adapter.OnUnivDeleteInterface
 import vsu.cs.univtimetable.screens.adapter.OnUnivEditInterface
 import vsu.cs.univtimetable.screens.adapter.UnivListAdapter
+import vsu.cs.univtimetable.utils.NotificationManager
+import vsu.cs.univtimetable.utils.Status
 
 class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterface,
     OnUnivClickInterface {
@@ -35,6 +36,7 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
     private lateinit var adapter: UnivListAdapter
     private lateinit var searchView: SearchView
     private lateinit var univViewModel: UnivViewModel
+    private lateinit var pDialog: ProgressDialog
     private var alertDialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +53,7 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
         recyclerView = view.findViewById(R.id.univsList)
         initRV(recyclerView)
         searchView = view.findViewById(R.id.enterUnivName)
-
+        pDialog = ProgressDialog(context)
         val token = SessionManager.getToken(requireContext())!!
         val univRepository = UnivRepository(univApi, token)
 
@@ -124,59 +126,71 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
     }
 
     private fun update(id: Int, updatedUniversity: UnivDto) {
-        univViewModel.editUniversity(id, updatedUniversity)
-//        val token: String? = SessionManager.getToken(requireContext())
-//        Log.d("API Request failed", "${token}")
-//        val call = univApi.editUniversity(
-//            "Bearer ${token}",
-//            updatedUniversity.id.toInt(),
-//            updatedUniversity
-//        )
-//        call.enqueue(object : Callback<Void> {
-//            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request okay", "Обновили ${response.code()}")
-//                    showToastNotification("Университет успешно обновлен")
-//                    val code = response.code()
-//                } else {
-//                    if (response.code() == 400) {
-//                        showToastNotification("Такой университет уже существует")
-//                    }
-//                    if (response.code() == 403) {
-//                        showToastNotification("Недостаточно прав доступа для выполнения")
-//                    }
-//                    if (response.code() == 404) {
-//                        showToastNotification("Университет по переданному id не был найден")
-//                    }
-//                    Log.d("API Request failed", "${response.code()}")
-//                    Log.d("API Request failed", "${response.body()}")
-//                    Log.d("API Request failed", "${response.errorBody()}")
-//                }
-//                callback(response.code())
-//            }
-//
-//            override fun onFailure(call: Call<Void>, t: Throwable) {
-//                // Обработка ошибки
-//            }
-//        })
+        univViewModel.editUniversity(id, updatedUniversity).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        getUniversities(null, null)
+                        pDialog.dismiss()
+                    }
+                    Status.ERROR -> {
+                        pDialog.dismiss()
+                        NotificationManager.showToastNotification(
+                            requireContext(),
+                            it.message.toString()
+                        )
+                    }
+                    Status.LOADING -> {
+                        NotificationManager.setLoadingDialog(pDialog)
+                    }
+                }
+            }
+        }
     }
 
     private fun delete(id: Int) {
-        val token: String? = SessionManager.getToken(requireContext())
-        univViewModel.deleteUniversity(id)
+        univViewModel.deleteUniversity(id).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        getUniversities(null, null)
+                        pDialog.dismiss()
+                    }
+                    Status.ERROR -> {
+                        pDialog.dismiss()
+                        NotificationManager.showToastNotification(
+                            requireContext(),
+                            it.message.toString()
+                        )
+                    }
+                    Status.LOADING -> {
+                        NotificationManager.setLoadingDialog(pDialog)
+                    }
+                }
+            }
+        }
     }
 
     private fun getUniversities(param: String?, order: String?) {
-        univViewModel.getUniversities(param, order)
-    }
-
-    private fun showToastNotification(message: String) {
-        val duration = Toast.LENGTH_LONG
-
-        val toast = Toast.makeText(requireContext(), message, duration)
-        toast.show()
-        val handler = Handler()
-        handler.postDelayed({ toast.cancel() }, 1500)
+        univViewModel.getUniversities(param, order).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        pDialog.dismiss()
+                    }
+                    Status.ERROR -> {
+                        pDialog.dismiss()
+                        NotificationManager.showToastNotification(
+                            requireContext(),
+                            it.message.toString()
+                        )
+                    }
+                    Status.LOADING -> {
+                        NotificationManager.setLoadingDialog(pDialog)
+                    }
+                }
+            }
+        }
     }
 
     override fun onEditClick(id: Int) {
@@ -185,10 +199,26 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
         val editUnivCity = dialogView.findViewById<AppCompatEditText>(R.id.updUnivCity)
         val btnUpdate = dialogView.findViewById<AppCompatButton>(R.id.updateUnivBtn)
 
-        univViewModel.getUniversity(id.toLong())
-        univViewModel.univ.observe(viewLifecycleOwner) {
-            editUnivName?.setText(it.universityName)
-            editUnivCity?.setText(it.city)
+        univViewModel.getUniversity(id.toLong()).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        pDialog.dismiss()
+                        editUnivName?.setText(it.data!!.universityName)
+                        editUnivCity?.setText(it.data!!.city)
+                    }
+                    Status.ERROR -> {
+                        pDialog.dismiss()
+                        NotificationManager.showToastNotification(
+                            requireContext(),
+                            it.message.toString()
+                        )
+                    }
+                    Status.LOADING -> {
+                        NotificationManager.setLoadingDialog(pDialog)
+                    }
+                }
+            }
         }
 
 
@@ -202,7 +232,6 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
                 val univName = editUnivName?.text.toString()
                 val city = editUnivCity?.text.toString()
                 update(id, UnivDto(id.toLong(), univName, city))
-                getUniversities(null, null)
                 alertDialog.dismiss()
             }
         })
@@ -215,7 +244,6 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
             .setCancelable(true)
             .setPositiveButton("Удалить") { _, _ ->
                 delete(id)
-                getUniversities(null, null)
             }
             .setNegativeButton(
                 "Отмена"
