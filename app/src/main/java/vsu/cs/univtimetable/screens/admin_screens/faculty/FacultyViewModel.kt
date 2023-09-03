@@ -3,6 +3,7 @@ package vsu.cs.univtimetable.screens.admin_screens.faculty
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -11,11 +12,13 @@ import kotlinx.coroutines.launch
 import vsu.cs.univtimetable.dto.faculty.FacultyDto
 import vsu.cs.univtimetable.dto.univ.CreateFacultyDto
 import vsu.cs.univtimetable.repository.FacultyRepository
+import vsu.cs.univtimetable.utils.Resource
+import java.lang.Exception
 
 class FacultyViewModel(
     private val facultyRepository: FacultyRepository,
     private val token: String
-): ViewModel() {
+) : ViewModel() {
     private val _facultyList = MutableLiveData<List<FacultyDto>>()
     private val _faculty = MutableLiveData<FacultyDto>()
 
@@ -25,21 +28,25 @@ class FacultyViewModel(
     private val _errorMsg = MutableLiveData<String>()
     val errorMsg: LiveData<String> = _errorMsg
 
-    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+    private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
         onError(200)
     }
 
     fun addFaculty(
         id: Int,
         faculty: CreateFacultyDto
-    ) {
-        viewModelScope.launch {
+    ) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
             val response = facultyRepository.addFaculty(id, faculty)
             if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
                 getFaculties(id, null, null)
             } else {
-                onError(response.code())
+                throw Exception(response.code().toString())
             }
+        } catch (exc: Exception) {
+            emit(Resource.error(data = null, onError(exc.message!!.toInt())))
         }
     }
 
@@ -47,17 +54,22 @@ class FacultyViewModel(
         id: Int,
         univId: Int,
         faculty: FacultyDto
-    ) {
-        viewModelScope.launch {
+    ) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
             val response = facultyRepository.editFaculty(
                 id,
                 faculty
             )
             if (response.isSuccessful) {
                 getFaculties(univId, null, null)
+                emit(Resource.success(response.body()))
+//                getFaculties(univId, null, null)
             } else {
-                onError(response.code())
+                throw Exception(response.code().toString())
             }
+        } catch (exc: Exception) {
+            emit(Resource.error(data = null, onError(exc.message!!.toInt())))
         }
     }
 
@@ -65,52 +77,65 @@ class FacultyViewModel(
         id: Int,
         name: String?,
         order: String?
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
+    ) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
             val response = facultyRepository.getFaculties(
                 id,
                 name,
                 order
             )
             if (response.isSuccessful) {
-                _facultyList.postValue(response.body()?.facultiesPage?.contents)
+                val a = response.body()?.facultiesPage?.contents
+                _facultyList.postValue(a!!)
+                emit(Resource.success(a))
             } else {
-                onError(response.code())
+                throw Exception(response.code().toString())
             }
+        } catch (exc: Exception) {
+            emit(Resource.error(data = null, onError(exc.message!!.toInt())))
         }
     }
 
     fun getFaculty(
         id: Int
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
+    ) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
             val response = facultyRepository.getFaculty(
                 id
             )
             if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
                 _faculty.postValue(response.body())
             } else {
-                onError(response.code())
+                throw Exception(response.code().toString())
             }
+        } catch (exc: Exception) {
+            emit(Resource.error(data = null, onError(exc.message!!.toInt())))
         }
     }
 
     fun deleteFaculty(
         id: Int,
         univId: Int,
-    ) {
-        viewModelScope.launch {
+    ) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
             val response = facultyRepository.deleteFaculty(id)
             if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
                 getFaculties(univId, null, null)
             } else {
-                onError(response.code())
+                throw Exception(response.code().toString())
             }
+        } catch (exc: Exception) {
+            emit(Resource.error(data = null, onError(exc.message!!.toInt())))
         }
     }
 
 
-    private fun onError(code: Int) {
+    private fun onError(code: Int): String {
         var msg: String = " "
         if (code == 400) {
             msg = "Такой факультет уже существует"
@@ -122,5 +147,6 @@ class FacultyViewModel(
             msg = "Факультет по переданному id не был найден"
         }
         _errorMsg.postValue(msg)
+        return msg
     }
 }

@@ -1,6 +1,7 @@
 package vsu.cs.univtimetable.screens.admin_screens.faculty
 
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -28,6 +29,8 @@ import vsu.cs.univtimetable.screens.adapter.OnFacultiesItemClickInterface
 import vsu.cs.univtimetable.screens.adapter.OnFacultyDeleteInterface
 import vsu.cs.univtimetable.screens.adapter.OnFacultyEditInterface
 import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
+import vsu.cs.univtimetable.utils.NotificationManager
+import vsu.cs.univtimetable.utils.Status
 
 class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFacultyEditInterface,
     OnFacultyDeleteInterface {
@@ -37,6 +40,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
     private lateinit var adapter: FacultyListAdapter
     private lateinit var searchView: SearchView
     private lateinit var facultyViewModel: FacultyViewModel
+    private lateinit var pDialog: ProgressDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +56,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
         recyclerView = view.findViewById(R.id.facultyRecyclerView)
         initRV(recyclerView)
 
+        pDialog = ProgressDialog(context)
         val token = SessionManager.getToken(requireContext())!!
         val facultyRepository = FacultyRepository(facultyApi, token)
 
@@ -103,6 +108,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
             adapter.submitList(it)
         }
         facultyViewModel.errorMsg.observe(viewLifecycleOwner) {
+            NotificationManager.showToastNotification(requireContext(), it)
         }
         getFaculties(null, null)
         searchView = view.findViewById(R.id.searchFacultyView)
@@ -126,9 +132,25 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
         val editFacultyName = dialogView.findViewById<AppCompatEditText>(R.id.updFacultyName)
         val btnUpdate = dialogView.findViewById<AppCompatButton>(R.id.updateFacultyBtn)
 
-        facultyViewModel.getFaculty(id)
-        facultyViewModel.faculty.observe(viewLifecycleOwner) {
-            editFacultyName?.setText(it.name)
+        facultyViewModel.getFaculty(id).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        pDialog.dismiss()
+                        editFacultyName?.setText(it.data?.name)
+                    }
+                    Status.ERROR -> {
+                        pDialog.dismiss()
+                        NotificationManager.showToastNotification(
+                            requireContext(),
+                            it.message.toString()
+                        )
+                    }
+                    Status.LOADING -> {
+                        NotificationManager.setLoadingDialog(pDialog)
+                    }
+                }
+            }
         }
 
         val builder = AlertDialog.Builder(context)
@@ -140,20 +162,19 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
             override fun onClick(view: View?) {
                 val name = editFacultyName?.text.toString()
                 update(id, FacultyDto(id, name))
-                getFaculties(null, null)
                 alertDialog.dismiss()
             }
         })
     }
 
+
     override fun onDeleteClick(id: Int) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Удаление университета")
-            .setMessage("Вы уверены что хотите удалить из списка?")
+            .setMessage("Вы уверены что хотите удалить этот университет?")
             .setCancelable(true)
             .setPositiveButton("Удалить") { _, _ ->
                 delete(id)
-                getFaculties(null, null)
             }
             .setNegativeButton(
                 "Отмена"
@@ -175,72 +196,52 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
     }
 
     private fun update(id: Int, updatedFaculty: FacultyDto) {
-        val token: String? = SessionManager.getToken(requireContext())
-//        Log.d("API Request failed", "${token}")
-        facultyViewModel.editFaculty(id, getUnivId(), updatedFaculty)
-//        val call = facultyApi.editFaculty(
-//            "Bearer ${token}",
-//            updatedFaculty.id,
-//            updatedFaculty
-//        )
-//        call.enqueue(object : Callback<Void> {
-//            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request okay", "Обновили ${response.code()}")
-//                    showToastNotification("Университет успешно обновлен")
+        facultyViewModel.editFaculty(id, getUnivId(), updatedFaculty).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        getFaculties(null, null)
+                        pDialog.dismiss()
 //
-//                    val code = response.code()
-//                } else {
-//                    if (response.code() == 400) {
-//                        showToastNotification("Такой Факультет уже существует")
-//                    }
-//                    if (response.code() == 403) {
-//                        showToastNotification("Недостаточно прав доступа для выполнения")
-//                    }
-//                    if (response.code() == 404) {
-//                        showToastNotification("Факультет по переданному id не был найден")
-//                    }
-//                    Log.d("API Request failed", "${response.code()}")
-//                    Log.d("API Request failed", "${response.body()}")
-//                    Log.d("API Request failed", "${response.errorBody()}")
-//                }
-//                callback(response.code())
-//            }
-//
-//            override fun onFailure(call: Call<Void>, t: Throwable) {
-//                // Обработка ошибки
-//            }
-//        })
+                    }
+                    Status.ERROR -> {
+                        pDialog.dismiss()
+                        NotificationManager.showToastNotification(
+                            requireContext(),
+                            it.message.toString()
+                        )
+                    }
+                    Status.LOADING -> {
+                        NotificationManager.setLoadingDialog(pDialog)
+                    }
+                }
+            }
+        }
     }
 
     private fun delete(id: Int) {
-        val token: String? = SessionManager.getToken(requireContext())
-        facultyViewModel.deleteFaculty(id, getUnivId())
-//        Log.d("API Request failed", "${token}")
-//        val call = facultyApi.deleteFaculty(
-//            "Bearer ${token}", id
-//        )
-//        call.enqueue(object : Callback<Void> {
-//            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request okay", "Удалили ${response.code()}")
-//                    showToastNotification("Факультет успешно удален")
-//                } else {
-//                    Log.d("API Request failed", "${response.code()}")
-//                    if (response.code() == 403) {
-//                        showToastNotification("Недостаточно прав доступа для выполнения")
-//                    }
-//                    if (response.code() == 404) {
-//                        showToastNotification("Факультет по переданному id не был найден")
-//                    }
-//                }
-//                callback(response.code())
-//            }
-//
-//            override fun onFailure(call: Call<Void>, t: Throwable) {
-//                // Обработка ошибки
-//            }
-//        })
+        facultyViewModel.deleteFaculty(id, getUnivId()).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        getFaculties(null, null)
+                        pDialog.dismiss()
+                    }
+
+                    Status.ERROR -> {
+                        pDialog.dismiss()
+                        NotificationManager.showToastNotification(
+                            requireContext(),
+                            it.message.toString()
+                        )
+                    }
+
+                    Status.LOADING -> {
+                        NotificationManager.setLoadingDialog(pDialog)
+                    }
+                }
+            }
+        }
     }
 
     private fun getFaculties(name: String?, order: String?) {
@@ -248,46 +249,27 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
 
         Log.d("API Request failed", "${token}")
         val universityId = getUnivId()
-        facultyViewModel.getFaculties(universityId, name, order)
-//        val call = facultyApi.getFaculties("Bearer ${token}", universityId, name, order)
-//
-//
-//        call.enqueue(object : Callback<FacultyResponseDto> {
-//            override fun onResponse(
-//                call: Call<FacultyResponseDto>,
-//                response: Response<FacultyResponseDto>
-//            ) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request successful", "Получили ${response.code()}")
-//                    val dataResponse = response.body()
-//                    println(dataResponse)
-//                    if (dataResponse != null) {
-//                        adapter = FacultyListAdapter(
-//                            requireContext(),
-//                            dataResponse.facultiesPage.contents,
-//                            this@FacultyListPageFragment
-//                        )
-//                    }
-//                    recyclerView.adapter = adapter
-//                } else {
-//                    println("Не успешно")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<FacultyResponseDto>, t: Throwable) {
-//                println("Ошибка")
-//                println(t)
-//            }
-//        })
-    }
+        facultyViewModel.getFaculties(universityId, name, order).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        pDialog.dismiss()
+                    }
 
-    private fun showToastNotification(message: String) {
-        val duration = Toast.LENGTH_LONG
+                    Status.ERROR -> {
+                        pDialog.dismiss()
+                        NotificationManager.showToastNotification(
+                            requireContext(),
+                            it.message.toString()
+                        )
+                    }
 
-        val toast = Toast.makeText(requireContext(), message, duration)
-        toast.show()
-        val handler = Handler()
-        handler.postDelayed({ toast.cancel() }, 1500)
+                    Status.LOADING -> {
+                        NotificationManager.setLoadingDialog(pDialog)
+                    }
+                }
+            }
+        }
     }
 
     private fun getUnivId(): Int {

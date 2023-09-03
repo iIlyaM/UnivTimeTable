@@ -16,7 +16,6 @@ class FacultyMainPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_faculty_main_page, container, false)
 
         val bundle = Bundle()
@@ -36,7 +35,7 @@ class FacultyMainPageFragment : Fragment() {
         val audienceBtn = view.findViewById<AppCompatButton>(R.id.addAudienceBtn)
         audienceBtn.setOnClickListener {
             findNavController().navigate(
-                R.id.action_facultyMainPageFragment_to_createAudiencePageFragment,
+                R.id.action_facultyMainPageFragment_to_audienceListPageFragment,
                 bundle
             )
         }

@@ -1,5 +1,6 @@
 package vsu.cs.univtimetable.screens.admin_screens.faculty
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -11,8 +12,10 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
@@ -20,11 +23,15 @@ import vsu.cs.univtimetable.api.FacultyApi
 import vsu.cs.univtimetable.dto.univ.CreateFacultyDto
 import vsu.cs.univtimetable.repository.FacultyRepository
 import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
+import vsu.cs.univtimetable.utils.NotificationManager
+import vsu.cs.univtimetable.utils.Status
 
 class CreateFacultyPageFragment : Fragment() {
 
     private lateinit var facultyApi: FacultyApi
     private lateinit var facultyViewModel: FacultyViewModel
+    private lateinit var confirmBtn: CircularProgressButton
+    private lateinit var pDialog: ProgressDialog
     private var universityId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,11 +43,11 @@ class CreateFacultyPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        return inflater.inflate(R.layout.fragment_create_faculty_page, container, false)
         val view = inflater.inflate(R.layout.fragment_create_faculty_page, container, false)
         val facultyNameField = view.findViewById<EditText>(R.id.editFacultyNameText)
         val confirmBtn = view.findViewById<AppCompatButton>(R.id.confirmFacultyCreateBtn)
 
+        pDialog = ProgressDialog(context)
         val token = SessionManager.getToken(requireContext())!!
         val facultyRepository = FacultyRepository(facultyApi, token)
 
@@ -54,7 +61,10 @@ class CreateFacultyPageFragment : Fragment() {
         prevPageButton.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt("univId", universityId)
-            findNavController().navigate(R.id.action_createFacultyPageFragment_to_facultyListPageFragment, bundle)
+            findNavController().navigate(
+                R.id.action_createFacultyPageFragment_to_facultyListPageFragment,
+                bundle
+            )
         }
 
         val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
@@ -79,6 +89,7 @@ class CreateFacultyPageFragment : Fragment() {
 
         if (facultyField.text.isEmpty()) {
             facultyField.error = "Введите название факультета"
+            stopAnimation(confirmBtn)
             return
         }
         val token: String? = SessionManager.getToken(requireContext())
@@ -87,39 +98,34 @@ class CreateFacultyPageFragment : Fragment() {
         val id = arguments?.getInt("univId")
 
         if (id != null) {
-            facultyViewModel.addFaculty(id, CreateFacultyDto(name))
-            showToastNotification("Факультет успешно создан")
-//
-//            call.enqueue(object : Callback<Void> {
-//                override fun onResponse(
-//                    call: Call<Void>,
-//                    response: Response<Void>
-//                ) {
-//                    if (response.isSuccessful) {
-//                        Log.d("API Request Successful", "${response.code()}")
-//                        showToastNotification("Факультет успешно создан")
-//                    } else {
-//                        println("Не успешно")
-//                        if (response.code() == 400) {
-//                            showToastNotification("Такой факультет в этом университете уже существует")
-//                        }
-//                        if (response.code() == 403) {
-//                            showToastNotification("Недостаточно прав доступа для выполнения")
-//                        }
-//                        if (response.code() == 404) {
-//                            showToastNotification("Университет по переданному id для добавления факульета не был найден")
-//                        }
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<Void>, t: Throwable) {
-//                    println("Ошибка")
-//                    println(t)
-//                }
-//            })
-//            facultyField.text.clear()
-//        }
-            facultyField.text.clear()
+            facultyViewModel.addFaculty(id, CreateFacultyDto(name)).observe(viewLifecycleOwner) {
+                it?.let {
+                    when (it.status) {
+                        Status.SUCCESS -> {
+                            pDialog.dismiss()
+                            showToastNotification("Факультет успешно создан")
+                            facultyField.text.clear()
+                            val bundle = Bundle()
+                            bundle.putInt("univId", universityId)
+                            findNavController().navigate(
+                                R.id.action_createFacultyPageFragment_to_facultyListPageFragment,
+                                bundle
+                            )
+                        }
+
+                        Status.ERROR -> {
+                            pDialog.dismiss()
+                            NotificationManager.showToastNotification(
+                                requireContext(),
+                                it.message.toString()
+                            )
+                        }
+                        Status.LOADING -> {
+                            NotificationManager.setLoadingDialog(pDialog)
+                        }
+                    }
+                }
+            }
 
         }
     }
@@ -142,29 +148,9 @@ class CreateFacultyPageFragment : Fragment() {
         return univId
     }
 
-//    private fun showDialog(facultyName: String, code: Int) {
-//        val builder = AlertDialog.Builder(requireContext())
-//        if (code == 201) {
-//            builder.setMessage("${facultyName} добавлен")
-//            val alert = builder.create()
-//            alert.show()
-//            alert.window?.setGravity(Gravity.BOTTOM)
-//
-//            Handler().postDelayed({
-//                alert.dismiss()
-//            }, 2000)
-//        }
-//        if (code == 400) {
-//            builder.setMessage("${facultyName} уже есть в списке")
-//            val alert = builder.create()
-//            alert.show()
-//            alert.window?.setGravity(Gravity.BOTTOM)
-//
-//            Handler().postDelayed({
-//                alert.dismiss()
-//            }, 2000)
-//        }
-//    }
-
+    private fun stopAnimation(btn: CircularProgressButton) {
+        btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.admin_bg)
+        btn.revertAnimation()
+    }
 
 }
