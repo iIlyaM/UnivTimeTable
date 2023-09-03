@@ -4,29 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
-import retrofit2.Response
 import vsu.cs.univtimetable.dto.user.CreateUserResponse
 import vsu.cs.univtimetable.dto.user.UserCreateRequest
 import vsu.cs.univtimetable.dto.user.UserDisplayDto
 import vsu.cs.univtimetable.repository.UserRepository
 import vsu.cs.univtimetable.utils.Resource
 import java.lang.Exception
-
-//class UserViewModel : ViewModel() {
-//    private val _userAdded = MutableLiveData<Unit>()
-//    val userAdded: LiveData<Unit>
-//        get() = _userAdded
-//
-//    fun notifyUserAdded() {
-//        _userAdded.value = Unit
-//    }
-//}
 
 
 class UserViewModel(
@@ -35,14 +20,12 @@ class UserViewModel(
 ) : ViewModel() {
     private val _userList = MutableLiveData<List<UserDisplayDto>>()
     private val _user = MutableLiveData<UserCreateRequest>()
-    private val _userInfo = MutableLiveData<CreateUserResponse>()
+    private val _userInfo = MutableLiveData<CreateUserResponse?>()
 
-//    private val _freeHeadmenList = MutableLiveData<List<UserDisplayDto>>()
     val userList: LiveData<List<UserDisplayDto>> get() = _userList
     val user: LiveData<UserCreateRequest> get() = _user
-    val userInfo: LiveData<CreateUserResponse> get() =  _userInfo
+    val userInfo: LiveData<CreateUserResponse?> get() = _userInfo
 
-//    val freeHeadmenList: LiveData<List<UserDisplayDto>> get() = _freeHeadmenList
 
     private val _errorMsg = MutableLiveData<String>()
     val errorMsg: LiveData<String> = _errorMsg
@@ -64,8 +47,9 @@ class UserViewModel(
         role: String?,
         city: String?,
         name: String?
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
+    ) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
             val response = userRepository.getAllUsers(
                 university,
                 role,
@@ -74,9 +58,12 @@ class UserViewModel(
             )
             if (response.isSuccessful) {
                 _userList.postValue(response.body()?.usersPage?.contents)
+                emit(Resource.success(response.body()?.usersPage?.contents))
             } else {
-                onError(response.code())
+                throw Exception(response.code().toString())
             }
+        } catch (exc: Exception) {
+            emit(Resource.error(data = null, onError(exc.message!!.toInt())))
         }
     }
 
@@ -91,7 +78,6 @@ class UserViewModel(
             )
             if (response.isSuccessful) {
                 val a = response.body()
-//                    _group.postValue(a!!)
                 emit(Resource.success(a))
             } else {
                 throw Exception(response.code().toString())
@@ -101,14 +87,18 @@ class UserViewModel(
         }
     }
 
-    fun getUserInfo() {
-        CoroutineScope(Dispatchers.IO).launch {
+    fun getUserInformation() = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
             val response = userRepository.createUserInfo()
             if (response.isSuccessful) {
                 _userInfo.postValue(response.body())
+                emit(Resource.success(response.body()))
             } else {
-                onError(response.code())
+                throw Exception(response.code().toString())
             }
+        } catch (exc: Exception) {
+            emit(Resource.error(data = null, onError(exc.message!!.toInt())))
         }
     }
 
@@ -123,8 +113,9 @@ class UserViewModel(
         universityId: Long?,
         facultyId: Long?,
         groupId: Long?
-    ) {
-        viewModelScope.launch {
+    ) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
             val response = userRepository.addUser(
                 UserCreateRequest(
                     id,
@@ -141,11 +132,15 @@ class UserViewModel(
             )
             if (response.isSuccessful) {
                 getAllUsers(null, null, null, null)
+                emit(Resource.success(response.body()))
             } else {
-                onError(response.code())
+                throw Exception(response.code().toString())
             }
+        } catch (exc: Exception) {
+            emit(Resource.error(data = null, onError(exc.message!!.toInt())))
         }
     }
+
 
     fun editUser(
         id: Int,
@@ -158,8 +153,9 @@ class UserViewModel(
         universityId: Long?,
         facultyId: Long?,
         groupId: Long?
-    ) {
-        viewModelScope.launch {
+    ) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
             val response = userRepository.editUser(
                 id,
                 UserCreateRequest(
@@ -177,26 +173,15 @@ class UserViewModel(
             )
             if (response.isSuccessful) {
                 getAllUsers(null, null, null, null)
+                emit(Resource.success(response.body()))
             } else {
-                onError(response.code())
+                throw Exception(response.code().toString())
             }
+        } catch (exc: Exception) {
+            emit(Resource.error(data = null, onError(exc.message!!.toInt())))
         }
     }
 
-//    fun getFreeHeadmen(
-//        facultyId: Int
-//    ) {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val response = userRepository.getFreeHeadmen(
-//                facultyId
-//            )
-//            if (response.isSuccessful) {
-//                _userList.postValue(response.body())
-//            } else {
-//                onError(response.code())
-//            }
-//        }
-//    }
 
     fun getFreeHeadmen(
         facultyId: Int
@@ -208,7 +193,25 @@ class UserViewModel(
             )
             if (response.isSuccessful) {
                 val a = response.body()
-//                    _group.postValue(a!!)
+                emit(Resource.success(a))
+            } else {
+                throw Exception(response.code().toString())
+            }
+        } catch (exc: Exception) {
+            emit(Resource.error(data = null, onError(exc.message!!.toInt())))
+        }
+    }
+
+    fun deleteUser(
+        id: Int
+    ) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
+            val response = userRepository.deleteUser(
+                id
+            )
+            if (response.isSuccessful) {
+                val a = response.body()
                 emit(Resource.success(a))
             } else {
                 throw Exception(response.code().toString())

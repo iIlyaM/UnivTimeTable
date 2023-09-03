@@ -36,7 +36,6 @@ class UserRepository(
     }
 
     suspend fun createUserInfo(
-
     ): Response<CreateUserResponse> {
         return userApi.createUserInfo(basicToken = "Bearer ${token}")
     }
@@ -52,6 +51,12 @@ class UserRepository(
         user: UserCreateRequest
     ): Response<ResponseBody> {
         return userApi.editUser(basicToken = "Bearer ${token}", id, user)
+    }
+
+    suspend fun deleteUser(
+        id: Int
+    ): Response<ResponseBody> {
+        return userApi.deleteUser(basicToken = "Bearer ${token}", id)
     }
 
 

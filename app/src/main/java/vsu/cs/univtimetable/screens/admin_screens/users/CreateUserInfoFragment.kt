@@ -1,7 +1,7 @@
 package vsu.cs.univtimetable.screens.admin_screens.users
 
+import android.app.ProgressDialog
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
-import android.widget.Toast
 import android.widget.ImageButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -28,6 +27,9 @@ import vsu.cs.univtimetable.dto.group.GroupDto
 import vsu.cs.univtimetable.dto.univ.UnivResponse
 import vsu.cs.univtimetable.repository.UserRepository
 import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
+import vsu.cs.univtimetable.utils.NotificationManager
+import vsu.cs.univtimetable.utils.NotificationManager.showToastNotification
+import vsu.cs.univtimetable.utils.Status
 
 
 class CreateUserInfoFragment : Fragment() {
@@ -35,6 +37,7 @@ class CreateUserInfoFragment : Fragment() {
     private lateinit var userApi: UserApi
     private lateinit var createUserResponse: CreateUserResponse
     private lateinit var userViewModel: UserViewModel
+    private lateinit var pDialog: ProgressDialog
     private val roleType =
         arrayOf("HEADMAN", "ADMIN", "LECTURER")
 
@@ -86,6 +89,7 @@ class CreateUserInfoFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_create_user_info, container, false)
 
+        pDialog = ProgressDialog(context)
         val token = SessionManager.getToken(requireContext())!!
         val userRepository = UserRepository(userApi, token)
         userViewModel =
@@ -129,7 +133,6 @@ class CreateUserInfoFragment : Fragment() {
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
-//            findNavController().navigate(R.id.action_createUserInfoFragment_to_createUserAuthFragment)
             findNavController().popBackStack()
         }
 
@@ -156,16 +159,14 @@ class CreateUserInfoFragment : Fragment() {
             groupTextInputLayout.error = null
         }
 
-        createBtn = view.findViewById<CircularProgressButton>(R.id.create_user_btn)
+        createBtn = view.findViewById(R.id.create_user_btn)
         createBtn.setOnClickListener {
-//            val progressbar = BtnLoadingProgressbar(it)
-//            progressbar.setLoading()
             createBtn.startAnimation()
             createUser(
-                view.findViewById<EditText>(R.id.editTextTextEmailAddress),
-                view.findViewById<EditText>(R.id.editLoginText),
-                view.findViewById<EditText>(R.id.editUserCity),
-                view.findViewById<EditText>(R.id.editTextTextPassword2),
+                view.findViewById(R.id.editTextTextEmailAddress),
+                view.findViewById(R.id.editLoginText),
+                view.findViewById(R.id.editUserCity),
+                view.findViewById(R.id.editTextTextPassword2),
                 view.findViewById(R.id.editFullNameText)
             )
         }
@@ -184,31 +185,31 @@ class CreateUserInfoFragment : Fragment() {
         password: EditText,
         fullNameText: EditText
     ) {
-        val editable = arguments?.getBoolean("editable");
+        val editable = arguments?.getBoolean("editable")
 
         if (email.text.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email.text.toString())
                 .matches()
         ) {
             email.error = "Почта введена некорректно"
-            showToastNotification("Пожалуйста, заполните все поля")
+            showToastNotification(requireContext(), "Пожалуйста, заполните все поля")
             stopAnimation(createBtn)
             return
         }
         if (password.text.isEmpty() && editable == null) {
             password.error = "Вы должны ввести пароль"
-            showToastNotification("Пожалуйста, заполните все поля")
+            showToastNotification(requireContext(), "Пожалуйста, заполните все поля")
             stopAnimation(createBtn)
             return
         }
         if (login.text.isEmpty()) {
             login.error = "Введите имя пользователя"
-            showToastNotification("Пожалуйста, заполните все поля")
+            showToastNotification(requireContext(), "Пожалуйста, заполните все поля")
             stopAnimation(createBtn)
             return
         }
         if (city.text.isEmpty()) {
             city.error = "Введите город"
-            showToastNotification("Пожалуйста, заполните все поля")
+            showToastNotification(requireContext(), "Пожалуйста, заполните все поля")
             stopAnimation(createBtn)
             return
         }
@@ -216,7 +217,7 @@ class CreateUserInfoFragment : Fragment() {
         val fullName = fullNameText.text.toString()
         if (fullName.isEmpty()) {
             fullNameText.error = "Введите имя пользователя"
-            showToastNotification("Пожалуйста, заполните имя пользователя")
+            showToastNotification(requireContext(), "Пожалуйста, заполните имя пользователя")
             stopAnimation(createBtn)
             return
         }
@@ -248,25 +249,12 @@ class CreateUserInfoFragment : Fragment() {
 
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
-//        val editable = arguments?.getBoolean("editable")
         val tempPass: String?
         tempPass = if (password.text.isEmpty()) {
             null
         } else {
             password.text.toString()
         }
-//        val user = UserCreateRequest(
-//            0,
-//            role,
-//            fullName,
-//            login,
-//            email,
-//            city,
-//            tempPass,
-//            univId,
-//            facId,
-//            groupId
-//        )
 
         if (editable != null && editable) {
             val id = arguments?.getInt("id") ?: -1
@@ -281,7 +269,29 @@ class CreateUserInfoFragment : Fragment() {
                 univId,
                 facId,
                 groupId
-            )
+            ).observe(viewLifecycleOwner) {
+                it?.let {
+                    when (it.status) {
+                        Status.SUCCESS -> {
+                            pDialog.dismiss()
+                            findNavController().popBackStack()
+                        }
+
+                        Status.ERROR -> {
+                            pDialog.dismiss()
+                            stopAnimation(createBtn)
+                            showToastNotification(
+                                requireContext(),
+                                it.message.toString()
+                            )
+                        }
+
+                        Status.LOADING -> {
+                            NotificationManager.setLoadingDialog(pDialog)
+                        }
+                    }
+                }
+            }
         } else {
             userViewModel.addUser(
                 0,
@@ -294,121 +304,79 @@ class CreateUserInfoFragment : Fragment() {
                 univId,
                 facId,
                 groupId
-            )
+            ).observe(viewLifecycleOwner) {
+                it?.let {
+                    when (it.status) {
+                        Status.SUCCESS -> {
+                            pDialog.dismiss()
+                            findNavController().popBackStack()
+                        }
+
+                        Status.ERROR -> {
+                            pDialog.dismiss()
+                            stopAnimation(createBtn)
+                            showToastNotification(
+                                requireContext(),
+                                it.message.toString()
+                            )
+                        }
+
+                        Status.LOADING -> {
+                            NotificationManager.setLoadingDialog(pDialog)
+                        }
+                    }
+                }
+            }
         }
-
-
-//        val call: Call<Void>;
-//        if (editable != null && editable) {
-//            val id = arguments?.getInt("id") ?: -1
-//            user.id = arguments?.getInt("id") ?: -1
-//            call = userApi.editUser(
-//                "Bearer ${token}",
-//                id,
-//                user
-//            )
-//        } else {
-//            call = userApi.addUser(
-//                "Bearer ${token}",
-//                user
-//            )
-//        }
-//        call.enqueue(object : Callback<Void> {
-//            override fun onResponse(
-//                call: Call<Void>,
-//                response: Response<Void>
-//            ) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request successful", "Получили ${response.code()}")
-//                } else {
-//                    println("Не успешно")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<Void>, t: Throwable) {
-//                println("Ошибка")
-//                println(t)
-//            }
-//        })
-
-        findNavController().popBackStack()
     }
 
     private fun getUserInfo(view: View) {
-        val token: String? = SessionManager.getToken(requireContext())
+        userViewModel.getUserInformation().observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        pDialog.dismiss()
+                        Log.d("INFO", it.toString())
+                        roleList = ArrayList(it.data!!.roles)
+                        univList = ArrayList(it.data.universityResponses)
+                        for (univ in univList) {
+                            val shortUnivName =
+                                abbreviateUniversityName(univ.universityName).toUpperCase()
+                            univMap[shortUnivName] = univ
+                        }
+                        roleTextInputLayout.setAdapter(
+                            ArrayAdapter(
+                                requireContext(),
+                                R.layout.subj_item,
+                                it.data.roles
+                            )
+                        )
+                        univTextInputLayout.setAdapter(
+                            ArrayAdapter(
+                                requireContext(),
+                                R.layout.subj_item,
+                                univMap.keys.toTypedArray()
+                            )
+                        )
+                        val editable = arguments?.getBoolean("editable")
+                        if (editable != null && editable)
+                            setFieldsIfEdit(view)
+                    }
 
-        userViewModel.getUserInfo()
-        userViewModel.userInfo.observe(viewLifecycleOwner) {
-            Log.d("INFO", it.toString())
-            roleList = ArrayList(it.roles)
-            univList = ArrayList(it.universityResponses)
-            for (univ in univList) {
-                univMap[univ.universityName] = univ
+                    Status.ERROR -> {
+                        pDialog.dismiss()
+                        showToastNotification(
+                            requireContext(),
+                            it.message.toString()
+                        )
+                    }
+
+                    Status.LOADING -> {
+                        NotificationManager.setLoadingDialog(pDialog)
+                    }
+                }
             }
-            roleTextInputLayout.setAdapter(
-                ArrayAdapter(
-                    requireContext(),
-                    R.layout.subj_item,
-                    it.roles
-                )
-            )
-            univTextInputLayout.setAdapter(
-                ArrayAdapter(
-                    requireContext(),
-                    R.layout.subj_item,
-                    univMap.keys.toTypedArray()
-                )
-            )
-            val editable = arguments?.getBoolean("editable")
-            if (editable != null && editable)
-                setFieldsIfEdit(view)
         }
-//        Log.d("API Request failed", "${token}")
-//        val call = userApi.createUserInfo("Bearer ${token}")
-//
-//        call.enqueue(object : Callback<CreateUserResponse> {
-//            override fun onResponse(
-//                call: Call<CreateUserResponse>,
-//                response: Response<CreateUserResponse>
-//            ) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request successful", "Получили ${response.code()}")
-//                    val dataResponse = response.body()
-//                    println(dataResponse)
-//                    if (dataResponse != null) {
-//                        roleList = ArrayList(dataResponse.roles)
-//                        univList = ArrayList(dataResponse.universityResponses)
-//                        for (univ in univList) {
-//                            univMap[univ.universityName] = univ
-//                        }
-//                        roleTextInputLayout.setAdapter(
-//                            ArrayAdapter(
-//                                requireContext(),
-//                                R.layout.subj_item,
-//                                dataResponse.roles
-//                            )
-//                        )
-//                        univTextInputLayout.setAdapter(
-//                            ArrayAdapter(
-//                                requireContext(),
-//                                R.layout.subj_item,
-//                                univMap.keys.toTypedArray()
-//                            )
-//                        )
-//                        val editable = arguments?.getBoolean("editable")
-//                        if (editable != null && editable)
-//                            setFieldsIfEdit(view)
-//                    }
-//                } else {
-//                    println("Не успешно")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<CreateUserResponse>, t: Throwable) {
-//                println("Ошибка")
-//                println(t)
-//            }
-//        })
     }
 
     private fun validUserInfo(
@@ -420,12 +388,12 @@ class CreateUserInfoFragment : Fragment() {
         if (role == "HEADMAN" || role == "LECTURER") {
             if (univId == null) {
                 univTextInputLayout.error = "Выберите университет"
-                showToastNotification("Пожалуйста, заполните все поля")
+                showToastNotification(requireContext(), "Пожалуйста, заполните все поля")
                 isValid = false;
             }
             if (facId == null) {
                 facultyTextInputLayout.error = "Выберите факультет"
-                showToastNotification("Пожалуйста, заполните все поля")
+                showToastNotification(requireContext(), "Пожалуйста, заполните все поля")
                 isValid = false
             }
         }
@@ -437,7 +405,78 @@ class CreateUserInfoFragment : Fragment() {
 
         val editable = arguments?.getBoolean("editable");
         if (editable != null && editable) {
-            userViewModel.getUser(arguments?.getInt("id")!!.toLong())
+            userViewModel.getUser(arguments?.getInt("id")!!.toLong()).observe(viewLifecycleOwner) {
+                it?.let {
+                    when (it.status) {
+                        Status.SUCCESS -> {
+                            pDialog.dismiss()
+                            val editableUser = it.data!!
+                            view.findViewById<EditText>(R.id.editTextTextEmailAddress)
+                                .setText(editableUser.email)
+                            view.findViewById<EditText>(R.id.editLoginText)
+                                .setText(editableUser.username)
+                            view.findViewById<EditText>(R.id.editUserCity)
+                                .setText(editableUser.city)
+                            view.findViewById<EditText>(R.id.editTextTextPassword2)
+                                .setText(editableUser.password)
+                            roleInputValid(view, editableUser.role)
+                            roleTextInputLayout.setText(editableUser.role)
+                            roleTextInputLayout.setAdapter(
+                                ArrayAdapter(
+                                    requireContext(),
+                                    R.layout.subj_item,
+                                    roleList
+                                )
+                            )
+                            view.findViewById<EditText>(R.id.editFullNameText)
+                                .setText(it.data.fullName)
+                            if (it.data.universityId != null && editableUser.universityId != -1L) {
+                                val univ =
+                                    univList.firstOrNull { it.id == editableUser.universityId }
+                                val position = univList.indexOf(univ)
+                                univTextInputLayout(position)
+                                if (univ != null) {
+                                    univTextInputLayout.setText(
+                                        abbreviateUniversityName(univ.universityName),
+                                        false
+                                    )
+                                }
+                            }
+                            if (editableUser.facultyId != null && editableUser.facultyId != -1L) {
+                                val faculty =
+                                    facultyList.firstOrNull { it.id == editableUser.facultyId };
+                                val position = facultyList.indexOf(faculty)
+                                val groupId = editableUser.groupId
+                                facultyTextInputLayout(position, groupId)
+                                if (faculty != null) {
+                                    facultyTextInputLayout.setText(faculty.name, false)
+                                }
+                            }
+
+                            if (editableUser.groupId != null && editableUser.groupId != -1L) {
+                                val group = groupList.firstOrNull { it.id == editableUser.groupId }
+                                for ((key, mapValue) in groupMap) {
+                                    if (mapValue.id == group?.id) {
+                                        groupTextInputLayout.setText(key, false)
+                                    }
+                                }
+                            }
+                        }
+
+                        Status.ERROR -> {
+                            pDialog.dismiss()
+                            showToastNotification(
+                                requireContext(),
+                                it.message.toString()
+                            )
+                        }
+
+                        Status.LOADING -> {
+                            NotificationManager.setLoadingDialog(pDialog)
+                        }
+                    }
+                }
+            }
             userViewModel.user.observe(viewLifecycleOwner) {
                 val editableUser = it
                 view.findViewById<EditText>(R.id.editTextTextEmailAddress)
@@ -477,39 +516,6 @@ class CreateUserInfoFragment : Fragment() {
                 }
             }
         }
-
-
-//        val fullName = arguments?.getString("fullName")
-//        if (fullName != null)
-//            view.findViewById<EditText>(R.id.editFullNameText).setText(fullName)
-//        val univId = arguments?.getLong("univId")
-//        if (univId != null && univId != -1L) {
-//            val univ = univList.firstOrNull { it.id == univId }
-//            val position = univList.indexOf(univ)
-//            univTextInputLayout(position)
-//            if (univ != null) {
-//                univTextInputLayout.setText(univ.universityName, false)
-//            }
-//        }
-//        val facultyId = arguments?.getLong("facultyId")
-//        if (facultyId != null && facultyId != -1L) {
-//            val faculty = facultyList.firstOrNull { it.id == facultyId };
-//            val position = facultyList.indexOf(faculty)
-//            val groupId = arguments?.getLong("group")
-//            facultyTextInputLayout(position, groupId)
-//            if (faculty != null) {
-//                facultyTextInputLayout.setText(faculty.name, false)
-//            }
-//        }
-//        val groupId = arguments?.getLong("group")
-//        if (groupId != null && groupId != -1L) {
-//            val group = groupList.firstOrNull { it.id == groupId }
-//            for ((key, mapValue) in groupMap) {
-//                if (mapValue.id == group?.id) {
-//                    groupTextInputLayout.setText(key, false)
-//                }
-//            }
-//        }
     }
 
     private fun roleTextInputLayout(view: View) {
@@ -521,7 +527,8 @@ class CreateUserInfoFragment : Fragment() {
 
     private fun univTextInputLayout(position: Int) {
         facultyMap.clear()
-        facultyList = ArrayList(univMap[univList[position].universityName]?.facultyDtos!!)
+        facultyList =
+            ArrayList(univMap[abbreviateUniversityName(univList[position].universityName).toUpperCase()]?.facultyDtos!!)
         for (fac in facultyList) {
             facultyMap[fac.name] = fac
         }
@@ -584,17 +591,19 @@ class CreateUserInfoFragment : Fragment() {
         }
     }
 
-    private fun showToastNotification(message: String) {
-        val duration = Toast.LENGTH_LONG
-
-        val toast = Toast.makeText(requireContext(), message, duration)
-        toast.show()
-        val handler = Handler()
-        handler.postDelayed({ toast.cancel() }, 1500)
-    }
-
     private fun stopAnimation(btn: CircularProgressButton) {
         btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.admin_bg)
         btn.revertAnimation()
+    }
+
+    private fun abbreviateUniversityName(fullName: String): String {
+        val words = fullName.split(" ")
+        val abbreviation = StringBuilder()
+        for (word in words) {
+            if (word.isNotBlank()) {
+                abbreviation.append(word[0])
+            }
+        }
+        return abbreviation.toString()
     }
 }
