@@ -102,7 +102,8 @@ class CreateGroupPageFragment : Fragment() {
             val bundle = Bundle()
             bundle.putInt("facultyId", getFacultyId())
             bundle.putInt("univId", arguments?.getInt("univId")!!)
-            findNavController().navigate(R.id.action_createGroupPageFragment_to_groupListPageFragment)
+            findNavController().navigate(R.id.action_createGroupPageFragment_to_groupListPageFragment,
+                bundle)
 //            findNavController().popBackStack()
         }
 
@@ -254,7 +255,6 @@ class CreateGroupPageFragment : Fragment() {
                     }
                 }
             }
-//            setHeadmen(headmanView)
         } else {
             groupViewModel.addGroup(
                 getFacultyId(),

@@ -122,20 +122,6 @@ class GroupViewModel(
         }
     }
 
-//    fun deleteGroups(
-//        id: Long,
-//        facultyId: Int
-//    ) {
-//        viewModelScope.launch {
-//            val response = groupRepository.deleteGroups(id)
-//            if (response.isSuccessful) {
-//                getGroups(facultyId, null, null, null)
-//            } else {
-//                onError(response.code())
-//            }
-//        }
-//    }
-
     fun deleteGroups(
         id: Long,
         facultyId: Int

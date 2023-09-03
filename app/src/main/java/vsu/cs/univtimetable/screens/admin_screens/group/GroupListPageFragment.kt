@@ -197,28 +197,6 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
                 }
             }
         }
-//        var courseNumber: Int = 0
-//        var groupNumber: Int = 0
-//        groupViewModel.groupIMmutable.observe(viewLifecycleOwner) {
-//            courseNumber = it!!.courseNumber
-//            groupNumber = it.groupNumber
-//        }
-//        builder.setTitle("Удаление группы")
-//            .setMessage(
-//                "Вы уверены что хотите удалить группу курса: ${courseNumber}, " +
-//                        "номер: $groupNumber из списка?"
-//            )
-//            .setCancelable(true)
-//            .setPositiveButton("Удалить") { _, _ ->
-//                delete(groupId)
-//                getGroups(null, null, null)
-//            }
-//            .setNegativeButton(
-//                "Отмена"
-//            ) { _, _ ->
-//            }
-//        builder.create()
-//        builder.show()
     }
 
     private fun delete(id: Long) {
@@ -265,35 +243,6 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
                 }
             }
         }
-//        val call = groupApi.getGroups("Bearer ${token}", getFacultyId(), course, order, groupNumber)
-
-//        call.enqueue(object : Callback<GroupResponseDto> {
-//            override fun onResponse(
-//                call: Call<GroupResponseDto>,
-//                response: Response<GroupResponseDto>
-//            ) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request successful", "Получили ${response.code()}")
-//                    val dataResponse = response.body()
-//                    println(dataResponse)
-//                    if (dataResponse != null) {
-//                        adapter = GroupListAdapter(
-//                            requireContext(),
-//                            dataResponse.groupsPage.contents,
-//                            this@GroupListPageFragment
-//                        )
-//                    }
-//                    recyclerView.adapter = adapter
-//                } else {
-//                    println("Не успешно")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<GroupResponseDto>, t: Throwable) {
-//                println("Ошибка")
-//                println(t)
-//            }
-//        })
     }
 
     private fun getFacultyId(): Int {
