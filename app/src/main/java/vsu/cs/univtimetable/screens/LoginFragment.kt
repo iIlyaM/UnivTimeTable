@@ -48,15 +48,6 @@ class LoginFragment : Fragment() {
             val progressbar = BtnLoadingProgressbar(it)
             progressbar.setLoading()
             login(emailField, pwd, navController, progressbar)
-//            val progressbar = BtnLoadingProgressbar(it) // `it` is view of button
-//            progressbar.setLoading()
-//            handler.postDelayed({
-//                progressbar.setState(true) { // executed after animation end
-//                    handler.postDelayed({
-//                        startError(progressbar)
-//                    }, 1500)
-//                }
-//            }, 2000)
         }
         return view
     }
@@ -71,10 +62,12 @@ class LoginFragment : Fragment() {
                 .matches()
         ) {
             email.error = "Почта введена некорректно"
+            startError(progressbar)
             return
         }
         if (password.text.isEmpty()) {
             password.error = "Вы должны ввести пароль"
+            startError(progressbar)
             return
         }
 
@@ -89,7 +82,7 @@ class LoginFragment : Fragment() {
                     val token = response.body()?.token
                     SessionManager.saveAuthToken(requireContext(), token!!)
                     val decodedToken = SessionManager.decodeToken(token)
-                    progressbar.setState(true){ // executed after animation end
+                    progressbar.setState(true){
                         NavigationManager.navigateTo(decodedToken, navController)
                     }
 
@@ -102,6 +95,7 @@ class LoginFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<AuthResponseDto>, t: Throwable) {
+                startError(progressbar)
                 call.cancel()
             }
         })
@@ -112,7 +106,7 @@ class LoginFragment : Fragment() {
         handler.postDelayed({
             progressbar.setLoading()
             handler.postDelayed({
-                progressbar.setState(false) { // executed after animation end
+                progressbar.setState(false) {
                     handler.postDelayed({
                         progressbar.reset()
                     }, 1500)
