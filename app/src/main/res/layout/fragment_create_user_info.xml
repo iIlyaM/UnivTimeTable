@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.admin_screens.CreateUserInfoFragment">
+    tools:context=".screens.admin_screens.users.CreateUserInfoFragment">
 
     <View
         android:id="@+id/topView"
@@ -19,275 +19,325 @@
     <View
         android:id="@+id/waveView"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:background="@drawable/wave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-<!--    <EditText-->
-<!--        android:id="@+id/editRoleText"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="32dp"-->
-<!--        android:layout_marginEnd="32dp"-->
-<!--        android:background="@drawable/rect_border"-->
-<!--        android:drawablePadding="16dp"-->
-<!--        android:ems="10"-->
-<!--        android:hint="@string/role"-->
-<!--        android:inputType="text"-->
-<!--        android:padding="16dp"-->
-<!--        android:textSize="24sp"-->
-<!--        android:textStyle="normal"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/waveView" />-->
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editRoleText"
-        style="@style/adminTextInputLayoutStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/rect_border"
-        android:textColorHint="@color/black"
-        app:boxCornerRadiusBottomEnd="10dp"
-        app:boxCornerRadiusBottomStart="10dp"
-        app:boxCornerRadiusTopEnd="10dp"
-        app:boxCornerRadiusTopStart="10dp"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waveView">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="115dp"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp">
 
-        <AutoCompleteTextView
-            android:id="@+id/editRoleAutoCompleteTextView"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/role"
-            android:inputType="none"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:popupBackground="#DDEAF6"
-            android:textColor="@color/black"
-            android:textSize="24sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:orientation="vertical"
+            android:layout_gravity="center">
 
-    <EditText
-        android:id="@+id/editFullNameText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/rect_border"
-        android:drawablePadding="16dp"
-        android:ems="10"
-        android:hint="@string/fullName"
-        android:inputType="text"
-        android:padding="16dp"
-        android:textSize="24sp"
-        android:textStyle="normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editRoleText" />
+            <EditText
+                android:id="@+id/editTextTextEmailAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="320dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/rect_border"
+                android:drawablePadding="16dp"
+                android:ems="10"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:padding="16dp"
+                android:textSize="24sp"
+                android:textStyle="normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/waveView" />
 
-<!--    <EditText-->
-<!--        android:id="@+id/editUnivText"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="32dp"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:layout_marginEnd="32dp"-->
-<!--        android:background="@drawable/rect_border"-->
-<!--        android:drawablePadding="16dp"-->
-<!--        android:ems="10"-->
-<!--        android:hint="@string/univ"-->
-<!--        android:inputType="text"-->
-<!--        android:padding="16dp"-->
-<!--        android:textSize="24sp"-->
-<!--        android:textStyle="normal"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/editFullNameText" />-->
+            <EditText
+                android:id="@+id/editLoginText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/rect_border"
+                android:drawablePadding="16dp"
+                android:ems="10"
+                android:hint="@string/login"
+                android:inputType="text"
+                android:padding="16dp"
+                android:textSize="24sp"
+                android:textStyle="normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editUnivText"
-        style="@style/adminTextInputLayoutStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="32dp"
-        android:textColorHint="@color/black"
-        app:boxCornerRadiusBottomEnd="10dp"
-        app:boxCornerRadiusBottomStart="10dp"
-        app:boxCornerRadiusTopEnd="10dp"
-        app:boxCornerRadiusTopStart="10dp"
-        app:cardCornerRadius="10dp"
-        android:background="@drawable/rect_border"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editFullNameText" >
+            <EditText
+                android:id="@+id/editTextTextPassword2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/rect_border"
+                android:drawablePadding="16dp"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:padding="16dp"
+                android:textSize="24sp"
+                android:textStyle="normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editLoginText" />
 
-        <AutoCompleteTextView
-            android:id="@+id/editUnivAutoCompleteTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            android:hint="@string/univ"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:popupBackground="#DDEAF6"
-            android:textColor="@color/black"
-            android:textSize="24sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/editUserCity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/rect_border"
+                android:drawablePadding="16dp"
+                android:ems="10"
+                android:hint="@string/city"
+                android:inputType="text"
+                android:padding="16dp"
+                android:textSize="24sp"
+                android:textStyle="normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/editTextTextPassword2"/>
 
-<!--    <EditText-->
-<!--        android:id="@+id/editFacultyText"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="32dp"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:layout_marginEnd="32dp"-->
-<!--        android:background="@drawable/rect_border"-->
-<!--        android:drawablePadding="16dp"-->
-<!--        android:ems="10"-->
-<!--        android:hint="@string/faculty"-->
-<!--        android:inputType="text"-->
-<!--        android:padding="16dp"-->
-<!--        android:textSize="24sp"-->
-<!--        android:textStyle="normal"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/editUnivText" />-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editRoleText"
+                style="@style/adminTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:textColorHint="@color/black"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/waveView">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editFacultyText"
-        style="@style/adminTextInputLayoutStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="32dp"
-        android:textColorHint="@color/black"
-        app:boxCornerRadiusBottomEnd="10dp"
-        app:boxCornerRadiusBottomStart="10dp"
-        app:boxCornerRadiusTopEnd="10dp"
-        app:boxCornerRadiusTopStart="10dp"
-        app:cardCornerRadius="10dp"
-        android:background="@drawable/rect_border"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editUnivText" >
+                <AutoCompleteTextView
+                    android:id="@+id/editRoleAutoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/role"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:popupBackground="#DDEAF6"
+                    android:textColor="@color/black"
+                    android:textSize="24sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <AutoCompleteTextView
-            android:id="@+id/editFacultyAutoCompleteTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            android:hint="@string/faculty"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:popupBackground="#DDEAF6"
-            android:textColor="@color/black"
-            android:textSize="24sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/editFullNameText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/rect_border"
+                android:drawablePadding="16dp"
+                android:ems="10"
+                android:hint="@string/fullName"
+                android:inputType="text"
+                android:padding="16dp"
+                android:textSize="24sp"
+                android:textStyle="normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editRoleText" />
 
-<!--    <EditText-->
-<!--        android:id="@+id/editGroupNumText"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="32dp"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:layout_marginEnd="32dp"-->
-<!--        android:background="@drawable/rect_border"-->
-<!--        android:drawablePadding="16dp"-->
-<!--        android:ems="10"-->
-<!--        android:hint="@string/groupNum"-->
-<!--        android:inputType="text"-->
-<!--        android:padding="16dp"-->
-<!--        android:textSize="24sp"-->
-<!--        android:textStyle="normal"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/editFacultyText" />-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editUnivText"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxStrokeColor="@color/adminsColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:textColorHint="@color/black"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editFullNameText" >
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editGroupNumText"
-        style="@style/adminTextInputLayoutStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="32dp"
-        android:textColorHint="@color/black"
-        app:boxCornerRadiusBottomEnd="10dp"
-        app:boxCornerRadiusBottomStart="10dp"
-        app:boxCornerRadiusTopEnd="10dp"
-        app:boxCornerRadiusTopStart="10dp"
-        app:cardCornerRadius="10dp"
-        android:background="@drawable/rect_border"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editFacultyText" >
+                <AutoCompleteTextView
+                    android:id="@+id/editUnivAutoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="none"
+                    android:hint="@string/univ"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:ellipsize="start"
+                    android:maxLines="1"
+                    android:popupBackground="#DDEAF6"
+                    android:textColor="@color/black"
+                    android:textSize="24sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <AutoCompleteTextView
-            android:id="@+id/editGroupNumAutoCompleteTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            android:hint="@string/groupNum"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:popupBackground="#DDEAF6"
-            android:textColor="@color/black"
-            android:textSize="24sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editFacultyText"
+                style="@style/adminTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:textColorHint="@color/black"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editUnivText" >
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/confUserInfoBtn"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/admin_bg"
-        android:text="@string/confirm"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+                <AutoCompleteTextView
+                    android:id="@+id/editFacultyAutoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:hint="@string/faculty"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:ellipsize="start"
+                    android:maxLines="1"
+                    android:popupBackground="#DDEAF6"
+                    android:textColor="@color/black"
+                    android:textSize="24sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <ImageButton
-        android:id="@+id/prevPageButton"
-        android:layout_width="91dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/admin_bg"
-        android:contentDescription="Go to theprevious page"
-        android:src="@drawable/ic_arrow_back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editGroupNumText"
+                style="@style/adminTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:textColorHint="@color/black"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editFacultyText" >
 
-    <ImageButton
-        android:id="@+id/mainPageButton"
-        android:layout_width="91dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="140dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/admin_bg"
-        android:contentDescription="Go to theprevious page"
-        android:src="@drawable/ic_home"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/confUserInfoBtn"
-        app:layout_constraintStart_toStartOf="parent" />
+                <AutoCompleteTextView
+                    android:id="@+id/editGroupNumAutoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:hint="@string/groupNum"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:ellipsize="start"
+                    android:maxLines="1"
+                    android:popupBackground="#DDEAF6"
+                    android:textColor="@color/black"
+                    android:textSize="24sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
+<!--            <androidx.appcompat.widget.AppCompatButton-->
+<!--                android:id="@+id/confUserInfoBtn"-->
+<!--                android:layout_width="145dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginStart="32dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_marginEnd="32dp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:background="@drawable/admin_bg"-->
+<!--                android:text="@string/confirm"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textSize="18sp"-->
+<!--                android:textStyle="bold" />-->
+
+            <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+                android:id="@+id/create_user_btn"
+                android:layout_width="match_parent"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:text="@string/confirm"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="@drawable/admin_bg"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+            </com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_margin="15dp">
+
+                <ImageButton
+                    android:id="@+id/prevPageButton"
+                    android:layout_width="90dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/admin_bg"
+                    android:contentDescription="Go to theprevious page"
+                    android:src="@drawable/ic_arrow_back"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content" />
+
+                <ImageButton
+                    android:id="@+id/mainPageButton"
+                    android:layout_width="91dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/admin_bg"
+                    android:contentDescription="Go to theprevious page"
+                    android:src="@drawable/ic_home"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content" />
+
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,7 +18,6 @@ class AdminMainPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_admin_main_page, container, false)
         val button = view.findViewById<ImageButton>(R.id.prevPageButton)
         val usersBtn = view.findViewById<AppCompatButton>(R.id.usersButton)

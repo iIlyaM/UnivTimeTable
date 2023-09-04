@@ -27,10 +27,10 @@ import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.TimetableApi
-import vsu.cs.univtimetable.dto.GroupResponse
-import vsu.cs.univtimetable.dto.ImpossibleTimeDto
-import vsu.cs.univtimetable.dto.RequestDataDto
-import vsu.cs.univtimetable.dto.SendRequest
+import vsu.cs.univtimetable.dto.group.GroupResponse
+import vsu.cs.univtimetable.dto.datetime.ImpossibleTimeDto
+import vsu.cs.univtimetable.dto.classes.RequestDataDto
+import vsu.cs.univtimetable.dto.classes.SendRequest
 import vsu.cs.univtimetable.screens.adapter.GroupAdapter
 
 

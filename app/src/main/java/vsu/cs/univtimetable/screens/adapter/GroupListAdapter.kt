@@ -1,86 +1,71 @@
 package vsu.cs.univtimetable.screens.adapter
 
-import android.annotation.SuppressLint
-import android.content.Context
+
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.dto.GroupDto
+import vsu.cs.univtimetable.databinding.GroupListItemBinding
+import vsu.cs.univtimetable.dto.group.GroupDto
+import vsu.cs.univtimetable.dto.user.UserDisplayDto
 
-interface OnGroupItemClickListener {
-    fun onEditClick(groupDto: GroupDto)
-    fun onDeleteClick(groupDto: GroupDto)
+interface OnGroupEditClickInterface {
+    fun onEditClick(groupId: Long)
+}
 
+interface OnGroupDeleteClickInterface {
+    fun onDeleteClick(groupId: Long)
 }
 
 class GroupListAdapter(
-    var context: Context,
-    var groups: List<GroupDto>,
-    val listener: OnGroupItemClickListener
-):
-    RecyclerView.Adapter<GroupListAdapter.GroupViewHolder>() {
-    inner class GroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var courseNumView: TextView
-        var groupNumView: TextView
-        var headmanNameView: TextView
-        var studentsCountView: TextView
-        var editGroupView: ImageView
-        var deleteGroupView: ImageView
-
-        init {
-            courseNumView = itemView.findViewById(R.id.courseNumView)
-            groupNumView = itemView.findViewById(R.id.groupNumView)
-            headmanNameView = itemView.findViewById(R.id.headmanNameView)
-            studentsCountView = itemView.findViewById(R.id.studentsCountView)
-            editGroupView = itemView.findViewById(R.id.editGroupView)
-            deleteGroupView = itemView.findViewById(R.id.deleteGroupView)
-
-            editGroupView.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    listener.onEditClick(groups[position])
-                }
+    private val onEditClick: OnGroupEditClickInterface,
+    private val onDeleteClick: OnGroupDeleteClickInterface
+) :
+    ListAdapter<GroupDto, GroupListAdapter.ViewHolder>(
+        DiffUtilCallback
+    ) {
+    inner class ViewHolder(
+        private val binding: GroupListItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(group: GroupDto) {
+            binding.courseNumView.text ="Курс: ${group.courseNumber}"
+            binding.groupNumView.text = "Группа: ${group.groupNumber}"
+            binding.headmanNameView.text = checkHeadman(group.headman)
+            binding.studentsCountView.text = "Студентов:${group.studentsAmount}"
+            binding.editGroupView.setOnClickListener {
+                val id = getItem(position).id!!
+                onEditClick.onEditClick(id)
             }
-
-            deleteGroupView.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    listener.onDeleteClick(groups[position])
-                }
+            binding.deleteGroupView.setOnClickListener {
+                val id = getItem(position).id!!
+                Log.d("Error", "bind: $id, ${group.id}")
+                onDeleteClick.onDeleteClick(id)
             }
         }
-
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
-        return GroupViewHolder(
-            LayoutInflater.from(context).inflate(
-                R.layout.group_list_item, parent,
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupListAdapter.ViewHolder {
+        return ViewHolder(
+            GroupListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
                 false
             )
         )
     }
 
-    override fun getItemCount(): Int {
-        return groups.size
-    }
+    private object DiffUtilCallback : DiffUtil.ItemCallback<GroupDto>() {
+        override fun areItemsTheSame(oldItem: GroupDto, newItem: GroupDto): Boolean =
+            oldItem == newItem
 
-    @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
-        val group = groups[position]
-        holder.courseNumView.text = "Курс: ${group.courseNumber}"
-        holder.groupNumView.text = "Группа: ${group.groupNumber}"
-        if(group.headman == null) {
-            holder.headmanNameView.text = "Староста: не назначен"
-
-        } else {
-            holder.headmanNameView.text = "Староста: \n ${getHeadmanShortName(group.headman.fullName)}"
-        }
-        holder.studentsCountView.text = "Студентов:${group.studentsAmount}"
+        override fun areContentsTheSame(oldItem: GroupDto, newItem: GroupDto): Boolean =
+            oldItem == newItem
     }
 
     private fun getHeadmanShortName(fullName: String): String {
@@ -92,6 +77,14 @@ class GroupListAdapter(
                 "${part.first()}."
             }
         }
-         return shortenedParts.joinToString(" ")
+        return shortenedParts.joinToString(" ")
+    }
+
+    private fun checkHeadman(headman: UserDisplayDto?): String {
+        if(headman == null) {
+            return "Староста: не назначен"
+        } else {
+            return getHeadmanShortName(headman.fullName)
+        }
     }
 }

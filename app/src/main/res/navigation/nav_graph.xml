@@ -77,7 +77,7 @@
     </fragment>
     <fragment
         android:id="@+id/univListPageFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.UnivListPageFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.univ.UnivListPageFragment"
         android:label="fragment_univ_list_page"
         tools:layout="@layout/fragment_univ_list_page" >
         <action
@@ -92,7 +92,7 @@
     </fragment>
     <fragment
         android:id="@+id/createUniversityFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.CreateUniversityFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.univ.CreateUniversityFragment"
         android:label="fragment_create_university"
         tools:layout="@layout/fragment_create_university" >
         <action
@@ -104,7 +104,7 @@
     </fragment>
     <fragment
         android:id="@+id/userListPageFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.UserListPageFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.users.UserListPageFragment"
         android:label="fragment_user_list_page"
         tools:layout="@layout/fragment_user_list_page" >
         <action
@@ -113,10 +113,13 @@
         <action
             android:id="@+id/action_userListPageFragment_to_createUserAuthFragment"
             app:destination="@id/createUserAuthFragment" />
+        <action
+            android:id="@+id/action_userListPageFragment_to_createUserInfoFragment"
+            app:destination="@id/createUserInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/createUserAuthFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.CreateUserAuthFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.users.CreateUserAuthFragment"
         android:label="fragment_create_user_auth"
         tools:layout="@layout/fragment_create_user_auth" >
         <action
@@ -131,7 +134,7 @@
     </fragment>
     <fragment
         android:id="@+id/createUserInfoFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.CreateUserInfoFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.users.CreateUserInfoFragment"
         android:label="fragment_create_user_info"
         tools:layout="@layout/fragment_create_user_info" >
         <action
@@ -155,21 +158,24 @@
     </fragment>
     <fragment
         android:id="@+id/univMainPageFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.UnivMainPageFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.univ.UnivMainPageFragment"
         android:label="fragment_univ_main_page"
         tools:layout="@layout/fragment_univ_main_page" />
     <fragment
         android:id="@+id/createFacultyPageFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.CreateFacultyPageFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.faculty.CreateFacultyPageFragment"
         android:label="fragment_create_faculty_page"
         tools:layout="@layout/fragment_create_faculty_page" >
         <action
             android:id="@+id/action_createFacultyPageFragment_to_facultyListPageFragment"
             app:destination="@id/facultyListPageFragment" />
+        <action
+            android:id="@+id/action_createFacultyPageFragment_to_adminMainPageFragment"
+            app:destination="@id/adminMainPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/facultyListPageFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.FacultyListPageFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.faculty.FacultyListPageFragment"
         android:label="fragment_faculty_list_page"
         tools:layout="@layout/fragment_faculty_list_page" >
         <action
@@ -187,10 +193,13 @@
         <action
             android:id="@+id/action_facultyListPageFragment_to_adminMainPageFragment"
             app:destination="@id/adminMainPageFragment" />
+        <action
+            android:id="@+id/action_facultyListPageFragment_to_adminMainPageFragment2"
+            app:destination="@id/adminMainPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/facultyMainPageFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.FacultyMainPageFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.faculty.FacultyMainPageFragment"
         android:label="fragment_faculty_main_page"
         tools:layout="@layout/fragment_faculty_main_page" >
         <action
@@ -205,6 +214,12 @@
         <action
             android:id="@+id/action_facultyMainPageFragment_to_facultyListPageFragment"
             app:destination="@id/facultyListPageFragment" />
+        <action
+            android:id="@+id/action_facultyMainPageFragment_to_groupListPageFragment"
+            app:destination="@id/groupListPageFragment" />
+        <action
+            android:id="@+id/action_facultyMainPageFragment_to_audienceListPageFragment"
+            app:destination="@id/audienceListPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/lecturerTimetablePageFragment"
@@ -229,7 +244,7 @@
     </fragment>
     <fragment
         android:id="@+id/groupListPageFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.GroupListPageFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.group.GroupListPageFragment"
         android:label="fragment_group_list_page"
         tools:layout="@layout/fragment_group_list_page" >
         <action
@@ -241,10 +256,13 @@
         <action
             android:id="@+id/action_groupListPageFragment_to_adminMainPageFragment"
             app:destination="@id/adminMainPageFragment" />
+        <action
+            android:id="@+id/action_groupListPageFragment_to_facultyMainPageFragment"
+            app:destination="@id/facultyMainPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/createGroupPageFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.CreateGroupPageFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.group.CreateGroupPageFragment"
         android:label="fragment_create_group_page"
         tools:layout="@layout/fragment_create_group_page" >
         <action
@@ -286,7 +304,7 @@
     </fragment>
     <fragment
         android:id="@+id/createAudiencePageFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.CreateAudiencePageFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.audience.CreateAudiencePageFragment"
         android:label="fragment_create_audience_page"
         tools:layout="@layout/fragment_create_audience_page" >
         <action
@@ -294,6 +312,27 @@
             app:destination="@id/facultyMainPageFragment" />
         <action
             android:id="@+id/action_createAudiencePageFragment_to_adminMainPageFragment"
+            app:destination="@id/adminMainPageFragment" />
+        <action
+            android:id="@+id/action_createAudiencePageFragment_to_audienceListPageFragment"
+            app:destination="@id/audienceListPageFragment" />
+        <action
+            android:id="@+id/action_createAudiencePageFragment_to_adminMainPageFragment2"
+            app:destination="@id/adminMainPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/audienceListPageFragment"
+        android:name="vsu.cs.univtimetable.screens.admin_screens.audience.AudienceListPageFragment"
+        android:label="fragment_audience_list_page"
+        tools:layout="@layout/fragment_audience_list_page" >
+        <action
+            android:id="@+id/action_audienceListPageFragment_to_createAudiencePageFragment"
+            app:destination="@id/createAudiencePageFragment" />
+        <action
+            android:id="@+id/action_audienceListPageFragment_to_facultyMainPageFragment"
+            app:destination="@id/facultyMainPageFragment" />
+        <action
+            android:id="@+id/action_audienceListPageFragment_to_adminMainPageFragment"
             app:destination="@id/adminMainPageFragment" />
     </fragment>
 </navigation>

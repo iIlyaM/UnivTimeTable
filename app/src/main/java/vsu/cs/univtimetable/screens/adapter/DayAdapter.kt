@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import vsu.cs.univtimetable.dto.Day
+import vsu.cs.univtimetable.dto.datetime.Day
 import vsu.cs.univtimetable.R
 
 class DayAdapter(private val days: List<Day>) : RecyclerView.Adapter<DayAdapter.ViewHolder>() {

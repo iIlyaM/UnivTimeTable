@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.dto.ClassDto
+import vsu.cs.univtimetable.dto.classes.ClassDto
 
 class HeadmanTimetableAdapter(
     var context: Context,

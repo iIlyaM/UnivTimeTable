@@ -65,16 +65,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextEmail" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <include
         android:id="@+id/login_btn"
-        android:layout_width="150dp"
+        layout="@layout/btn_loading_layout"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="70dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/round_bg"
-        android:text="Войти"
-        android:textStyle="bold|italic"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />

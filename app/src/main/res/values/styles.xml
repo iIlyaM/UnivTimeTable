@@ -19,4 +19,9 @@
         <item name="boxStrokeColor">@color/adminsColor</item>
         <item name="boxStrokeWidth">2dp</item>
     </style>
+
+    <style name="MyTextInputLayout_overlay" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="colorOnSurface">@color/adminsColor</item>
+        <item name="colorPrimary">@color/adminsColor</item>
+    </style>
 </resources>

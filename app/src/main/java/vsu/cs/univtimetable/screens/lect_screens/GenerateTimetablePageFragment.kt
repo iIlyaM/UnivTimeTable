@@ -20,7 +20,7 @@ import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.TimetableApi
-import vsu.cs.univtimetable.dto.RequestDto
+import vsu.cs.univtimetable.dto.classes.RequestDto
 import vsu.cs.univtimetable.screens.adapter.LecturerNameAdapter
 
 class GenerateTimetablePageFragment : Fragment() {
