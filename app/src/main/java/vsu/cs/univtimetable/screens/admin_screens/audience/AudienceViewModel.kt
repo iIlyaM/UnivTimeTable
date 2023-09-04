@@ -56,8 +56,8 @@ class AudienceViewModel(
                 facultyId
             )
             if (response.isSuccessful) {
-                _audienceList.postValue(response.body()?.audiences)
-                emit(Resource.success(response.body()?.audiences))
+                _audienceList.postValue(response.body()?.audiencesPage?.contents)
+                emit(Resource.success(response.body()?.audiencesPage?.contents))
             } else {
                 throw Exception(response.code().toString())
             }

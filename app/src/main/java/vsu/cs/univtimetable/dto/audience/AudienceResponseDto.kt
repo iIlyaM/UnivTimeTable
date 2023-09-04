@@ -1,7 +1,7 @@
 package vsu.cs.univtimetable.dto.audience
 
 data class AudienceResponseDto(
-    val id: Long,
+    val id: Int,
     val audienceNumber: Int,
     val capacity: Int,
     val equipments: List<String>,

@@ -119,7 +119,7 @@ class AudienceListPageFragment : Fragment(), OnAudienceEditInterface, OnAudience
         bundle.putInt("facultyId", getFacultyId())
         bundle.putInt("univId", getUnivId())
         findNavController().navigate(
-            R.id.action_groupListPageFragment_to_createGroupPageFragment,
+            R.id.action_audienceListPageFragment_to_createAudiencePageFragment,
             bundle
         )
     }
@@ -184,6 +184,7 @@ class AudienceListPageFragment : Fragment(), OnAudienceEditInterface, OnAudience
                 when (it.status) {
                     Status.SUCCESS -> {
                         pDialog.dismiss()
+                        getAudiences()
                     }
                     Status.ERROR -> {
                         pDialog.dismiss()

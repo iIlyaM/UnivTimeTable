@@ -23,19 +23,21 @@ interface OnAudienceDeleteInterface {
 class AudienceListAdapter(
     private val onEditClick: OnAudienceEditInterface,
     private val onDeleteClick: OnAudienceDeleteInterface
-): ListAdapter<AudienceResponseDto, AudienceListAdapter.ViewHolder>(
+) : ListAdapter<AudienceResponseDto, AudienceListAdapter.ViewHolder>(
     AudienceListAdapter.DiffUtilCallback
 ) {
     inner class ViewHolder(
         private val binding: AudienceListItemBinding
-    ) : RecyclerView.ViewHolder(binding.root){
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(audience: AudienceResponseDto) {
             binding.audienceNumberView.text = "№ ${audience.audienceNumber}"
             binding.capacityView.text = "Мест: ${audience.capacity}"
             binding.facultyView.text = audience.faculty
-            binding.universityView.text = abbreviateUniversityName(audience.university).toUpperCase()
-            binding.equipmentsView.text = audience.equipments.toString()
+            binding.universityView.text =
+                abbreviateUniversityName(audience.university).toUpperCase()
+            binding.equipmentsView.text =
+                (audience.equipments.toString()).replace("[", "").replace("]", "")
 
             binding.icAudienceEditView.setOnClickListener {
                 val id = getItem(position).id
@@ -56,10 +58,16 @@ class AudienceListAdapter(
     }
 
     private object DiffUtilCallback : DiffUtil.ItemCallback<AudienceResponseDto>() {
-        override fun areItemsTheSame(oldItem: AudienceResponseDto, newItem: AudienceResponseDto): Boolean =
+        override fun areItemsTheSame(
+            oldItem: AudienceResponseDto,
+            newItem: AudienceResponseDto
+        ): Boolean =
             oldItem == newItem
 
-        override fun areContentsTheSame(oldItem: AudienceResponseDto, newItem: AudienceResponseDto): Boolean =
+        override fun areContentsTheSame(
+            oldItem: AudienceResponseDto,
+            newItem: AudienceResponseDto
+        ): Boolean =
             oldItem == newItem
     }
 
@@ -74,7 +82,10 @@ class AudienceListAdapter(
         return abbreviation.toString()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AudienceListAdapter.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): AudienceListAdapter.ViewHolder {
         return ViewHolder(
             AudienceListItemBinding.inflate(
                 LayoutInflater.from(parent.context),

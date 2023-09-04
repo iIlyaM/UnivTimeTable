@@ -1,6 +1,8 @@
 package vsu.cs.univtimetable.screens.admin_screens.audience
 
+import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.InputType
@@ -13,11 +15,14 @@ import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,24 +31,32 @@ import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.AudienceApi
+import vsu.cs.univtimetable.dto.audience.AudienceDto
+import vsu.cs.univtimetable.dto.group.GroupDto
 import vsu.cs.univtimetable.dto.univ.CreateAudienceRequest
 import vsu.cs.univtimetable.repository.AudienceRepository
+import vsu.cs.univtimetable.screens.adapter.EquipmentsAdapter
+import vsu.cs.univtimetable.screens.adapter.OnEquipmentDeleteInterface
 import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
 import vsu.cs.univtimetable.utils.NotificationManager
+import vsu.cs.univtimetable.utils.NotificationManager.setLoadingDialog
 import vsu.cs.univtimetable.utils.NotificationManager.showToastNotification
 import vsu.cs.univtimetable.utils.Status
 
 
-class CreateAudiencePageFragment : Fragment() {
+class CreateAudiencePageFragment : Fragment(), OnEquipmentDeleteInterface {
 
     private lateinit var audienceApi: AudienceApi
-    private lateinit var equipmentLayout: AutoCompleteTextView
-    private lateinit var equipments: List<String>
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: EquipmentsAdapter
     private lateinit var audienceViewModel: AudienceViewModel
     private lateinit var pDialog: ProgressDialog
     private lateinit var confirmBtn: CircularProgressButton
 
-    private var neededEquipments: ArrayList<String> = ArrayList()
+    private var neededEquipments: MutableSet<String> = mutableSetOf()
+    private var equipments: MutableList<String> = mutableListOf()
+
 
     private lateinit var audience: CreateAudienceRequest
 
@@ -62,6 +75,9 @@ class CreateAudiencePageFragment : Fragment() {
         val token = SessionManager.getToken(requireContext())!!
         val audienceRepository = AudienceRepository(audienceApi, token)
 
+        recyclerView = view.findViewById(R.id.equipmentsRecyclerView)
+        initRV(recyclerView)
+
         audienceViewModel =
             ViewModelProvider(
                 requireActivity(),
@@ -69,15 +85,11 @@ class CreateAudiencePageFragment : Fragment() {
             )[AudienceViewModel::class.java]
 
 
+        val editEquipmentBtn = view.findViewById<AppCompatButton>(R.id.editEquipmentBtn)
+
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putInt("facultyId", getFacultyId())
-            bundle.putInt("univId", getUnivId())
-            findNavController().navigate(
-                R.id.action_createAudiencePageFragment_to_facultyMainPageFragment,
-                bundle
-            )
+            sendId()
         }
 
         val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
@@ -90,7 +102,7 @@ class CreateAudiencePageFragment : Fragment() {
         val editCapacityText = view.findViewById<EditText>(R.id.editCapacityText)
         editCapacityText.inputType = InputType.TYPE_CLASS_NUMBER
 
-        equipmentLayout = view.findViewById(R.id.editEquipmentAutoCompleteTextView)
+        setFieldsIfEdit(audienceEditText, editCapacityText)
 
         confirmBtn = view.findViewById(R.id.confirmCreateAudienceBtn)
         confirmBtn.setOnClickListener {
@@ -100,7 +112,7 @@ class CreateAudiencePageFragment : Fragment() {
 
         getEquipments()
 
-        equipmentLayout.setOnClickListener {
+        editEquipmentBtn.setOnClickListener {
             showDialog("Инвентарь", equipments.toTypedArray())
         }
 
@@ -108,70 +120,112 @@ class CreateAudiencePageFragment : Fragment() {
     }
 
     private fun createAudience(view: View) {
-        val token: String? = SessionManager.getToken(requireContext())
-
         val audienceEditText = view.findViewById<EditText>(R.id.addAudienceText)
         val editCapacityText = view.findViewById<EditText>(R.id.editCapacityText)
         if (audienceEditText.text.isEmpty()) {
             audienceEditText.error = "Введите номер аудитории"
-            showToastNotification(requireContext(),"Пожалуйста, заполните все поля")
+            showToastNotification(requireContext(), "Пожалуйста, заполните все поля")
             stopAnimation(confirmBtn)
             return
         }
         if (editCapacityText.text.isEmpty()) {
             audienceEditText.error = "Введите вместимость аудитории"
-            showToastNotification(requireContext(),"Пожалуйста, заполните все поля")
+            showToastNotification(requireContext(), "Пожалуйста, заполните все поля")
             stopAnimation(confirmBtn)
             return
         }
 
+        audience = CreateAudienceRequest(0, 0, arrayListOf())
         audience.audienceNumber = audienceEditText.text.toString().toInt()
         audience.capacity = editCapacityText.text.toString().toInt()
+        audience.equipments = neededEquipments.toList()
 
-        val univId = arguments?.getInt("univId")
-        val facultyId = arguments?.getInt("facultyId")
+        val editable = arguments?.getBoolean("editable");
+        if (editable != null && editable) {
+            val id = arguments?.getInt("id") ?: -1
+            audienceViewModel.editUser(
+                id,
+                AudienceDto(id, audience.audienceNumber, audience.capacity, audience.equipments)
+            ).observe(viewLifecycleOwner) {
+                it?.let {
+                    when (it.status) {
+                        Status.SUCCESS -> {
+                            stopAnimation(confirmBtn)
+                            showToastNotification(requireContext(), "Информация о группе изменена")
+                            sendId()
+                        }
 
-//        val call =
-//            audienceApi.createAudience("Bearer ${token}", univId ?: -1, facultyId ?: -1, audience)
-//
-//        call.enqueue(object : Callback<Void> {
-//            override fun onResponse(
-//                call: Call<Void>,
-//                response: Response<Void>
-//            ) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request Successful", "${response.code()}")
-//
-//                    showToastNotification(requireContext(), "Аудитория успешно создана")
-//                } else {
-//                    println("Не успешно, ошибка = ${response.code()}")
-//                    if (response.code() == 400) {
-//                        showToastNotification(
-//                            requireContext(),
-//                            "Аудитория с таким номером уже существует"
-//                        )
-//                    }
-//                    if (response.code() == 403) {
-//                        showToastNotification(
-//                            requireContext(),
-//                            "Недостаточно прав доступа для выполнения"
-//                        )
-//                    }
-//                    if (response.code() == 404) {
-//                        showToastNotification(
-//                            requireContext(),
-//                            "Переданный инвентарь не существует в базе"
-//                        )
-//                    }
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<Void>, t: Throwable) {
-//                println("Ошибка")
-//                println(t)
-//            }
-//        })
+                        Status.ERROR -> {
+                            showToastNotification(requireContext(), it.message.toString())
+                            stopAnimation(confirmBtn)
+                        }
+
+                        Status.LOADING -> {}
+                    }
+                }
+            }
+        } else {
+            audienceViewModel.addAudience(
+                getUnivId(),
+                getFacultyId(),
+                audience
+            ).observe(viewLifecycleOwner) {
+                it?.let {
+                    when (it.status) {
+                        Status.SUCCESS -> {
+                            stopAnimation(confirmBtn)
+                            audienceEditText.text.clear()
+                            editCapacityText.text.clear()
+                            neededEquipments.clear()
+                            adapter.submitList(neededEquipments.toList())
+                            recyclerView.visibility=View.GONE
+                            sendId()
+                            showToastNotification(requireContext(), "Группа добавлена")
+                        }
+
+                        Status.ERROR -> {
+                            showToastNotification(requireContext(), it.message.toString())
+                            stopAnimation(confirmBtn)
+                        }
+
+                        Status.LOADING -> {}
+                    }
+                }
+            }
+        }
     }
+
+    private fun setFieldsIfEdit(
+        audienceEditText: EditText,
+        editCapacityText: EditText
+    ) {
+        val editable = arguments?.getBoolean("editable")
+        if (editable != null && editable) {
+            audienceViewModel.getAudience(arguments?.getInt("id")!!).observe(viewLifecycleOwner) {
+                it?.let {
+                    when (it.status) {
+                        Status.SUCCESS -> {
+                            pDialog.dismiss()
+                            audienceEditText.setText(it.data!!.audienceNumber.toString())
+                            editCapacityText.setText(it.data.capacity.toString())
+                            neededEquipments.addAll(it.data.equipments)
+                            adapter.submitList(it.data.equipments)
+                        }
+
+                        Status.ERROR -> {
+                            pDialog.dismiss()
+                            showToastNotification(requireContext(), it.message.toString())
+                        }
+
+                        Status.LOADING -> {
+                            setLoadingDialog(pDialog)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     private fun getEquipments() {
         audienceViewModel.getAvailableEquipments().observe(viewLifecycleOwner) {
@@ -179,59 +233,31 @@ class CreateAudiencePageFragment : Fragment() {
                 when (it.status) {
                     Status.SUCCESS -> {
                         pDialog.dismiss()
-                        equipmentLayout.setAdapter(
-                            ArrayAdapter(
-                                requireContext(),
-                                R.layout.subj_item,
-                                it.data!!.toTypedArray()
-                            )
-                        )
+                        equipments.addAll(it.data!!)
                     }
+
                     Status.ERROR -> {
                         pDialog.dismiss()
                     }
+
                     Status.LOADING -> {
-                        NotificationManager.setLoadingDialog(pDialog)
+                        setLoadingDialog(pDialog)
                     }
                 }
             }
         }
-//
-//        call.enqueue(object : Callback<List<String>> {
-//            override fun onResponse(
-//                call: Call<List<String>>,
-//                response: Response<List<String>>
-//            ) {
-//                if (response.isSuccessful) {
-//                    Log.d("API Request successful", "Получили ${response.code()}")
-//                    val dataResponse = response.body()
-//                    println(dataResponse)
-//                    if (dataResponse != null) {
-//
-//                        equipmentLayout.setAdapter(
-//                            ArrayAdapter(
-//                                requireContext(),
-//                                R.layout.subj_item,
-//                                dataResponse
-//                            )
-//                        )
-//                    }
-//                } else {
-//                    println("Не успешно")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<List<String>>, t: Throwable) {
-//                println("Ошибка")
-//                println(t)
-//            }
-//        })
     }
+
+    override fun onDeleteClick(equipment: String) {
+        neededEquipments.remove(equipment)
+        adapter.submitList(neededEquipments.toMutableList())
+    }
+
 
     private fun showDialog(title: String, options: Array<String>) {
         val checkedItems = BooleanArray(options.size) { false }
 
-        val builder = android.app.AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(title)
             .setMultiChoiceItems(options, checkedItems) { _, which, isChecked ->
                 checkedItems[which] = isChecked
@@ -240,12 +266,10 @@ class CreateAudiencePageFragment : Fragment() {
                 for (i in options.indices) {
                     if (checkedItems[i]) {
                         neededEquipments.add(options[i])
-                    } else {
-                        if (neededEquipments.contains(options[i])) {
-                            neededEquipments.remove(options[i])
-                        }
                     }
                 }
+                recyclerView.visibility=View.VISIBLE
+                adapter.submitList(neededEquipments.toMutableList())
             }
             .setNegativeButton("Отмена") { dialog, _ ->
                 dialog.dismiss()
@@ -276,13 +300,24 @@ class CreateAudiencePageFragment : Fragment() {
         bundle.putInt("facultyId", getFacultyId())
         bundle.putInt("univId", getUnivId())
         findNavController().navigate(
-            R.id.action_groupListPageFragment_to_createGroupPageFragment,
+            R.id.action_createAudiencePageFragment_to_audienceListPageFragment,
             bundle
         )
     }
+
 
     private fun stopAnimation(btn: CircularProgressButton) {
         btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.admin_bg)
         btn.revertAnimation()
     }
+
+    private fun initRV(rv: RecyclerView) {
+        adapter = EquipmentsAdapter(
+            this@CreateAudiencePageFragment
+        )
+        rv.layoutManager = LinearLayoutManager(requireContext())
+        rv.adapter = adapter
+    }
+
+
 }

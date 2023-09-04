@@ -13,6 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/audLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="5dp">
+
         <TextView
             android:id="@+id/audienceNumberView"
             android:layout_width="wrap_content"
@@ -33,19 +41,20 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/audienceNumberView"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:padding="5dp"
             android:text="Мест: "
             android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textSize="18sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/univLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/capacityView"
+            android:layout_below="@+id/audLayout"
             android:layout_gravity="center"
             android:orientation="horizontal"
             android:paddingTop="5dp">
@@ -55,23 +64,23 @@
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:minLines="2"
-                android:padding="5dp"
+                android:layout_marginStart="8dp"
                 android:text="@string/faculty"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <Space
-                android:layout_width="130dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/universityView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:layout_marginStart="8dp"
                 android:text="@string/univ"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -102,14 +111,16 @@
 
         <TextView
             android:id="@+id/equipmentsView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/univLayout"
-            android:padding="5dp"
             android:minLines="2"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="2dp"
             android:text="оборудование"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
 
 
     </RelativeLayout>

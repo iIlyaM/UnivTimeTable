@@ -6,15 +6,15 @@
     android:layout_margin="5dp"
     app:cardCornerRadius ="10dp"
     app:cardElevation="10dp"
-    app:cardBackgroundColor="@color/adminsColor"
-    android:foreground="@drawable/prim_color_rect_border">
+    app:cardBackgroundColor="@color/white"
+    android:foreground="@drawable/rect_border">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/facultyNameView"
+            android:id="@+id/equipmentNameView"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:minLines="2"
@@ -29,26 +29,14 @@
             android:textStyle="normal" />
 
         <ImageView
-            android:id="@+id/editFacultyIcView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/deleteEquipmentIcView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginBottom="4dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/ic_settings" />
-
-        <ImageView
-            android:id="@+id/deleteFacultyIcView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:padding="5dp"
             app:srcCompat="@drawable/ic_delete" />
 
