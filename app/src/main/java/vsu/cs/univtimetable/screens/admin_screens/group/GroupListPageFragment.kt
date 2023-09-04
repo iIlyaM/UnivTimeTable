@@ -95,7 +95,7 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
             bundle.putInt("facultyId", getFacultyId())
             bundle.putInt("univId", getUnivId())
             findNavController().navigate(
-                R.id.action_groupListPageFragment_to_facultyListPageFragment,
+                R.id.action_groupListPageFragment_to_facultyMainPageFragment,
                 bundle
             )
         }
@@ -172,6 +172,7 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
             it?.let {
                 when (it.status) {
                     Status.SUCCESS -> {
+                        pDialog.dismiss()
                         builder.setTitle("Удаление группы")
                             .setMessage(
                                 "Вы уверены что хотите удалить группу курса: ${it.data!!.courseNumber}, " +
@@ -180,7 +181,6 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
                             .setCancelable(true)
                             .setPositiveButton("Удалить") { _, _ ->
                                 delete(groupId)
-                                getGroups(null, null, null)
                             }
                             .setNegativeButton(
                                 "Отмена"
@@ -205,6 +205,7 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
                 when (it.status) {
                     Status.SUCCESS -> {
                         pDialog.dismiss()
+                        getGroups(null, null, null)
                     }
                     Status.ERROR -> {
                         pDialog.dismiss()
@@ -289,11 +290,6 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
         toast.show()
         val handler = Handler()
         handler.postDelayed({ toast.cancel() }, 1500)
-    }
-
-    private fun stopAnimation(btn: CircularProgressButton) {
-        btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.admin_bg)
-        btn.revertAnimation()
     }
 
 

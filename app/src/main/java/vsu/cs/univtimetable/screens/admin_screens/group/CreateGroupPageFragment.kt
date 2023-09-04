@@ -104,7 +104,6 @@ class CreateGroupPageFragment : Fragment() {
             bundle.putInt("univId", arguments?.getInt("univId")!!)
             findNavController().navigate(R.id.action_createGroupPageFragment_to_groupListPageFragment,
                 bundle)
-//            findNavController().popBackStack()
         }
 
         val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
