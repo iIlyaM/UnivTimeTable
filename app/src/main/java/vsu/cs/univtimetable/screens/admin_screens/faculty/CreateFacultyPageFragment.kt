@@ -45,7 +45,8 @@ class CreateFacultyPageFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_create_faculty_page, container, false)
         val facultyNameField = view.findViewById<EditText>(R.id.editFacultyNameText)
-        val confirmBtn = view.findViewById<AppCompatButton>(R.id.confirmFacultyCreateBtn)
+
+        confirmBtn = view.findViewById(R.id.confirmFacultyCreateBtn)
 
         pDialog = ProgressDialog(context)
         val token = SessionManager.getToken(requireContext())!!
@@ -74,6 +75,7 @@ class CreateFacultyPageFragment : Fragment() {
 
 
         confirmBtn.setOnClickListener {
+            confirmBtn.startAnimation()
             addFaculty(facultyNameField)
         }
         return view
@@ -102,7 +104,6 @@ class CreateFacultyPageFragment : Fragment() {
                 it?.let {
                     when (it.status) {
                         Status.SUCCESS -> {
-                            pDialog.dismiss()
                             showToastNotification("Факультет успешно создан")
                             facultyField.text.clear()
                             val bundle = Bundle()
@@ -114,14 +115,13 @@ class CreateFacultyPageFragment : Fragment() {
                         }
 
                         Status.ERROR -> {
-                            pDialog.dismiss()
+                            stopAnimation(confirmBtn)
                             NotificationManager.showToastNotification(
                                 requireContext(),
                                 it.message.toString()
                             )
                         }
                         Status.LOADING -> {
-                            NotificationManager.setLoadingDialog(pDialog)
                         }
                     }
                 }

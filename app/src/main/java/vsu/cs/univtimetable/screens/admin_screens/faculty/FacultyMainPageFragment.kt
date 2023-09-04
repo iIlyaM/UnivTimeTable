@@ -24,7 +24,10 @@ class FacultyMainPageFragment : Fragment() {
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
-            findNavController().navigate(R.id.action_facultyMainPageFragment_to_facultyListPageFragment)
+            findNavController().navigate(
+                R.id.action_facultyMainPageFragment_to_facultyListPageFragment,
+                bundle
+            )
         }
 
         val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)

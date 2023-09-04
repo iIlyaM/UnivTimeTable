@@ -256,6 +256,9 @@
         <action
             android:id="@+id/action_groupListPageFragment_to_adminMainPageFragment"
             app:destination="@id/adminMainPageFragment" />
+        <action
+            android:id="@+id/action_groupListPageFragment_to_facultyMainPageFragment"
+            app:destination="@id/facultyMainPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/createGroupPageFragment"
