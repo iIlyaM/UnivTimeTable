@@ -36,7 +36,7 @@ interface AudienceApi {
     @GET("audience/{id}")
     suspend fun getAudience(
         @Header("Authorization") basicToken: String,
-        @Path("audienceId") id: Int,
+        @Path("id") id: Int,
     ): Response<AudienceDto>
 
     @Headers("Content-Type: application/json")
@@ -50,14 +50,14 @@ interface AudienceApi {
     @DELETE("audience/{id}")
     suspend fun deleteAudience(
         @Header("Authorization") basicToken: String,
-        @Path("audienceId") id: Int,
+        @Path("id") id: Int,
     ): Response<ResponseBody>
 
     @Headers("Content-Type: application/json")
     @PUT("audience/{id}")
     suspend fun editAudience(
         @Header("Authorization") basicToken: String,
-        @Path("audienceId") id: Int,
+        @Path("id") id: Int,
         @Body audienceDto: AudienceDto
     ): Response<ResponseBody>
 }
