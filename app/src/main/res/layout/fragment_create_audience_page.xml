@@ -28,8 +28,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="160dp"
         android:paddingLeft="30dp"
-        android:paddingTop="115dp"
         android:paddingRight="30dp">
 
         <LinearLayout
@@ -37,61 +37,65 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="140dp"
+            android:paddingTop="100dp"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/addAudienceText"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="50dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/rect_border"
-                android:drawablePadding="16dp"
-                android:ems="10"
-                android:hint="@string/audience_num"
-                android:inputType="text"
-                android:padding="16dp"
-                android:textSize="24sp"
-                android:textStyle="normal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/waveView" />
+                android:orientation="horizontal"
+                android:layout_gravity="center">
 
-            <EditText
-                android:id="@+id/editCapacityText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="50dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/rect_border"
-                android:drawablePadding="16dp"
-                android:ems="10"
-                android:hint="@string/capacity"
-                android:inputType="text"
-                android:padding="16dp"
-                android:textSize="24sp"
-                android:textStyle="normal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addAudienceText" />
+                <EditText
+                    android:id="@+id/addAudienceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rect_border"
+                    android:hint="@string/audience_num"
+                    android:inputType="text"
+                    android:padding="16dp"
+                    android:textSize="18sp"
+                    android:textStyle="normal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/waveView" />
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/editCapacityText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rect_border"
+                    android:drawablePadding="16dp"
+                    android:hint="@string/capacity"
+                    android:inputType="text"
+                    android:padding="16dp"
+                    android:textSize="18sp"
+                    android:textStyle="normal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/addAudienceText" />
+            </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/editEquipmentText"
-                android:layout_width="match_parent"
+                android:id="@+id/editEquipmentBtn"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="32dp"
+                android:layout_gravity="center"
+                android:background="@drawable/admin_bg"
                 android:drawablePadding="16dp"
-                android:ems="10"
-                android:hint="Выбрать оборудование"
-                android:inputType="text"
-                android:padding="16dp"
-                android:textSize="20sp"
-                android:background="@drawable/rect_border"
+                android:text="Выбрать оборудование"
+                android:padding="10dp"
+                android:textAllCaps="false"
+                android:textSize="18sp"
                 app:boxCornerRadiusBottomEnd="10dp"
                 app:boxCornerRadiusBottomStart="10dp"
                 app:boxCornerRadiusTopEnd="10dp"
@@ -101,55 +105,24 @@
             </androidx.appcompat.widget.AppCompatButton>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="wrap_content"
-                android:layout_height="120dp"
+                android:id="@+id/equipmentsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="347dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
+                android:background="@drawable/rect_border"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sortRoleBtn"
-                tools:ignore="MissingConstraints"/>
-
-
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                android:id="@+id/editEquipmentText"-->
-<!--                style="@style/adminTextInputLayoutStyle"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="32dp"-->
-<!--                android:layout_marginTop="50dp"-->
-<!--                android:layout_marginEnd="32dp"-->
-<!--                android:background="@drawable/rect_border"-->
-<!--                android:textColorHint="@color/black"-->
-<!--                app:boxCornerRadiusBottomEnd="10dp"-->
-<!--                app:boxCornerRadiusBottomStart="10dp"-->
-<!--                app:boxCornerRadiusTopEnd="10dp"-->
-<!--                app:boxCornerRadiusTopStart="10dp"-->
-<!--                app:cardCornerRadius="10dp"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/editCapacityText">-->
-
-<!--                <AutoCompleteTextView-->
-<!--                    android:id="@+id/editEquipmentAutoCompleteTextView"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:hint="@string/equipment"-->
-<!--                    android:inputType="none"-->
-<!--                    android:paddingTop="16dp"-->
-<!--                    android:paddingBottom="16dp"-->
-<!--                    android:popupBackground="#DDEAF6"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:textSize="24sp" />-->
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
+                tools:ignore="MissingConstraints"
+                tools:listitem="@layout/equipment_item" />
 
             <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
                 android:id="@+id/confirmCreateAudienceBtn"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="68dp"
-                android:background="@drawable/admin_bg"
                 android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/admin_bg"
                 android:text="@string/confirm"
                 android:textAllCaps="false"
                 android:textSize="18sp"
