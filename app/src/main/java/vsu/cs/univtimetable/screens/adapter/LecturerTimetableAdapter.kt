@@ -33,7 +33,10 @@ class LecturerTimetableAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LecturerTimetableAdapter.LecturerTimeTableViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): LecturerTimetableAdapter.LecturerTimeTableViewHolder {
         return LecturerTimeTableViewHolder(
             LayoutInflater.from(context).inflate(
                 R.layout.lect_timetable_item, parent,
@@ -47,12 +50,16 @@ class LecturerTimetableAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: LecturerTimetableAdapter.LecturerTimeTableViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: LecturerTimetableAdapter.LecturerTimeTableViewHolder,
+        position: Int
+    ) {
         val timetableItem = timetableItems[position]
-        holder.lectTimeView.text = "${timetableItem.startTime.dropLast(3)} - ${timetableItem.endTime.dropLast(3)}"
+        holder.lectTimeView.text =
+            "${timetableItem.startTime.dropLast(3)} - ${timetableItem.endTime.dropLast(3)}"
         holder.subjNameView.text = timetableItem.subjectName
         holder.courseNumberView.text = "${timetableItem.courseNumber} курс"
-        holder.audienceNumView.text = timetableItem.audience.toString()
+        holder.audienceNumView.text = "ауд. № ${timetableItem.audience}"
         holder.classTypeView.text = timetableItem.typeOfClass
         holder.lectGroupNumberView.text = "Гр.: ${timetableItem.groupsNumber.joinToString()}"
     }

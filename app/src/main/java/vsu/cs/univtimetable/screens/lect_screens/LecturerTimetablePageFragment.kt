@@ -1,8 +1,10 @@
 package vsu.cs.univtimetable.screens.lect_screens
 
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.util.Log
 import android.view.Gravity
@@ -14,10 +16,12 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,6 +38,8 @@ import vsu.cs.univtimetable.dto.datetime.DateDto
 import vsu.cs.univtimetable.dto.classes.TimetableResponse
 import vsu.cs.univtimetable.screens.adapter.DayOfWeekAdapter
 import vsu.cs.univtimetable.screens.adapter.LecturerTimetableAdapter
+import vsu.cs.univtimetable.utils.NotificationManager
+import vsu.cs.univtimetable.utils.NotificationManager.showToastNotification
 import java.io.File
 import java.io.FileOutputStream
 import java.time.LocalDate
@@ -49,6 +55,8 @@ class LecturerTimetablePageFragment : Fragment() {
     private lateinit var timeTableAdapter: LecturerTimetableAdapter
     private lateinit var toLeftView: ImageView
     private lateinit var toRightView: ImageView
+    private lateinit var downloadLectTTBtn: CircularProgressButton
+    private lateinit var pDialog: ProgressDialog
 
     private lateinit var timetable: MutableMap<String, List<ClassDto>>
 
@@ -75,6 +83,7 @@ class LecturerTimetablePageFragment : Fragment() {
         lectWeekView = view.findViewById(R.id.lectWeekView)
         lectWeekView.layoutManager = LinearLayoutManager(requireContext())
 
+        pDialog = ProgressDialog(context)
         toLeftView = view.findViewById(R.id.toLeftView)
         toRightView = view.findViewById(R.id.toRightView)
         if (getCurrDayOfWeek() == "Воскресенье") {
@@ -92,8 +101,9 @@ class LecturerTimetablePageFragment : Fragment() {
             getNextDay(toRightView, toLeftView)
         }
 
-        val downloadLectTTBtn = view.findViewById<AppCompatButton>(R.id.downloadLectTTBtn)
+        downloadLectTTBtn = view.findViewById(R.id.downloadLectTTBtn)
         downloadLectTTBtn.setOnClickListener {
+            downloadLectTTBtn.startAnimation()
             downloadTimetable()
         }
 
@@ -116,7 +126,7 @@ class LecturerTimetablePageFragment : Fragment() {
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
         val call = timetableApi.getTimetable("Bearer ${token}")
-
+        NotificationManager.setLoadingDialog(pDialog)
 
         call.enqueue(object : Callback<TimetableResponse> {
             @RequiresApi(Build.VERSION_CODES.O)
@@ -125,6 +135,7 @@ class LecturerTimetablePageFragment : Fragment() {
                 response: Response<TimetableResponse>
             ) {
                 if (response.isSuccessful) {
+                    pDialog.dismiss()
                     Log.d("API Request successful", "Получили ${response.code()}")
                     val dataResponse = response.body()
                     var weekType = ""
@@ -137,6 +148,7 @@ class LecturerTimetablePageFragment : Fragment() {
                     tempWeekPointer = weekPointer
                     getDayTimetable(timetable, weekType, getCurrDayOfWeek())
                 } else {
+                    pDialog.dismiss()
                     if (response.code() == 400) {
                         showDialog("Расписание ещё не сформировано")
                     }
@@ -152,6 +164,7 @@ class LecturerTimetablePageFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<TimetableResponse>, t: Throwable) {
+                pDialog.dismiss()
                 println("Ошибка")
                 println(t)
             }
@@ -170,7 +183,13 @@ class LecturerTimetablePageFragment : Fragment() {
                 response: Response<ResponseBody>
             ) {
                 if (response.isSuccessful) {
-                    val file = File(context!!.getExternalFilesDir(null), "example.xlsx")
+                    val file = File(
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                        "расписание.xlsx"
+                    )
+                    if (file.exists()) {
+                        file.delete()
+                    }
                     val inputStream = response.body()?.byteStream()
                     val outputStream = FileOutputStream(file)
 
@@ -179,8 +198,10 @@ class LecturerTimetablePageFragment : Fragment() {
                             input.copyTo(output)
                         }
                     }
-                    showToastNotification("Файл сохранён")
+                    stopAnimation(downloadLectTTBtn)
+                    showToastNotification(requireContext(), "Файл сохранён")
                 } else {
+                    stopAnimation(downloadLectTTBtn)
                     if (response.code() == 400) {
                         showDialog("Расписание ещё не сформировано")
                     }
@@ -196,20 +217,11 @@ class LecturerTimetablePageFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                stopAnimation(downloadLectTTBtn)
                 println("Ошибка")
                 println(t)
             }
         })
-    }
-
-    private fun showToastNotification(message: String) {
-        val duration = Toast.LENGTH_LONG
-
-        val toast = Toast.makeText(requireContext(), message, duration)
-        toast.show()
-        val handler = Handler()
-        handler.postDelayed({ toast.cancel() }, 1500)
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -283,7 +295,11 @@ class LecturerTimetablePageFragment : Fragment() {
             alert.dismiss()
         }, 1500)
         findNavController().navigate(R.id.action_lecturerTimetablePageFragment_to_lecturerMainPageFragment)
+    }
 
+    private fun stopAnimation(btn: CircularProgressButton) {
+        btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.lecturer_bg)
+        btn.revertAnimation()
     }
 
 }
