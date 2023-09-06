@@ -28,31 +28,31 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="170dp"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toBottomOf="@+id/selectEquipmentView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waveView"
+        android:layout_marginTop="160dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
         tools:ignore="NotSibling">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="100dp"
+            android:paddingTop="10dp"
             android:orientation="vertical" >
 
             <EditText
                 android:id="@+id/editSubjectNameText"
-                android:layout_width="335dp"
-                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="20dp"
                 android:layout_marginEnd="32dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/lect_color_rect_border"
                 android:ems="10"
                 android:hint="@string/subject_name"
                 android:inputType="text"
-                android:paddingStart="16dp"
+                android:padding="16dp"
+                android:drawablePadding="16dp"
                 android:textAlignment="viewStart"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
@@ -60,51 +60,43 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/selectGroupView"
-                style="@style/WeekTextInputLayoutStyle"
-                android:layout_width="335dp"
-                android:layout_height="61dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxStrokeColor="@color/lecturerColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="32dp"
-                android:background="@drawable/text_input_layout"
                 android:hint="@string/add_group"
                 android:textColorHint="@color/black"
                 app:boxCornerRadiusBottomEnd="10dp"
                 app:boxCornerRadiusBottomStart="10dp"
                 app:boxCornerRadiusTopEnd="10dp"
                 app:boxCornerRadiusTopStart="10dp"
-                app:cardCornerRadius="10dp"
-                app:hintTextColor="@color/lecturerColor"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:strokeWidth="1dp">
-
+                app:cardCornerRadius="10dp">
 
                 <AutoCompleteTextView
                     android:id="@+id/selectGroupAutoCompleteText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    android:popupBackground="#DDEAF6"
+                    android:padding="16dp"
                     android:textColor="@color/black"
-                    android:textSize="24sp"/>
+                    android:textSize="24sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <EditText
                 android:id="@+id/editHoursCountText"
-                android:layout_width="335dp"
-                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="32dp"
                 android:background="@drawable/lect_color_rect_border"
-                android:ems="10"
                 android:hint="@string/hours_per_week"
                 android:inputType="text"
-                android:paddingStart="16dp"
+                android:padding="16dp"
                 android:textColorHint="@color/black"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -114,13 +106,13 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/classTypeInputLayout"
-                style="@style/WeekTextInputLayoutStyle"
-                android:layout_width="335dp"
-                android:layout_height="61dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxStrokeColor="@color/lecturerColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="32dp"
-                android:background="@drawable/text_input_layout"
                 android:hint="@string/class_form"
                 android:textColorHint="@color/black"
                 app:boxCornerRadiusBottomEnd="10dp"
@@ -128,7 +120,6 @@
                 app:boxCornerRadiusTopEnd="10dp"
                 app:boxCornerRadiusTopStart="10dp"
                 app:cardCornerRadius="10dp"
-                app:hintTextColor="@color/lecturerColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editHoursCountText">
@@ -149,8 +140,8 @@
             <TextView
                 android:id="@+id/selectEquipmentView"
                 style="@style/lectTextInputLayoutStyle"
-                android:layout_width="335dp"
-                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="32dp"
@@ -158,7 +149,7 @@
                 android:ems="10"
                 android:hint="@string/equipment"
                 android:inputType="text"
-                android:paddingStart="16dp"
+                android:padding="16dp"
                 android:textColorHint="@color/black"
                 android:textSize="24sp"
                 app:layout_constraintTop_toBottomOf="@+id/classTypeInputLayout"
@@ -166,80 +157,80 @@
                 app:strokeWidth="1dp">
             </TextView>
 
-            <LinearLayout
-                android:id="@+id/reqBtnLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:padding="10dp">
+            <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+                android:id="@+id/confirmSubjectBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:background="@drawable/lecturer_bg"
+                android:text="@string/confirm"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.06"
+                app:layout_constraintStart_toStartOf="parent" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/confirmSubjectBtn"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginBottom="55dp"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_margin="15dp"
+                android:layout_gravity="center">
+
+                <ImageButton
+                    android:id="@+id/prevPageButton"
+                    android:layout_width="91dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/lecturer_bg"
-                    android:text="@string/confirm"
-                    android:textAllCaps="false"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                    android:contentDescription="Go to theprevious page"
+                    android:src="@drawable/ic_arrow_back"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.06"
+                    app:layout_constraintEnd_toStartOf="@+id/mainPageButton"
                     app:layout_constraintStart_toStartOf="parent" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/lectRequestsButton"
-                    android:layout_width="150dp"
-                    android:layout_height="46dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginBottom="55dp"
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content" />
+
+                <ImageButton
+                    android:id="@+id/mainPageButton"
+                    android:layout_width="91dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/lecturer_bg"
-                    android:drawableStart="@drawable/ic_request_list"
-                    android:paddingStart="14dp"
-                    android:text="@string/requests"
-                    android:textAllCaps="false"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                    android:contentDescription="Go to theprevious page"
+                    android:src="@drawable/ic_home"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.08"
-                    app:layout_constraintStart_toEndOf="@+id/confirmSubjectBtn" />
+                    app:layout_constraintStart_toStartOf="parent" />
+
+<!--                <androidx.appcompat.widget.AppCompatButton-->
+<!--                    android:id="@+id/lectRequestsButton"-->
+<!--                    android:layout_width="150dp"-->
+<!--                    android:layout_height="46dp"-->
+<!--                    android:layout_marginStart="30dp"-->
+<!--                    android:layout_marginEnd="32dp"-->
+<!--                    android:layout_marginBottom="55dp"-->
+<!--                    android:background="@drawable/lecturer_bg"-->
+<!--                    android:drawableStart="@drawable/ic_request_list"-->
+<!--                    android:paddingStart="14dp"-->
+<!--                    android:text="@string/requests"-->
+<!--                    android:textAllCaps="false"-->
+<!--                    android:textSize="18sp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintHorizontal_bias="0.08"-->
+<!--                    app:layout_constraintStart_toEndOf="@+id/confirmSubjectBtn" />-->
             </LinearLayout>
 
 
         </LinearLayout>
     </ScrollView>
 
-    <ImageButton
-        android:id="@+id/prevPageButton"
-        android:layout_width="91dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/lecturer_bg"
-        android:contentDescription="Go to theprevious page"
-        android:src="@drawable/ic_arrow_back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/mainPageButton"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageButton
-        android:id="@+id/mainPageButton"
-        android:layout_width="91dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="145dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/lecturer_bg"
-        android:contentDescription="Go to theprevious page"
-        android:src="@drawable/ic_home"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,91 +24,106 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/generateTTBtn"
-        android:layout_width="161dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/lecturer_bg"
-        android:text="Сгенерировать расписание"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lecturersRecyclerView" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="160dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        tools:ignore="NotSibling">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/clearTTBtn"
-        android:layout_width="161dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/clear_btn"
-        android:text="Стереть расписание"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lecturersRecyclerView" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="100dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/lecturersRecyclerView"
-        android:layout_width="268dp"
-        android:layout_height="309dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/lect_color_rect_border"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waveView"
-        tools:listitem="@layout/lecturer_item" />
+            <TextView
+                android:id="@+id/sendersLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/lect_color_rect_border"
+                android:padding="10dp"
+                android:text="Заявки отправили: "
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/waveView" />
 
-    <TextView
-        android:id="@+id/sendersLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/lect_color_rect_border"
-        android:text="Заявки отправили: "
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waveView" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/lecturersRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="330dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/lect_color_rect_border"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints"
+                tools:listitem="@layout/lecturer_item" />
 
-    <ImageButton
-        android:id="@+id/prevPageButton"
-        android:layout_width="91dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/lecturer_bg"
-        android:contentDescription="Go to theprevious page"
-        android:src="@drawable/ic_arrow_back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+            <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+                android:id="@+id/generateTTBtn"
+                android:layout_width="161dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/lecturer_bg"
+                android:text="Сгенерировать расписание"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lecturersRecyclerView" />
 
-    <ImageButton
-        android:id="@+id/mainPageButton"
-        android:layout_width="91dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="140dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/lecturer_bg"
-        android:contentDescription="Go to theprevious page"
-        android:src="@drawable/ic_home"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+
+            <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+                android:id="@+id/clearTTBtn"
+                android:layout_width="161dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/clear_btn"
+                android:text="Стереть расписание"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lecturersRecyclerView" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="15dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/prevPageButton"
+                    android:layout_width="91dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/lecturer_bg"
+                    android:contentDescription="Go to theprevious page"
+                    android:src="@drawable/ic_arrow_back"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

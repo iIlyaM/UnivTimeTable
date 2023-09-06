@@ -10,9 +10,11 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
 import vsu.cs.univtimetable.DateManager
 import vsu.cs.univtimetable.dto.datetime.Day
 import vsu.cs.univtimetable.R
@@ -23,6 +25,7 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: DayAdapter
+    private lateinit var confirmTimeBtn: CircularProgressButton
     private var bundle = Bundle()
     private var dayWeekTimeMap: MutableMap<String, ArrayList<String>> = mutableMapOf()
 
@@ -42,7 +45,7 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
     ): View? {
         val view = inflater.inflate(R.layout.fragment_select_unwanted_time_page, container, false)
         recyclerView = view.findViewById(R.id.weekView)
-        val confirmTimeBtn = view.findViewById<AppCompatButton>(R.id.confirmTimeBtn)
+        confirmTimeBtn = view.findViewById(R.id.confirmTimeBtn)
 
         adapter = DayAdapter(days)
         recyclerView.adapter = adapter
@@ -51,11 +54,13 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
 
         val bundle = Bundle()
         confirmTimeBtn.setOnClickListener {
+            confirmTimeBtn.startAnimation()
             bundle.putSerializable("map", ImpossibleTimeDto(dayWeekTimeMap))
             findNavController().navigate(
                 R.id.action_selectUnwantedTimePageFragment_to_addSubjectPageFragment,
                 bundle
             )
+            stopAnimation(confirmTimeBtn)
         }
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
@@ -97,4 +102,8 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
         builder.create().show()
     }
 
+    private fun stopAnimation(btn: CircularProgressButton) {
+        btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.lecturer_bg)
+        btn.revertAnimation()
+    }
 }
