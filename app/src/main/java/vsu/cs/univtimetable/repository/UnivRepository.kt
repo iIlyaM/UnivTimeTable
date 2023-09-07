@@ -29,7 +29,7 @@ class UnivRepository(
     suspend fun getUniversities(
         univName: String?,
         order: String?
-    ): Response<UnivResponseDto> {
+    ): Response<List<UnivDto>> {
         return univApi.getUniversities(basicToken = "Bearer ${token}", univName, order)
     }
 

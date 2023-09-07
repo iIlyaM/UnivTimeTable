@@ -86,7 +86,7 @@ class FacultyViewModel(
                 order
             )
             if (response.isSuccessful) {
-                val a = response.body()?.facultiesPage?.contents
+                val a = response.body()
                 _facultyList.postValue(a!!)
                 emit(Resource.success(a))
             } else {

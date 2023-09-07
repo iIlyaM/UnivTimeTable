@@ -151,7 +151,7 @@ class CreateAudiencePageFragment : Fragment(), OnEquipmentDeleteInterface {
                     when (it.status) {
                         Status.SUCCESS -> {
                             stopAnimation(confirmBtn)
-                            showToastNotification(requireContext(), "Информация о группе изменена")
+                            showToastNotification(requireContext(), "Информация об аудитории изменена")
                             sendId()
                         }
 
@@ -180,7 +180,7 @@ class CreateAudiencePageFragment : Fragment(), OnEquipmentDeleteInterface {
                             adapter.submitList(neededEquipments.toList())
                             recyclerView.visibility=View.GONE
                             sendId()
-                            showToastNotification(requireContext(), "Группа добавлена")
+                            showToastNotification(requireContext(), "Аудитория добавлена")
                         }
 
                         Status.ERROR -> {
@@ -232,8 +232,8 @@ class CreateAudiencePageFragment : Fragment(), OnEquipmentDeleteInterface {
             it?.let {
                 when (it.status) {
                     Status.SUCCESS -> {
-                        pDialog.dismiss()
                         equipments.addAll(it.data!!)
+                        pDialog.dismiss()
                     }
 
                     Status.ERROR -> {

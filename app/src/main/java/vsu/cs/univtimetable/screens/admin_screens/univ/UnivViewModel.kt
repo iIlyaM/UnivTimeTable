@@ -44,8 +44,8 @@ class UnivViewModel(
                 order
             )
             if (response.isSuccessful) {
-                _univList.postValue(response.body()?.universitiesPage?.contents)
-                emit(Resource.success(response.body()?.universitiesPage?.contents))
+                _univList.postValue(response.body())
+                emit(Resource.success(response.body()))
             } else {
                 onError(response.code())
             }

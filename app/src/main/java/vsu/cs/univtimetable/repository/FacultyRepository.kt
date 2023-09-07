@@ -31,7 +31,7 @@ class FacultyRepository(
         id: Int,
         name: String?,
         order: String?
-    ): Response<FacultyResponseDto> {
+    ): Response<List<FacultyDto>> {
         return facultyApi.getFaculties(basicToken = "Bearer ${token}", id, name, order)
     }
 

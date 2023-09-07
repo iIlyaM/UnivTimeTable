@@ -13,6 +13,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 import vsu.cs.univtimetable.dto.audience.AudienceDto
 import vsu.cs.univtimetable.dto.audience.AudienceResponse
+import vsu.cs.univtimetable.dto.audience.AudienceResponseDto
 import vsu.cs.univtimetable.dto.univ.CreateAudienceRequest
 
 interface AudienceApi {
@@ -40,11 +41,11 @@ interface AudienceApi {
     ): Response<AudienceDto>
 
     @Headers("Content-Type: application/json")
-    @GET("faculty/{facultyId}/audiences")
+    @GET("faculty/{facultyId}/audiences/all")
     suspend fun getAudiences(
         @Header("Authorization") basicToken: String,
         @Path("facultyId") facultyId: Int,
-    ): Response<AudienceResponse>
+    ): Response<List<AudienceResponseDto>>
 
     @Headers("Content-Type: application/json")
     @DELETE("audience/{id}")

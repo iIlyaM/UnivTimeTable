@@ -57,8 +57,8 @@ class UserViewModel(
                 name
             )
             if (response.isSuccessful) {
-                _userList.postValue(response.body()?.usersPage?.contents)
-                emit(Resource.success(response.body()?.usersPage?.contents))
+                _userList.postValue(response.body()?.users)
+                emit(Resource.success(response.body()?.users))
             } else {
                 throw Exception(response.code().toString())
             }
