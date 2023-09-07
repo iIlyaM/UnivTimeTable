@@ -81,10 +81,11 @@ class GroupListAdapter(
     }
 
     private fun checkHeadman(headman: UserDisplayDto?): String {
-        if(headman == null) {
-            return "Староста: не назначен"
+        return if(headman == null) {
+            "Староста: не назначен"
         } else {
-            return getHeadmanShortName(headman.fullName)
+            val checkedName = headman.fullName.trimEnd().trimStart()
+            getHeadmanShortName(checkedName)
         }
     }
 }

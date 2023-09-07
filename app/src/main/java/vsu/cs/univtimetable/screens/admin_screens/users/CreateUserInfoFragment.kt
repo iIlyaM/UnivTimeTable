@@ -131,6 +131,17 @@ class CreateUserInfoFragment : Fragment() {
         )
         tilGroupNum.boxStrokeWidth = resources.getDimensionPixelSize(R.dimen.new_stroke_width)
 
+        val tilRole = view.findViewById<TextInputLayout>(R.id.editRoleText)
+        tilRole.boxStrokeColor =
+            ContextCompat.getColor(requireContext(), R.color.adminsColor)
+        tilRole.setBoxStrokeColorStateList(
+            ContextCompat.getColorStateList(
+                requireContext(),
+                R.color.admin_selector
+            )!!
+        )
+        tilRole.boxStrokeWidth = resources.getDimensionPixelSize(R.dimen.new_stroke_width)
+
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
             findNavController().popBackStack()
@@ -215,7 +226,7 @@ class CreateUserInfoFragment : Fragment() {
         }
 
         val fullName = fullNameText.text.toString()
-        if (fullName.isEmpty()) {
+        if (fullName.isEmpty() || fullName == " ") {
             fullNameText.error = "Введите имя пользователя"
             showToastNotification(requireContext(), "Пожалуйста, заполните имя пользователя")
             stopAnimation(createBtn)
@@ -227,8 +238,8 @@ class CreateUserInfoFragment : Fragment() {
             stopAnimation(createBtn)
             return
         }
-        val univId = if (univMap[univTextInputLayout.text.toString()] != null) {
-            univMap[univTextInputLayout.text.toString()]?.id
+        val univId = if (univMap[univTextInputLayout.text.toString().toUpperCase()] != null) {
+            univMap[univTextInputLayout.text.toString().toUpperCase()]?.id
         } else {
             null
         }
@@ -261,7 +272,7 @@ class CreateUserInfoFragment : Fragment() {
             userViewModel.editUser(
                 id,
                 role,
-                fullName,
+                fullName.trimEnd().trimStart(),
                 login.text.toString(),
                 email.text.toString(),
                 city.text.toString(),
@@ -274,6 +285,7 @@ class CreateUserInfoFragment : Fragment() {
                     when (it.status) {
                         Status.SUCCESS -> {
                             pDialog.dismiss()
+                            showToastNotification(requireContext(), "${fullName} успешно изменён")
                             findNavController().popBackStack()
                         }
 
@@ -284,6 +296,7 @@ class CreateUserInfoFragment : Fragment() {
                                 requireContext(),
                                 it.message.toString()
                             )
+                            showToastNotification(requireContext(), "${fullName} ошибка")
                         }
 
                         Status.LOADING -> {
@@ -296,7 +309,7 @@ class CreateUserInfoFragment : Fragment() {
             userViewModel.addUser(
                 0,
                 role,
-                fullName,
+                fullName.trimEnd().trimStart(),
                 login.text.toString(),
                 email.text.toString(),
                 city.text.toString(),
@@ -309,6 +322,7 @@ class CreateUserInfoFragment : Fragment() {
                     when (it.status) {
                         Status.SUCCESS -> {
                             pDialog.dismiss()
+                            showToastNotification(requireContext(), "${fullName} успешно добавлен")
                             findNavController().popBackStack()
                         }
 
@@ -437,7 +451,7 @@ class CreateUserInfoFragment : Fragment() {
                                 univTextInputLayout(position)
                                 if (univ != null) {
                                     univTextInputLayout.setText(
-                                        abbreviateUniversityName(univ.universityName),
+                                        abbreviateUniversityName(univ.universityName).toUpperCase(),
                                         false
                                     )
                                 }
