@@ -157,6 +157,8 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
             it?.let {
                 when (it.status) {
                     Status.SUCCESS -> {
+                        clearSortBtns()
+                        getSearchItems(it.data!!)
                         pDialog.dismiss()
                     }
 
@@ -263,6 +265,7 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
         val bundle = Bundle()
         bundle.putInt("id", userId)
         bundle.putBoolean("editable", true)
+        clearSortBtns()
         findNavController().navigate(
             R.id.action_userListPageFragment_to_createUserInfoFragment,
             bundle
@@ -292,6 +295,12 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
         )
         rv.layoutManager = LinearLayoutManager(requireContext())
         rv.adapter = adapter
+    }
+
+    fun clearSortBtns() {
+        univs.clear()
+        cities.clear()
+        roles.clear()
     }
 
 }
