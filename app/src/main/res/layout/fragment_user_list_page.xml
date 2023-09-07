@@ -28,10 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="30dp"
-        android:paddingTop="115dp"
-        android:paddingRight="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_marginTop="120dp"
+        android:paddingRight="30dp">
 
         <LinearLayout
             android:id="@+id/linLayout"
@@ -45,6 +43,7 @@
                 android:id="@+id/userSearch"
                 android:layout_width="315dp"
                 android:layout_height="45dp"
+                android:layout_marginTop="100dp"
                 android:layout_gravity="center"
                 android:background="@drawable/rect_border"
                 android:iconifiedByDefault="false"

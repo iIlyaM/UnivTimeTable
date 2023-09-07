@@ -29,7 +29,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="115dp"
+        android:layout_marginTop="160dp"
         android:paddingRight="30dp"
         android:paddingLeft="30dp">
 
@@ -38,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginTop="100dp"
             android:layout_gravity="center">
 
             <EditText
