@@ -24,133 +24,124 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp">
 
-        <LinearLayout
-            android:id="@+id/linLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="70dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/sortBtnLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <SearchView
-                    android:id="@+id/searchByCourseView"
-                    android:layout_width="170dp"
-                    android:layout_height="45dp"
-                    android:background="@drawable/rect_border"
-                    android:iconifiedByDefault="false"
-                    android:queryHint="№ курса"
-                    android:text="№ курса"
-                    app:defaultQueryHint="№ курса"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/waveView" />
-
-                <ImageButton
-                    android:id="@+id/sortByCourseBtn"
-                    android:layout_width="51dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="50dp"
-                    android:background="@drawable/admin_bg"
-                    android:contentDescription="@string/sort_by_course_num"
-                    android:src="@drawable/ic_sort"
-                    app:layout_constraintStart_toEndOf="@+id/searchByCourseView"
-                    app:layout_constraintTop_toBottomOf="@+id/waveView" />
-
-            </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/groupRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/mainPageButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchByGroupView"
+        tools:listitem="@layout/group_list_item" />
 
 
-            <SearchView
-                android:id="@+id/searchByGroupView"
-                android:layout_width="170dp"
-                android:layout_height="45dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/rect_border"
-                android:iconifiedByDefault="false"
-                android:queryHint="№ группы"
-                app:defaultQueryHint="№ группы"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/searchByCourseView" />
+    <SearchView
+        android:id="@+id/searchByCourseView"
+        android:layout_width="170dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="6dp"
+        android:background="@drawable/rect_border"
+        android:iconifiedByDefault="false"
+        android:queryHint="№ курса"
+        android:text="№ курса"
+        app:defaultQueryHint="№ курса"
+        app:layout_constraintBottom_toBottomOf="@+id/topView"
+        app:layout_constraintEnd_toStartOf="@+id/sortByCourseBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/topView" />
+
+    <SearchView
+        android:id="@+id/searchByGroupView"
+        android:layout_width="170dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rect_border"
+        android:iconifiedByDefault="false"
+        android:queryHint="№ группы"
+        app:defaultQueryHint="№ группы"
+        app:layout_constraintEnd_toEndOf="@+id/searchByCourseView"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="@+id/searchByCourseView"
+        app:layout_constraintTop_toBottomOf="@+id/searchByCourseView" />
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/groupRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="347dp"
-                android:layout_marginTop="40dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/searchByGroupView"
-                tools:listitem="@layout/group_list_item" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:orientation="horizontal"
-                android:paddingTop="5dp">
-
-                <ImageButton
-                    android:id="@+id/prevPageButton"
-                    android:layout_width="91dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/admin_bg"
-                    android:contentDescription="Go to theprevious page"
-                    android:src="@drawable/ic_arrow_back"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <Space
-                    android:layout_width="8dp"
-                    android:layout_height="wrap_content" />
+    <ImageButton
+        android:id="@+id/sortByCourseBtn"
+        android:layout_width="51dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/admin_bg"
+        android:contentDescription="@string/sort_by_course_num"
+        android:src="@drawable/ic_sort"
+        app:layout_constraintBottom_toBottomOf="@+id/searchByCourseView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/searchByCourseView"
+        app:layout_constraintTop_toTopOf="@+id/searchByCourseView" />
 
 
-                <ImageButton
-                    android:id="@+id/mainPageButton"
-                    android:layout_width="91dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/admin_bg"
-                    android:contentDescription="Go to theprevious page"
-                    android:src="@drawable/ic_home"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+    <ImageButton
+        android:id="@+id/prevPageButton"
+        android:layout_width="91dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/admin_bg"
+        android:contentDescription="Go to theprevious page"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mainPageButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
 
-                <Space
-                    android:layout_width="8dp"
-                    android:layout_height="wrap_content" />
+    <Space
+        android:layout_width="8dp"
+        android:layout_height="wrap_content" />
 
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/addNewGroupBtn"
-                    android:layout_width="90dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/admin_bg"
-                    android:text="@string/add"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-            </LinearLayout>
+    <ImageButton
+        android:id="@+id/mainPageButton"
+        android:layout_width="91dp"
+        android:layout_height="40dp"
+        android:background="@drawable/admin_bg"
+        android:contentDescription="Go to theprevious page"
+        android:src="@drawable/ic_home"
+        app:layout_constraintBottom_toBottomOf="@+id/prevPageButton"
+        app:layout_constraintEnd_toStartOf="@+id/addNewGroupBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/prevPageButton"
+        app:layout_constraintTop_toTopOf="@+id/prevPageButton" />
 
-        </LinearLayout>
+    <Space
+        android:layout_width="8dp"
+        android:layout_height="wrap_content" />
 
-    </ScrollView>
+
+    <ImageButton
+        android:id="@+id/addNewGroupBtn"
+        android:layout_width="90dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/admin_bg"
+        android:src="@drawable/ic_item_add"
+        android:text="@string/add"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/mainPageButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/mainPageButton"
+        app:layout_constraintTop_toTopOf="@+id/mainPageButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
