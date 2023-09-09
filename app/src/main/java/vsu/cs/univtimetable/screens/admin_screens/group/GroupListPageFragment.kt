@@ -74,7 +74,7 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
                 UnivViewModelFactory(groupRepository, token)
             )[GroupViewModel::class.java]
 
-        val addGroupBtn = view.findViewById<AppCompatButton>(R.id.addNewGroupBtn)
+        val addGroupBtn = view.findViewById<ImageButton>(R.id.addNewGroupBtn)
         addGroupBtn.setOnClickListener {
             sendId()
         }
@@ -116,7 +116,9 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
         groupViewModel.errorMsg.observe(viewLifecycleOwner) {
             showToastNotification(it)
         }
+        setLoadingDialog()
         getGroups(null, null, null)
+        pDialog.dismiss()
         universityId = getUnivId()
         searchByCourseView = view.findViewById(R.id.searchByCourseView)
         searchByCourseView.inputType = InputType.TYPE_CLASS_NUMBER;
@@ -233,13 +235,10 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
             it?.let {
                 when(it.status) {
                     Status.SUCCESS -> {
-                        pDialog.dismiss()
                     }
                     Status.ERROR -> {
-                        pDialog.dismiss()
                     }
                     Status.LOADING -> {
-                        setLoadingDialog()
                     }
                 }
             }

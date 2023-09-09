@@ -5,6 +5,5 @@ import vsu.cs.univtimetable.dto.PageModelDto
 
 data class UnivResponseDto (
 
-    @SerializedName("universitiesPage")
-    var universitiesPage: PageModelDto<UnivDto>
+    var universitiesPage: List<UnivDto>
 )

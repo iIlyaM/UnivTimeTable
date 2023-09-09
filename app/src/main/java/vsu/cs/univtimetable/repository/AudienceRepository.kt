@@ -8,6 +8,7 @@ import retrofit2.http.Path
 import vsu.cs.univtimetable.api.AudienceApi
 import vsu.cs.univtimetable.dto.audience.AudienceDto
 import vsu.cs.univtimetable.dto.audience.AudienceResponse
+import vsu.cs.univtimetable.dto.audience.AudienceResponseDto
 import vsu.cs.univtimetable.dto.univ.CreateAudienceRequest
 
 class AudienceRepository(
@@ -24,7 +25,7 @@ class AudienceRepository(
 
     suspend fun getAudiences(
         @Path("facultyId") facultyId: Int,
-    ): Response<AudienceResponse> {
+    ): Response<List<AudienceResponseDto>> {
         return audienceApi.getAudiences(basicToken = "Bearer ${token}", facultyId)
     }
 

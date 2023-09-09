@@ -24,84 +24,68 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="130dp"
-        android:layout_marginBottom="50dp"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/audiencesRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/mainPageButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/waveView"
+        tools:ignore="MissingConstraints"
+        tools:listitem="@layout/audience_list_item" />
 
-        <LinearLayout
-            android:id="@+id/linLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/audiencesRecyclerView"
-                android:layout_width="354dp"
-                android:layout_height="426dp"
-                android:layout_gravity="center"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sortRoleBtn"
-                tools:ignore="MissingConstraints"
-                tools:listitem="@layout/audience_list_item" />
+    <ImageButton
+        android:id="@+id/prevPageButton"
+        android:layout_width="91dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/admin_bg"
+        android:contentDescription="Go to theprevious page"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mainPageButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal"
-                android:paddingTop="15dp">
+    <ImageButton
+        android:id="@+id/mainPageButton"
+        android:layout_width="91dp"
+        android:layout_height="40dp"
+        android:background="@drawable/admin_bg"
+        android:contentDescription="Go to theprevious page"
+        android:src="@drawable/ic_home"
+        app:layout_constraintBottom_toBottomOf="@+id/prevPageButton"
+        app:layout_constraintEnd_toStartOf="@+id/addNewAudienceBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/prevPageButton"
+        app:layout_constraintTop_toTopOf="@+id/prevPageButton" />
 
-                <ImageButton
-                    android:id="@+id/prevPageButton"
-                    android:layout_width="91dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/admin_bg"
-                    android:contentDescription="Go to theprevious page"
-                    android:src="@drawable/ic_arrow_back"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
 
-                <Space
-                    android:layout_width="8dp"
-                    android:layout_height="wrap_content" />
-
-                <ImageButton
-                    android:id="@+id/mainPageButton"
-                    android:layout_width="91dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/admin_bg"
-                    android:contentDescription="Go to theprevious page"
-                    android:src="@drawable/ic_home"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/confirmCreateGroupBtn"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <Space
-                    android:layout_width="8dp"
-                    android:layout_height="wrap_content" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/addNewAudienceBtn"
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/admin_bg"
-                    android:text="@string/add"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.9" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </ScrollView>
+    <ImageButton
+        android:id="@+id/addNewAudienceBtn"
+        android:layout_width="91dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/admin_bg"
+        android:src="@drawable/ic_item_add"
+        android:text="@string/add"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/mainPageButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/mainPageButton"
+        app:layout_constraintTop_toTopOf="@+id/mainPageButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

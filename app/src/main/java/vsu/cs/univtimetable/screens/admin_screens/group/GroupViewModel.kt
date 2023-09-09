@@ -49,7 +49,7 @@ class GroupViewModel(
             )
             if (response.isSuccessful) {
                 val a = response.body()
-                _groupList.postValue(response.body()?.groupsPage?.contents)
+                _groupList.postValue(response.body()?.groups)
                 emit(Resource.success(a))
             } else {
                 onError(response.code())

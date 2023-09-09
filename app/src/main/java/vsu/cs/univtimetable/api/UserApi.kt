@@ -19,7 +19,7 @@ import vsu.cs.univtimetable.dto.user.UserResponseDto
 
 interface UserApi {
     @Headers("Content-Type: application/json")
-    @GET("users")
+    @GET("v2/users")
     suspend fun getUsers(
         @Header("Authorization") basicToken: String,
         @Query("university") university: String?,

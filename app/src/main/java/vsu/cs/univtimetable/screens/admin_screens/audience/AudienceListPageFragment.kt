@@ -61,7 +61,7 @@ class AudienceListPageFragment : Fragment(), OnAudienceEditInterface, OnAudience
                 UnivViewModelFactory(audienceRepository, token)
             )[AudienceViewModel::class.java]
 
-        val addBtn = view.findViewById<AppCompatButton>(R.id.addNewAudienceBtn)
+        val addBtn = view.findViewById<ImageButton>(R.id.addNewAudienceBtn)
         addBtn.setOnClickListener {
             sendId()
         }
