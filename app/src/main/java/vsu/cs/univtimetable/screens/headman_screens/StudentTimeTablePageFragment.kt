@@ -108,7 +108,9 @@ class StudentTimeTablePageFragment : Fragment() {
         }
 
         saveTimeTable = view.findViewById(R.id.saveTimeTable)
-        PermissionsHandler.checkPermissionsButton(requireContext(), saveTimeTable)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            PermissionsHandler.checkPermissionsButton(requireContext(), saveTimeTable)
+        }
         saveTimeTable.setOnClickListener {
             saveTimeTable.startAnimation()
             downloadTimetable()
