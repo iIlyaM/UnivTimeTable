@@ -399,11 +399,11 @@ class CreateUserInfoFragment : Fragment() {
         facId: Long?
     ): Boolean {
         var isValid = true;
-        if (role == "HEADMAN" || role == "LECTURER") {
+        if (role == "Староста" || role == "Преподаватель") {
             if (univId == null) {
                 univTextInputLayout.error = "Выберите университет"
                 showToastNotification(requireContext(), "Пожалуйста, заполните все поля")
-                isValid = false;
+                isValid = false
             }
             if (facId == null) {
                 facultyTextInputLayout.error = "Выберите факультет"
@@ -415,8 +415,6 @@ class CreateUserInfoFragment : Fragment() {
     }
 
     private fun setFieldsIfEdit(view: View) {
-//        val role = arguments?.getString("role")
-
         val editable = arguments?.getBoolean("editable");
         if (editable != null && editable) {
             userViewModel.getUser(arguments?.getInt("id")!!.toLong()).observe(viewLifecycleOwner) {

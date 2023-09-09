@@ -87,7 +87,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
             getFaculties(null, order)
         }
 
-        val addFacultyBtn = view.findViewById<AppCompatButton>(R.id.addNewFacultyBtn)
+        val addFacultyBtn = view.findViewById<ImageButton>(R.id.addNewFacultyBtn)
         addFacultyBtn.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt("univId", getUnivId())
@@ -110,7 +110,9 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
         facultyViewModel.errorMsg.observe(viewLifecycleOwner) {
             NotificationManager.showToastNotification(requireContext(), it)
         }
+        NotificationManager.setLoadingDialog(pDialog)
         getFaculties(null, null)
+        pDialog.dismiss()
         searchView = view.findViewById(R.id.searchFacultyView)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -202,7 +204,6 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
                     Status.SUCCESS -> {
                         getFaculties(null, null)
                         pDialog.dismiss()
-//
                     }
                     Status.ERROR -> {
                         pDialog.dismiss()
@@ -253,11 +254,9 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
             it?.let {
                 when (it.status) {
                     Status.SUCCESS -> {
-                        pDialog.dismiss()
                     }
 
                     Status.ERROR -> {
-                        pDialog.dismiss()
                         NotificationManager.showToastNotification(
                             requireContext(),
                             it.message.toString()
@@ -265,7 +264,6 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
                     }
 
                     Status.LOADING -> {
-                        NotificationManager.setLoadingDialog(pDialog)
                     }
                 }
             }

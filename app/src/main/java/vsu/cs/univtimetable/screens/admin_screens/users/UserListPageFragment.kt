@@ -78,7 +78,7 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
         pDialog = ProgressDialog(context)
         recyclerView = view.findViewById(R.id.usersRecyclerView)
         initRV(recyclerView)
-        val addUser = view.findViewById<AppCompatButton>(R.id.addNewUserBtn)
+        val addUser = view.findViewById<ImageButton>(R.id.addNewUserBtn)
         val refreshFilterBtn = view.findViewById<AppCompatButton>(R.id.refreshFilterBtn)
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
@@ -143,7 +143,9 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
         }
         userViewModel.errorMsg.observe(viewLifecycleOwner) {
         }
+        NotificationManager.setLoadingDialog(pDialog)
         getUsers(searchParams, null)
+        pDialog.dismiss()
     }
 
     private fun getUsers(searchParams: MutableList<String?>, name: String?) {
@@ -159,11 +161,9 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
                     Status.SUCCESS -> {
                         clearSortBtns()
                         getSearchItems(it.data!!)
-                        pDialog.dismiss()
                     }
 
                     Status.ERROR -> {
-                        pDialog.dismiss()
                         NotificationManager.showToastNotification(
                             requireContext(),
                             it.message.toString()
@@ -171,7 +171,6 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
                     }
 
                     Status.LOADING -> {
-                        NotificationManager.setLoadingDialog(pDialog)
                     }
                 }
             }

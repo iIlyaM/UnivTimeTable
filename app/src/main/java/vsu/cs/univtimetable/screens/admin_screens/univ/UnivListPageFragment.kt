@@ -79,7 +79,7 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
             findNavController().navigate(R.id.action_univListPageFragment_to_adminMainPageFragment)
         }
 
-        val addUnivBtn = view.findViewById<AppCompatButton>(R.id.addNewUnivBtn)
+        val addUnivBtn = view.findViewById<ImageButton>(R.id.addNewUnivBtn)
         addUnivBtn.setOnClickListener {
             findNavController().navigate(R.id.action_univListPageFragment_to_createUniversityFragment)
         }
@@ -100,7 +100,9 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
         }
         univViewModel.errorMsg.observe(viewLifecycleOwner) {
         }
+        NotificationManager.setLoadingDialog(pDialog)
         getUniversities(null, null)
+        pDialog.dismiss()
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -110,7 +112,6 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
                 if (newText != null) {
                     getUniversities(newText, null)
                 }
-
                 return true
             }
         })
@@ -176,7 +177,6 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
             it?.let {
                 when (it.status) {
                     Status.SUCCESS -> {
-                        pDialog.dismiss()
                     }
                     Status.ERROR -> {
                         pDialog.dismiss()
@@ -186,7 +186,7 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
                         )
                     }
                     Status.LOADING -> {
-                        NotificationManager.setLoadingDialog(pDialog)
+
                     }
                 }
             }
