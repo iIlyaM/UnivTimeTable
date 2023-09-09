@@ -44,6 +44,7 @@ import vsu.cs.univtimetable.screens.adapter.DayOfWeekAdapter
 import vsu.cs.univtimetable.screens.adapter.LecturerTimetableAdapter
 import vsu.cs.univtimetable.utils.NotificationManager
 import vsu.cs.univtimetable.utils.NotificationManager.showToastNotification
+import vsu.cs.univtimetable.utils.permissions_utils.PermissionsHandler
 import vsu.cs.univtimetable.utils.permissions_utils.PermissionsHandler.checkPermissionsButton
 import vsu.cs.univtimetable.utils.permissions_utils.PermissionsHandler.loadFile
 import java.io.File
@@ -109,7 +110,9 @@ class LecturerTimetablePageFragment : Fragment() {
         }
 
         downloadLectTTBtn = view.findViewById(R.id.downloadLectTTBtn)
-        checkPermissionsButton(requireContext(), downloadLectTTBtn)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            checkPermissionsButton(requireContext(), downloadLectTTBtn)
+        }
         downloadLectTTBtn.setOnClickListener {
             downloadLectTTBtn.startAnimation()
             downloadTimetable()
@@ -190,7 +193,7 @@ class LecturerTimetablePageFragment : Fragment() {
                 response: Response<ResponseBody>
             ) {
                 if (response.isSuccessful) {
-                    val fileName = "расписание"
+                    val fileName = "расписание.xlsx"
                     val contentResolver = requireContext().contentResolver
 
                     val contentValues = ContentValues().apply {

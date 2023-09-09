@@ -14,11 +14,11 @@
             android:id="@+id/action_loginFragment_to_adminMainPageFragment"
             app:destination="@id/adminMainPageFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_headmanMainPageFragment"
-            app:destination="@id/headmanMainPageFragment" />
-        <action
             android:id="@+id/action_loginFragment_to_lecturerMainPageFragment"
             app:destination="@id/lecturerMainPageFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_studentTimeTablePageFragment"
+            app:destination="@id/studentTimeTablePageFragment" />
     </fragment>
     <fragment
         android:id="@+id/adminMainPageFragment"
@@ -34,18 +34,6 @@
         <action
             android:id="@+id/action_adminMainPageFragment_to_userListPageFragment"
             app:destination="@id/userListPageFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/headmanMainPageFragment"
-        android:name="vsu.cs.univtimetable.screens.headman_screens.HeadmanMainPageFragment"
-        android:label="fragment_headman_main_page"
-        tools:layout="@layout/fragment_headman_main_page" >
-        <action
-            android:id="@+id/action_headmanMainPageFragment_to_studentTimeTablePageFragment"
-            app:destination="@id/studentTimeTablePageFragment" />
-        <action
-            android:id="@+id/action_headmanMainPageFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/lecturerMainPageFragment"
@@ -156,8 +144,8 @@
         android:label="fragment_student_time_table_page"
         tools:layout="@layout/fragment_student_time_table_page" >
         <action
-            android:id="@+id/action_studentTimeTablePageFragment_to_headmanMainPageFragment"
-            app:destination="@id/headmanMainPageFragment" />
+            android:id="@+id/action_studentTimeTablePageFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/univMainPageFragment"
