@@ -1,4 +1,4 @@
-package vsu.cs.univtimetable
+package vsu.cs.univtimetable.utils.date_utils
 
 import android.annotation.SuppressLint
 import android.os.Build

@@ -1,8 +1,9 @@
-package vsu.cs.univtimetable
+package vsu.cs.univtimetable.utils.token_utils
 
 import android.content.Context
 import android.content.SharedPreferences
 import com.auth0.android.jwt.JWT
+import vsu.cs.univtimetable.R
 
 object SessionManager {
 
@@ -36,7 +37,7 @@ object SessionManager {
     fun getString(context: Context, key: String): String? {
         val prefs: SharedPreferences =
             context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
-        return prefs.getString(this.USER_TOKEN, null)
+        return prefs.getString(USER_TOKEN, null)
     }
 
     fun clearData(context: Context){

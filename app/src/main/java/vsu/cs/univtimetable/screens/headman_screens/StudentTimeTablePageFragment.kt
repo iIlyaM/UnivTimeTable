@@ -20,11 +20,11 @@ import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import vsu.cs.univtimetable.DateManager
-import vsu.cs.univtimetable.DateManager.Companion.WEEK_DAYS
-import vsu.cs.univtimetable.DateManager.Companion.checkWeekType
+import vsu.cs.univtimetable.utils.date_utils.DateManager
+import vsu.cs.univtimetable.utils.date_utils.DateManager.Companion.WEEK_DAYS
+import vsu.cs.univtimetable.utils.date_utils.DateManager.Companion.checkWeekType
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.SessionManager
+import vsu.cs.univtimetable.utils.token_utils.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.TimetableApi
 import vsu.cs.univtimetable.dto.classes.ClassDto

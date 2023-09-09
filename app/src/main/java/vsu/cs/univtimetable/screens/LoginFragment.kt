@@ -16,7 +16,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import vsu.cs.univtimetable.BtnLoadingProgressbar
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.SessionManager
+import vsu.cs.univtimetable.utils.token_utils.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.UserAuthApi
 import vsu.cs.univtimetable.dto.auth.AuthRequestDto

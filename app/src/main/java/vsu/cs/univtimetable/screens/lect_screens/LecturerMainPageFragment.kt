@@ -8,9 +8,8 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
-import vsu.cs.univtimetable.AuthToken.token
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.SessionManager
+import vsu.cs.univtimetable.utils.token_utils.SessionManager
 
 
 class LecturerMainPageFragment : Fragment() {

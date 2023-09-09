@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageButton
-import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -22,9 +20,9 @@ import com.google.android.material.textfield.TextInputLayout.END_ICON_NONE
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import vsu.cs.univtimetable.DateManager
+import vsu.cs.univtimetable.utils.date_utils.DateManager
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.SessionManager
+import vsu.cs.univtimetable.utils.token_utils.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.TimetableApi
 import vsu.cs.univtimetable.dto.univ.AudienceToMoveResponse

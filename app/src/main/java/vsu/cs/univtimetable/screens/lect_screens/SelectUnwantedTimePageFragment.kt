@@ -9,13 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.annotation.RequiresApi
-import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
-import vsu.cs.univtimetable.DateManager
+import vsu.cs.univtimetable.utils.date_utils.DateManager
 import vsu.cs.univtimetable.dto.datetime.Day
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.dto.datetime.ImpossibleTimeDto
