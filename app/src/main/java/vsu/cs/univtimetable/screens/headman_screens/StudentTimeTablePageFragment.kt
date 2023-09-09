@@ -1,9 +1,13 @@
 package vsu.cs.univtimetable.screens.headman_screens
 
 import android.app.AlertDialog
+import android.app.ProgressDialog
+import android.content.ContentValues
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
@@ -14,9 +18,13 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,6 +40,11 @@ import vsu.cs.univtimetable.dto.datetime.DateDto
 import vsu.cs.univtimetable.dto.classes.TimetableResponse
 import vsu.cs.univtimetable.screens.adapter.HeadmanTimetableAdapter
 import vsu.cs.univtimetable.screens.adapter.StudentDayOfWeekAdapter
+import vsu.cs.univtimetable.utils.NotificationManager
+import vsu.cs.univtimetable.utils.permissions_utils.PermissionsHandler
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
@@ -44,6 +57,8 @@ class StudentTimeTablePageFragment : Fragment() {
     private lateinit var timeTableAdapter: HeadmanTimetableAdapter
     private lateinit var toLeftView: ImageView
     private lateinit var toRightView: ImageView
+    private lateinit var saveTimeTable: CircularProgressButton
+    private lateinit var pDialog: ProgressDialog
 
     private lateinit var timetable: MutableMap<String, List<ClassDto>>
 
@@ -66,16 +81,16 @@ class StudentTimeTablePageFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_student_time_table_page, container, false)
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
+        pDialog = ProgressDialog(context)
         lectWeekView = view.findViewById(R.id.recyclerView2)
         lectWeekView.layoutManager = LinearLayoutManager(requireContext())
 
         toLeftView = view.findViewById(R.id.toPrevDayView)
         toRightView = view.findViewById(R.id.toNextDayView)
-        if(getCurrDayOfWeek() == "Воскресенье") {
+        if (getCurrDayOfWeek() == "Воскресенье") {
             toRightView.visibility = View.INVISIBLE
         }
-        if(getCurrDayOfWeek() == "Понедельник") {
+        if (getCurrDayOfWeek() == "Понедельник") {
             toLeftView.visibility = View.INVISIBLE
         }
 
@@ -89,7 +104,14 @@ class StudentTimeTablePageFragment : Fragment() {
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
-            findNavController().navigate(R.id.action_studentTimeTablePageFragment_to_headmanMainPageFragment)
+            findNavController().navigate(R.id.action_studentTimeTablePageFragment_to_loginFragment)
+        }
+
+        saveTimeTable = view.findViewById(R.id.saveTimeTable)
+        PermissionsHandler.checkPermissionsButton(requireContext(), saveTimeTable)
+        saveTimeTable.setOnClickListener {
+            saveTimeTable.startAnimation()
+            downloadTimetable()
         }
         return view
     }
@@ -104,7 +126,7 @@ class StudentTimeTablePageFragment : Fragment() {
         val token: String? = SessionManager.getToken(requireContext())
         Log.d("API Request failed", "${token}")
         val call = timetableApi.getTimetable("Bearer ${token}")
-
+        NotificationManager.setLoadingDialog(pDialog)
 
         call.enqueue(object : Callback<TimetableResponse> {
             @RequiresApi(Build.VERSION_CODES.O)
@@ -113,6 +135,7 @@ class StudentTimeTablePageFragment : Fragment() {
                 response: Response<TimetableResponse>
             ) {
                 if (response.isSuccessful) {
+                    pDialog.dismiss()
                     Log.d("API Request successful", "Получили ${response.code()}")
                     val dataResponse = response.body()
                     var weekType = ""
@@ -125,14 +148,15 @@ class StudentTimeTablePageFragment : Fragment() {
                     tempWeekPointer = weekPointer
                     getDayTimetable(timetable, weekType, getCurrDayOfWeek())
                 } else {
+                    pDialog.dismiss()
                     if (response.code() == 400) {
-                        showDialog("Расписание ещё не сформировано")
+                        NotificationManager.showToastNotification(requireContext(), "Расписание ещё не сформировано")
                     }
                     if (response.code() == 403) {
-                        showDialog("Недостаточно прав доступа для выполнения")
+                        NotificationManager.showToastNotification(requireContext(), "Недостаточно прав доступа для выполнения")
                     }
                     if (response.code() == 404) {
-                        showDialog("Неверный username пользователя")
+                        NotificationManager.showToastNotification(requireContext(), "Неверный username пользователя")
                     }
                     Log.d("ошибка", "Получили ошибку - ${response.code()}")
                     Log.d("ошибка", "с ошибкой пришло - ${response.body()}")
@@ -140,6 +164,96 @@ class StudentTimeTablePageFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<TimetableResponse>, t: Throwable) {
+                pDialog.dismiss()
+                println("Ошибка")
+                println(t)
+            }
+        })
+    }
+
+    private fun downloadTimetable() {
+        val token: String? = SessionManager.getToken(requireContext())
+        Log.d("API Request failed", "${token}")
+        val call = timetableApi.downloadFile("Bearer ${token}")
+
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+                if (response.isSuccessful) {
+                    val fileName = "расписание.xlsx"
+                    val contentResolver = requireContext().contentResolver
+
+                    val contentValues = ContentValues().apply {
+                        put(MediaStore.Downloads.DISPLAY_NAME, fileName)
+                        put(
+                            MediaStore.Downloads.MIME_TYPE,
+                            "application/vnd.ms-excel"
+                        )
+                        put(MediaStore.Downloads.IS_PENDING, 1)
+                        put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
+                    }
+                    try {
+                        val resolver = requireContext().contentResolver
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            PermissionsHandler.loadFile(
+                                contentResolver,
+                                resolver,
+                                contentValues,
+                                response
+                            )
+                            stopAnimation(saveTimeTable)
+                            NotificationManager.showToastNotification(
+                                requireContext(),
+                                "Файл сохранен"
+                            )
+                        } else {
+                            val file = File(
+                                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                                fileName
+                            )
+
+                            val inputStream = response.body()?.byteStream()
+                            val outputStream = FileOutputStream(file)
+
+                            inputStream?.use { input ->
+                                outputStream.use { output ->
+                                    input.copyTo(output)
+                                }
+                            }
+
+                            stopAnimation(saveTimeTable)
+                            NotificationManager.showToastNotification(
+                                requireContext(),
+                                "Файл сохранен"
+                            )
+                        }
+
+                    } catch (e: IOException) {
+                        stopAnimation(saveTimeTable)
+                        Log.e("Error", "Failed to save file to Downloads directory: ${e.message}")
+                        NotificationManager.showToastNotification(requireContext(), "ОШИБКА")
+                    }
+                } else {
+                    stopAnimation(saveTimeTable)
+                    if (response.code() == 400) {
+                        NotificationManager.showToastNotification(requireContext(), "Расписание ещё не сформировано")
+                    }
+                    if (response.code() == 403) {
+                        NotificationManager.showToastNotification(requireContext(), "Недостаточно прав доступа для выполнения")
+                    }
+                    if (response.code() == 404) {
+                        NotificationManager.showToastNotification(requireContext(), "Неверный username пользователя")
+                    }
+                    Log.d("ошибка", "Получили ошибку - ${response.code()}")
+                    Log.d("ошибка", "с ошибкой пришло - ${response.body()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                stopAnimation(saveTimeTable)
                 println("Ошибка")
                 println(t)
             }
@@ -164,7 +278,8 @@ class StudentTimeTablePageFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getCurrDayOfWeek(): String {
-        val currDay = LocalDate.now().dayOfWeek.getDisplayName(TextStyle.FULL, Locale("ru")).capitalize()
+        val currDay =
+            LocalDate.now().dayOfWeek.getDisplayName(TextStyle.FULL, Locale("ru")).capitalize()
         currDayInd = DateManager.WEEK_DAYS.toList().indexOf(currDay)
         return currDay
     }
@@ -203,28 +318,10 @@ class StudentTimeTablePageFragment : Fragment() {
         lectWeekView.adapter = dayAdapter
     }
 
-    private fun showToastNotification (message: String) {
-        val duration = Toast.LENGTH_LONG
 
-        val toast = Toast.makeText(requireContext(), message, duration)
-        toast.show()
-        val handler = Handler()
-        handler.postDelayed({ toast.cancel() }, 1500)
-    }
-
-    private fun showDialog(msg: String) {
-        val builder = AlertDialog.Builder(requireContext())
-
-        builder.setMessage(msg)
-        val alert = builder.create()
-        alert.show()
-        alert.window?.setGravity(Gravity.BOTTOM)
-
-        Handler().postDelayed({
-            alert.dismiss()
-        }, 2000)
-        findNavController().navigate(R.id.action_studentTimeTablePageFragment_to_headmanMainPageFragment)
-
+    private fun stopAnimation(btn: CircularProgressButton) {
+        btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.headman_bg)
+        btn.revertAnimation()
     }
 
 }

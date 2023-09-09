@@ -40,9 +40,9 @@ class HeadmanMainPageFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_headman_main_page, container, false)
         val button = view.findViewById<AppCompatButton>(R.id.lookTimeTableBtn)
-        button.setOnClickListener {
-            findNavController().navigate(R.id.action_headmanMainPageFragment_to_studentTimeTablePageFragment)
-        }
+//        button.setOnClickListener {
+//            findNavController().navigate(R.id.action_headmanMainPageFragment_to_studentTimeTablePageFragment)
+//        }
 
         val saveFilebtn = view.findViewById<AppCompatButton>(R.id.saveTimeTableBtn)
         saveFilebtn.setOnClickListener {
@@ -50,10 +50,10 @@ class HeadmanMainPageFragment : Fragment() {
         }
 
         val headmanLogoutBtn = view.findViewById<ImageButton>(R.id.headmanLogoutBtn)
-        headmanLogoutBtn.setOnClickListener {
-            SessionManager.clearData(requireContext())
-            findNavController().navigate(R.id.action_headmanMainPageFragment_to_loginFragment)
-        }
+//        headmanLogoutBtn.setOnClickListener {
+//            SessionManager.clearData(requireContext())
+//            findNavController().navigate(R.id.action_headmanMainPageFragment_to_loginFragment)
+//        }
         return view
     }
 

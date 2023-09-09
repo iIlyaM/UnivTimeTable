@@ -190,7 +190,7 @@ class LecturerTimetablePageFragment : Fragment() {
                 response: Response<ResponseBody>
             ) {
                 if (response.isSuccessful) {
-                    val fileName = "расписание"
+                    val fileName = "расписание.xlsx"
                     val contentResolver = requireContext().contentResolver
 
                     val contentValues = ContentValues().apply {
