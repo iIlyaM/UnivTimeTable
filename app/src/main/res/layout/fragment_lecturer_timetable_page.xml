@@ -24,76 +24,95 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/downloadLectTTBtn"
-        android:layout_width="90dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/lecturer_bg"
-        android:text="@string/download"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lecturerRecyclerView"
-        android:layout_width="365dp"
-        android:layout_height="365dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="90dp"
-        android:layout_marginEnd="32dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/prevPageButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/waveView"
         tools:listitem="@layout/lect_timetable_item" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/lectWeekView"
-        android:layout_width="186dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="80dp"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="6dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/waveView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topView"
-        tools:listitem="@layout/lect_day_item">
+        app:layout_constraintTop_toTopOf="@+id/topView"
+        tools:ignore="MissingConstraints">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <ImageView
+            android:id="@+id/toLeftView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_left" />
 
-    <ImageView
-        android:id="@+id/toLeftView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="-5dp"
-        android:src="@drawable/ic_arrow_left"
-        app:layout_constraintEnd_toStartOf="@+id/lectWeekView"
-        app:layout_constraintTop_toBottomOf="@+id/waveView" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lectWeekView"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
 
-    <ImageView
-        android:id="@+id/toRightView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="-5dp"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/ic_arrow_right"
-        app:layout_constraintStart_toEndOf="@+id/lectWeekView"
-        app:layout_constraintTop_toBottomOf="@+id/waveView" />
+            app:layout_constraintBottom_toBottomOf="@+id/waveView"
+            tools:listitem="@layout/lect_day_item">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+
+        <ImageView
+            android:id="@+id/toRightView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"
+            app:layout_constraintEnd_toEndOf="@+id/waveView"
+            app:layout_constraintStart_toEndOf="@+id/lectWeekView" />
+
+    </LinearLayout>
+
 
     <ImageButton
         android:id="@+id/prevPageButton"
         android:layout_width="91dp"
         android:layout_height="40dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/lecturer_bg"
         android:contentDescription="Go to the previous page"
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/downloadLectTTBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+        android:id="@+id/downloadLectTTBtn"
+        android:layout_width="90dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/lecturer_bg"
+        android:text="@string/download"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/prevPageButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/prevPageButton"
+        app:layout_constraintTop_toTopOf="@+id/prevPageButton" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,18 +11,18 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageButton
-import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textfield.TextInputLayout.END_ICON_NONE
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import vsu.cs.univtimetable.DateManager
+import vsu.cs.univtimetable.utils.date_utils.DateManager
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.SessionManager
+import vsu.cs.univtimetable.utils.token_utils.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.TimetableApi
 import vsu.cs.univtimetable.dto.univ.AudienceToMoveResponse
@@ -30,6 +30,7 @@ import vsu.cs.univtimetable.dto.classes.ClassDto
 import vsu.cs.univtimetable.dto.datetime.DayTime
 import vsu.cs.univtimetable.dto.classes.MoveClassRequest
 import vsu.cs.univtimetable.dto.classes.MoveClassResponse
+import vsu.cs.univtimetable.utils.NotificationManager.showToastNotification
 
 class MoveClassTimePageFragment : Fragment() {
 
@@ -42,6 +43,7 @@ class MoveClassTimePageFragment : Fragment() {
     private lateinit var weekTypeInputLayout: TextInputLayout
     private lateinit var audienceInputLayout: TextInputLayout
     private lateinit var dayTimeInputLayout: TextInputLayout
+    private lateinit var confirmSubjectBtn: CircularProgressButton
 
 
     private var subjects = mutableSetOf<String>()
@@ -73,6 +75,8 @@ class MoveClassTimePageFragment : Fragment() {
             findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
         }
 
+        val classNameInputLayout = view.findViewById<TextInputLayout>(R.id.classNameInputLayout)
+        setTilColor(classNameInputLayout)
         subjectCompleteView =
             view.findViewById(R.id.subjAutoCompleteTextView)
         val dayAutoCompleteTextView =
@@ -80,6 +84,8 @@ class MoveClassTimePageFragment : Fragment() {
         dayAutoCompleteTextView.visibility = View.GONE
         dayAutoInput =
             view.findViewById<TextInputLayout>(R.id.dayInputLayout)
+        setTilColor(dayAutoInput)
+
         dayAutoInput.endIconMode = END_ICON_NONE
         val dayAdapter =
             ArrayAdapter(requireContext(), R.layout.subj_item, DateManager.WEEK_DAYS.toArray())
@@ -90,6 +96,7 @@ class MoveClassTimePageFragment : Fragment() {
         classTimeAutoCompleteTextView.visibility = View.GONE
         classTimeInputLayout =
             view.findViewById<TextInputLayout>(R.id.classTimeInputLayout)
+        setTilColor(classTimeInputLayout)
         classTimeInputLayout.endIconMode = END_ICON_NONE
 
 
@@ -99,9 +106,10 @@ class MoveClassTimePageFragment : Fragment() {
         weekTypeInputLayout =
             view.findViewById<TextInputLayout>(R.id.weekTypeInputLayout)
         weekTypeInputLayout.endIconMode = END_ICON_NONE
-
+        setTilColor(weekTypeInputLayout)
         audienceInputLayout =
             view.findViewById<TextInputLayout>(R.id.audienceInputLayout)
+        setTilColor(audienceInputLayout)
         audienceInputLayout.endIconMode = END_ICON_NONE
         val audienceAutoCompleteTextView =
             view.findViewById<AutoCompleteTextView>(R.id.audienceAutoCompleteTextView)
@@ -112,6 +120,7 @@ class MoveClassTimePageFragment : Fragment() {
         dayTimeAutoCompleteTextView.visibility = View.GONE
         dayTimeInputLayout =
             view.findViewById<TextInputLayout>(R.id.dayTimeInputLayout)
+        setTilColor(dayAutoInput)
         dayTimeInputLayout.endIconMode = END_ICON_NONE
 
         subjectCompleteView.setOnItemClickListener { parent, view, position, id ->
@@ -191,7 +200,7 @@ class MoveClassTimePageFragment : Fragment() {
             }
         }
 
-        val confirmSubjectBtn = view.findViewById<AppCompatButton>(R.id.confirmSubjectBtn)
+        confirmSubjectBtn = view.findViewById(R.id.confirmMoveSubjectBtn)
         confirmSubjectBtn.setOnClickListener {
             move(
                 dayAutoCompleteTextView,
@@ -219,22 +228,27 @@ class MoveClassTimePageFragment : Fragment() {
     ) {
         if (dayAutoCompleteTextView.text.isEmpty()) {
             dayAutoCompleteTextView.error = "Выберите исходную дату переносимого занятия"
+            stopAnimation(confirmSubjectBtn)
             return
         }
         if (classTimeAutoCompleteTextView.text.isEmpty()) {
             classTimeAutoCompleteTextView.error = "Выберите исходное время переносимого занятия"
+            stopAnimation(confirmSubjectBtn)
             return
         }
         if (audienceAutoCompleteTextView.text.isEmpty()) {
             audienceAutoCompleteTextView.error = "Выберите аудиторию для переноса"
+            stopAnimation(confirmSubjectBtn)
             return
         }
         if (dayTimeAutoCompleteTextView.text.isEmpty()) {
             dayTimeAutoCompleteTextView.error = "Выберите день и время для переноса"
+            stopAnimation(confirmSubjectBtn)
             return
         }
         if (weekTypeAutoCompleteTextView.text.isEmpty()) {
             weekTypeAutoCompleteTextView.error = "Выберите тип недели, на которую будет перенос "
+            stopAnimation(confirmSubjectBtn)
             return
         }
         dayTimeAutoCompleteTextView.setSelection(0)
@@ -275,10 +289,12 @@ class MoveClassTimePageFragment : Fragment() {
                 response: Response<Void>
             ) {
                 if (response.isSuccessful) {
+                    stopAnimation(confirmSubjectBtn)
                     Log.d("API Request successful", "Получили ${response.code()}")
-                    showToastNotification("Занятие перенесено")
+                    showToastNotification(requireContext(), "Занятие перенесено")
                     findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
                 } else {
+                    stopAnimation(confirmSubjectBtn)
                     if (response.code() == 400) {
                         showDialog("Аудитория занята для переноса")
                     }
@@ -293,6 +309,7 @@ class MoveClassTimePageFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
+                stopAnimation(confirmSubjectBtn)
                 println("Ошибка")
                 println(t)
             }
@@ -326,7 +343,8 @@ class MoveClassTimePageFragment : Fragment() {
                         subjectCompleteView.setAdapter(adapter)
                     }
                 } else {
-                    showToastNotification("Расписание ещё не сформировано")
+                    showToastNotification(requireContext(), "Расписание ещё не сформировано")
+                    findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
                     Log.d("Не успешно", "Получили ${response.code()}")
                 }
             }
@@ -510,15 +528,6 @@ class MoveClassTimePageFragment : Fragment() {
         return set.toMutableList()
     }
 
-    private fun showToastNotification(message: String) {
-        val duration = Toast.LENGTH_LONG
-
-        val toast = Toast.makeText(requireContext(), message, duration)
-        toast.show()
-        val handler = Handler()
-        handler.postDelayed({ toast.cancel() }, 1500)
-    }
-
     private fun showDialog(msg: String) {
         val builder = AlertDialog.Builder(requireContext())
 
@@ -531,5 +540,22 @@ class MoveClassTimePageFragment : Fragment() {
             alert.dismiss()
         }, 1500)
         findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
+    }
+
+    private fun stopAnimation(btn: CircularProgressButton) {
+        btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.lecturer_bg)
+        btn.revertAnimation()
+    }
+
+    private fun setTilColor(til: TextInputLayout) {
+        til.boxStrokeColor =
+            ContextCompat.getColor(requireContext(), R.color.lecturerColor)
+        til.setBoxStrokeColorStateList(
+            ContextCompat.getColorStateList(
+                requireContext(),
+                R.color.lecturer_selector
+            )!!
+        )
+        til.boxStrokeWidth = resources.getDimensionPixelSize(R.dimen.new_stroke_width)
     }
 }

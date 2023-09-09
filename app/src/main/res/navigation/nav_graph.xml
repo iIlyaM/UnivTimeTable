@@ -64,6 +64,9 @@
         <action
             android:id="@+id/action_lecturerMainPageFragment_to_moveClassTimePageFragment"
             app:destination="@id/moveClassTimePageFragment" />
+        <action
+            android:id="@+id/action_lecturerMainPageFragment_to_generateTimetablePageFragment"
+            app:destination="@id/generateTimetablePageFragment" />
 
     </fragment>
     <fragment
@@ -300,6 +303,9 @@
             app:destination="@id/addSubjectPageFragment" />
         <action
             android:id="@+id/action_generateTimetablePageFragment_to_lecturerMainPageFragment"
+            app:destination="@id/lecturerMainPageFragment" />
+        <action
+            android:id="@+id/action_generateTimetablePageFragment_to_lecturerMainPageFragment2"
             app:destination="@id/lecturerMainPageFragment" />
     </fragment>
     <fragment
