@@ -2,6 +2,7 @@ package vsu.cs.univtimetable
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.fragment.NavHostFragment
@@ -18,5 +19,8 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
 
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
     }
 }
