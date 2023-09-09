@@ -15,7 +15,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.SessionManager
+import vsu.cs.univtimetable.utils.token_utils.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.TimetableApi
 import java.io.File
