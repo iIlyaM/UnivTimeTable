@@ -399,7 +399,7 @@ class CreateUserInfoFragment : Fragment() {
         facId: Long?
     ): Boolean {
         var isValid = true;
-        if (role == "Староста" || role == "Преподаватель") {
+        if (role == "Староста" || role == "Преподаватель" || role == "Преподаватель составитель") {
             if (univId == null) {
                 univTextInputLayout.error = "Выберите университет"
                 showToastNotification(requireContext(), "Пожалуйста, заполните все поля")
@@ -578,6 +578,14 @@ class CreateUserInfoFragment : Fragment() {
     private fun roleInputValid(view: View, role: String) {
         when (role) {
             "Преподаватель" -> {
+                view.findViewById<TextInputLayout>(R.id.editUnivText).visibility = View.VISIBLE
+                view.findViewById<TextInputLayout>(R.id.editFacultyText).visibility = View.VISIBLE
+                view.findViewById<TextInputLayout>(R.id.editGroupNumText).visibility =
+                    View.GONE
+                groupTextInputLayout.text = null
+            }
+
+            "Преподаватель составитель" -> {
                 view.findViewById<TextInputLayout>(R.id.editUnivText).visibility = View.VISIBLE
                 view.findViewById<TextInputLayout>(R.id.editFacultyText).visibility = View.VISIBLE
                 view.findViewById<TextInputLayout>(R.id.editGroupNumText).visibility =
