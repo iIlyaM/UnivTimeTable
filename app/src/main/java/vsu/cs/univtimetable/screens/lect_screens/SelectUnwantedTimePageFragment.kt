@@ -1,6 +1,7 @@
 package vsu.cs.univtimetable.screens.lect_screens
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -19,6 +20,7 @@ import vsu.cs.univtimetable.dto.datetime.Day
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.dto.datetime.ImpossibleTimeDto
 import vsu.cs.univtimetable.screens.adapter.DayAdapter
+import vsu.cs.univtimetable.utils.date_utils.DateManager.Companion.clearChoices
 
 class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListener {
 
@@ -64,6 +66,7 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
+            clearChoices(requireContext())
             findNavController().navigate(R.id.action_selectUnwantedTimePageFragment_to_lecturerMainPageFragment)
         }
 
@@ -79,7 +82,17 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showDialog(title: String, options: Array<String>) {
+        val sharedPreferences = requireContext().getSharedPreferences("dayTimeChoices", Context.MODE_PRIVATE)
         val checkedItems = BooleanArray(options.size) { false }
+
+        // Загрузить предыдущие выбранные значения из SharedPreferences
+        val savedSelections = sharedPreferences.getStringSet(title, emptySet())
+        savedSelections?.forEach { selectedOption ->
+            val index = options.indexOfFirst { it.startsWith(selectedOption) }
+            if (index != -1) {
+                checkedItems[index] = true
+            }
+        }
 
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(title)
@@ -93,6 +106,12 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
                         selectedOptions.add(options[i].split('-')[0])
                     }
                 }
+
+                // Сохранить выбранные значения в SharedPreferences
+                val editor = sharedPreferences.edit()
+                editor.putStringSet(title, selectedOptions.toSet())
+                editor.apply()
+
                 dayWeekTimeMap[title] = selectedOptions
             }
             .setNegativeButton("Отмена") { dialog, _ ->

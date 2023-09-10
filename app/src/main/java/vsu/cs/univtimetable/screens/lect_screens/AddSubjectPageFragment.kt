@@ -1,6 +1,7 @@
 package vsu.cs.univtimetable.screens.lect_screens
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -29,14 +30,19 @@ import vsu.cs.univtimetable.dto.group.GroupResponse
 import vsu.cs.univtimetable.dto.datetime.ImpossibleTimeDto
 import vsu.cs.univtimetable.dto.classes.RequestDataDto
 import vsu.cs.univtimetable.dto.classes.SendRequest
+import vsu.cs.univtimetable.dto.datetime.Day
 import vsu.cs.univtimetable.screens.adapter.GroupAdapter
 import vsu.cs.univtimetable.utils.NotificationManager.showToastNotification
+import vsu.cs.univtimetable.utils.date_utils.DateManager.Companion.clearChoices
 
 
 class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
 
     private var classTypes =
         arrayOf("Лекция", "Семинар")
+
+    private var times =
+        arrayOf("3", "6", "9")
 
 
     private lateinit var selectedEquipment: BooleanArray
@@ -68,7 +74,23 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
 
         val equipListView = view.findViewById<TextView>(R.id.selectEquipmentView)
         val editSubjectNameText = view.findViewById<EditText>(R.id.editSubjectNameText)
-        val editHoursCountText = view.findViewById<EditText>(R.id.editHoursCountText)
+        val editHoursCountTextInputLayout = view.findViewById<TextInputLayout>(R.id.editHoursCountText)
+        editHoursCountTextInputLayout.boxStrokeColor =
+            ContextCompat.getColor(requireContext(), R.color.lecturerColor)
+        editHoursCountTextInputLayout.setBoxStrokeColorStateList(
+            ContextCompat.getColorStateList(
+                requireContext(),
+                R.color.lecturer_selector
+            )!!
+        )
+        editHoursCountTextInputLayout.boxStrokeWidth = resources.getDimensionPixelSize(R.dimen.new_stroke_width)
+        val hoursAdapter = ArrayAdapter(requireContext(), R.layout.subj_item, times)
+        val hoursAutoCompleteText = view.findViewById<AutoCompleteTextView>(R.id.hoursAutoCompleteText)
+        hoursAutoCompleteText.setAdapter(hoursAdapter)
+        hoursAutoCompleteText.setOnItemClickListener { parent, view2, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as String
+
+        }
 
         val classTypeCompleteView =
             view.findViewById<AutoCompleteTextView>(R.id.typeAutoCompleteText)
@@ -128,7 +150,7 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
                 classTypeCompleteView,
                 selectGroupAutoCompleteText,
                 editSubjectNameText,
-                editHoursCountText
+                hoursAutoCompleteText
             )
         }
         return view
@@ -143,7 +165,7 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
         classTypeCompleteView: AutoCompleteTextView,
         selectGroupAutoCompleteText: AutoCompleteTextView,
         editSubjectNameText: EditText,
-        editHoursCountText: EditText,
+        editHoursCountText: AutoCompleteTextView,
     ) {
         val subject: String = editSubjectNameText.text.toString()
         val hours: Int? = editHoursCountText.text.toString().toIntOrNull()
@@ -195,8 +217,12 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
                     stopAnimation(confirm)
                     Log.d("API Request Successful", "${response.code()}")
                     showToastNotification(requireContext(), "Заявка отправлена")
+                    classTypeCompleteView.text.clear()
                     editSubjectNameText.text.clear()
+                    selectGroupAutoCompleteText.text.clear()
                     editHoursCountText.text.clear()
+                    clearChoices(requireContext())
+
                 } else {
                     stopAnimation(confirm)
                     if (response.code() == 403) {
@@ -218,7 +244,7 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 stopAnimation(confirm)
-                println("Ошибка")
+                showToastNotification(requireContext(), "Ошибка")
                 println(t)
             }
         })
@@ -319,4 +345,5 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
         btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.lecturer_bg)
         btn.revertAnimation()
     }
+
 }
