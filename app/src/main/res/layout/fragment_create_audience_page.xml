@@ -25,148 +25,127 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="160dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp">
 
-        <LinearLayout
-            android:id="@+id/linLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="100dp"
-            android:orientation="vertical">
+    <EditText
+        android:id="@+id/addAudienceText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rect_border"
+        android:hint="@string/audience_num"
+        android:inputType="text"
+        android:padding="16dp"
+        android:textSize="18sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toStartOf="@+id/editCapacityText"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/waveView" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center">
+    <EditText
+        android:id="@+id/editCapacityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rect_border"
+        android:drawablePadding="16dp"
+        android:hint="@string/capacity"
+        android:inputType="text"
+        android:padding="16dp"
+        android:textSize="18sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/addAudienceText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/addAudienceText" />
 
-                <EditText
-                    android:id="@+id/addAudienceText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/rect_border"
-                    android:hint="@string/audience_num"
-                    android:inputType="text"
-                    android:padding="16dp"
-                    android:textSize="18sp"
-                    android:textStyle="normal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/waveView" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/editEquipmentBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/admin_bg"
+        android:drawablePadding="16dp"
+        android:padding="10dp"
+        android:text="Выбрать оборудование"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editCapacityText">
 
-                <Space
-                    android:layout_width="8dp"
-                    android:layout_height="wrap_content" />
+    </androidx.appcompat.widget.AppCompatButton>
 
-                <EditText
-                    android:id="@+id/editCapacityText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/rect_border"
-                    android:drawablePadding="16dp"
-                    android:hint="@string/capacity"
-                    android:inputType="text"
-                    android:padding="16dp"
-                    android:textSize="18sp"
-                    android:textStyle="normal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/addAudienceText" />
-            </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/equipmentsRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rect_border"
+        app:layout_constraintBottom_toTopOf="@+id/confirmCreateAudienceBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editEquipmentBtn"
+        tools:ignore="MissingConstraints"
+        tools:listitem="@layout/equipment_item" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/editEquipmentBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="32dp"
-                android:layout_gravity="center"
-                android:background="@drawable/admin_bg"
-                android:drawablePadding="16dp"
-                android:text="Выбрать оборудование"
-                android:padding="10dp"
-                android:textAllCaps="false"
-                android:textSize="18sp"
-                app:boxCornerRadiusBottomEnd="10dp"
-                app:boxCornerRadiusBottomStart="10dp"
-                app:boxCornerRadiusTopEnd="10dp"
-                app:boxCornerRadiusTopStart="10dp"
-                app:cardCornerRadius="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/editCapacityText">
-            </androidx.appcompat.widget.AppCompatButton>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/equipmentsRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="347dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/rect_border"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="MissingConstraints"
-                tools:listitem="@layout/equipment_item" />
-
-            <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
-                android:id="@+id/confirmCreateAudienceBtn"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/admin_bg"
-                android:text="@string/confirm"
-                android:textAllCaps="false"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editEquipmentText" />
+    <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+        android:id="@+id/confirmCreateAudienceBtn"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/admin_bg"
+        android:text="@string/confirm"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/prevPageButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="35dp"
-                android:orientation="horizontal">
+    <ImageButton
+        android:id="@+id/prevPageButton"
+        android:layout_width="91dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/admin_bg"
+        android:contentDescription="Go to theprevious page"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mainPageButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
 
-                <ImageButton
-                    android:id="@+id/prevPageButton"
-                    android:layout_width="91dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/admin_bg"
-                    android:contentDescription="Go to theprevious page"
-                    android:src="@drawable/ic_arrow_back"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
 
-                <Space
-                    android:layout_width="8dp"
-                    android:layout_height="wrap_content" />
-
-                <ImageButton
-                    android:id="@+id/mainPageButton"
-                    android:layout_width="91dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/admin_bg"
-                    android:contentDescription="Go to theprevious page"
-                    android:src="@drawable/ic_home"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </ScrollView>
+    <ImageButton
+        android:id="@+id/mainPageButton"
+        android:layout_width="91dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/admin_bg"
+        android:contentDescription="Go to theprevious page"
+        android:src="@drawable/ic_home"
+        app:layout_constraintBottom_toBottomOf="@+id/prevPageButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/prevPageButton"
+        app:layout_constraintTop_toTopOf="@+id/prevPageButton" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

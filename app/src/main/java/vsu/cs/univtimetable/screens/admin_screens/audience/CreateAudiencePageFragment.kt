@@ -123,10 +123,45 @@ class CreateAudiencePageFragment : Fragment(), OnEquipmentDeleteInterface {
             return
         }
 
+        if (audienceEditText.text.toString()
+                .filter { it.isDigit() }.length > 4 || audienceEditText.text.toString()
+                .filter { it.isDigit() }
+                .toLong() < 0
+        ) {
+            audienceEditText.error = "Введите корректный номер аудитории"
+            stopAnimation(confirmBtn)
+            return
+        }
+
+        if (editCapacityText.text.toString()
+                .filter { it.isDigit() }.length > 4 || editCapacityText.text.toString()
+                .filter { it.isDigit() }
+                .toLong() < 0
+        ) {
+            editCapacityText.error = "Введите вместимость аудитории"
+            showToastNotification(requireContext(), "Пожалуйста, заполните все поля")
+            stopAnimation(confirmBtn)
+            return
+        }
+
         audience = CreateAudienceRequest(0, 0, arrayListOf())
+        if(audienceEditText.text.toString().toIntOrNull() == null) {
+            audienceEditText.error = "Введите корректный номер аудитории"
+            showToastNotification(requireContext(), "Пожалуйста, заполните все поля")
+            stopAnimation(confirmBtn)
+            return
+        }
+        if(editCapacityText.text.toString().toIntOrNull() == null) {
+            editCapacityText.error = "Введите вместимость аудитории"
+            showToastNotification(requireContext(), "Пожалуйста, заполните все поля")
+            stopAnimation(confirmBtn)
+            return
+        }
         audience.audienceNumber = audienceEditText.text.toString().toInt()
         audience.capacity = editCapacityText.text.toString().toInt()
         audience.equipments = neededEquipments.toList()
+
+
 
         val editable = arguments?.getBoolean("editable");
         if (editable != null && editable) {
