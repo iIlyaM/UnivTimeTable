@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
+import vsu.cs.univtimetable.utils.token_utils.AuthToken.token
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.SessionManager
+import vsu.cs.univtimetable.utils.token_utils.SessionManager
 
 
 class LecturerMainPageFragment : Fragment() {
@@ -19,7 +20,6 @@ class LecturerMainPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_lecturer_main_page, container, false)
         val button = view.findViewById<AppCompatButton>(R.id.lookTimeTableBtn)
         button.setOnClickListener {
@@ -38,11 +38,20 @@ class LecturerMainPageFragment : Fragment() {
 
         val lecturerLogoutBtn = view.findViewById<ImageButton>(R.id.lecturerLogoutBtn)
         lecturerLogoutBtn.setOnClickListener {
+            SessionManager.isAuth = false
             SessionManager.clearData(requireContext())
             findNavController().navigate(R.id.action_lecturerMainPageFragment_to_loginFragment)
         }
 
+        val generateTimeTableBtn = view.findViewById<AppCompatButton>(R.id.generateTimeTableBtn)
 
+        val token: String? = SessionManager.getToken(requireContext())
+        if("MAKE_TIMETABLE_AUTHORITY" !in SessionManager.decodeToken(token!!)) {
+            generateTimeTableBtn.visibility = View.GONE
+        }
+        generateTimeTableBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_lecturerMainPageFragment_to_generateTimetablePageFragment)
+        }
         return view
     }
 }

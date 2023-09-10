@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.dto.GroupDto
-import vsu.cs.univtimetable.dto.GroupResponse
+import vsu.cs.univtimetable.dto.group.GroupResponse
 
 class GroupAdapter (private val groups: List<GroupResponse>): RecyclerView.Adapter<GroupAdapter.ViewHolder>() {
     interface OnItemClickListener {

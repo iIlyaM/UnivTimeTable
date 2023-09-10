@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.admin_screens.UnivListPageFragment">
+    tools:context=".screens.admin_screens.univ.UnivListPageFragment">
 
     <View
         android:id="@+id/topView"
@@ -18,79 +18,121 @@
     <View
         android:id="@+id/waveView"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:background="@drawable/wave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topView" />
 
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/enterUnivName"
-        android:layout_width="270dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/rect_border"
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.03"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waveView" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/addNewUnivBtn"
-        android:layout_width="150dp"
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/univsList"
+                android:layout_width="match_parent"
+                android:layout_height="470dp"
+                android:layout_marginTop="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sortButton"
+                tools:listitem="@layout/univs_list_item" />
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/admin_bg"
-        android:text="@string/add"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/prevPageButton"
+            android:layout_width="85dp"
+            android:layout_height="40dp"
+            android:background="@drawable/admin_bg"
+            android:contentDescription="Go to theprevious page"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Space
+            android:layout_width="4dp"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/mainPageButton"
+            android:layout_width="85dp"
+            android:layout_height="40dp"
+            android:background="@drawable/admin_bg"
+            android:contentDescription="Go to theprevious page"
+            android:src="@drawable/ic_home"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/addNewUnivBtn"
+            android:layout_width="85dp"
+            android:layout_height="40dp"
+            android:background="@drawable/admin_bg"
+            android:src="@drawable/ic_item_add"
+            android:text="@string/add"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintStart_toStartOf="parent" />
+    </LinearLayout>
+
+    <SearchView
+        android:id="@+id/enterUnivName"
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="6dp"
+        android:background="@drawable/rect_border"
+        android:iconifiedByDefault="false"
+        app:layout_constraintBottom_toBottomOf="@+id/topView"
+        app:layout_constraintEnd_toStartOf="@+id/sortButton"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent" />
+
 
     <ImageButton
         android:id="@+id/sortButton"
         android:layout_width="51dp"
         android:layout_height="40dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="6dp"
         android:background="@drawable/admin_bg"
         android:contentDescription="@string/sort_btn_descr"
         android:src="@drawable/ic_sort"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.944"
+        app:layout_constraintBottom_toBottomOf="@+id/enterUnivName"
         app:layout_constraintStart_toEndOf="@+id/enterUnivName"
-        app:layout_constraintTop_toBottomOf="@+id/waveView" />
-
-    <ImageButton
-        android:id="@+id/prevPageButton"
-        android:layout_width="91dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/admin_bg"
-        android:contentDescription="Go to theprevious page"
-        android:src="@drawable/ic_arrow_back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/univsList"
-        android:layout_width="349dp"
-        android:layout_height="347dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sortButton"
-        tools:listitem="@layout/univs_list_item" />
-
+        app:layout_constraintTop_toTopOf="@+id/enterUnivName" />
 </androidx.constraintlayout.widget.ConstraintLayout>

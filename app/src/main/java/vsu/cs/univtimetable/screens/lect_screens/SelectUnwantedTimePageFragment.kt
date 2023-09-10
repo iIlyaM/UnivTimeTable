@@ -1,6 +1,7 @@
 package vsu.cs.univtimetable.screens.lect_screens
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,20 +10,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.annotation.RequiresApi
-import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import vsu.cs.univtimetable.DateManager
-import vsu.cs.univtimetable.dto.Day
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+import vsu.cs.univtimetable.utils.date_utils.DateManager
+import vsu.cs.univtimetable.dto.datetime.Day
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.dto.ImpossibleTimeDto
+import vsu.cs.univtimetable.dto.datetime.ImpossibleTimeDto
 import vsu.cs.univtimetable.screens.adapter.DayAdapter
+import vsu.cs.univtimetable.utils.date_utils.DateManager.Companion.clearChoices
 
 class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: DayAdapter
+    private lateinit var confirmTimeBtn: CircularProgressButton
     private var bundle = Bundle()
     private var dayWeekTimeMap: MutableMap<String, ArrayList<String>> = mutableMapOf()
 
@@ -42,7 +46,7 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
     ): View? {
         val view = inflater.inflate(R.layout.fragment_select_unwanted_time_page, container, false)
         recyclerView = view.findViewById(R.id.weekView)
-        val confirmTimeBtn = view.findViewById<AppCompatButton>(R.id.confirmTimeBtn)
+        confirmTimeBtn = view.findViewById(R.id.confirmTimeBtn)
 
         adapter = DayAdapter(days)
         recyclerView.adapter = adapter
@@ -51,15 +55,18 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
 
         val bundle = Bundle()
         confirmTimeBtn.setOnClickListener {
+            confirmTimeBtn.startAnimation()
             bundle.putSerializable("map", ImpossibleTimeDto(dayWeekTimeMap))
             findNavController().navigate(
                 R.id.action_selectUnwantedTimePageFragment_to_addSubjectPageFragment,
                 bundle
             )
+            stopAnimation(confirmTimeBtn)
         }
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
+            clearChoices(requireContext())
             findNavController().navigate(R.id.action_selectUnwantedTimePageFragment_to_lecturerMainPageFragment)
         }
 
@@ -75,7 +82,17 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showDialog(title: String, options: Array<String>) {
+        val sharedPreferences = requireContext().getSharedPreferences("dayTimeChoices", Context.MODE_PRIVATE)
         val checkedItems = BooleanArray(options.size) { false }
+
+        // Загрузить предыдущие выбранные значения из SharedPreferences
+        val savedSelections = sharedPreferences.getStringSet(title, emptySet())
+        savedSelections?.forEach { selectedOption ->
+            val index = options.indexOfFirst { it.startsWith(selectedOption) }
+            if (index != -1) {
+                checkedItems[index] = true
+            }
+        }
 
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(title)
@@ -89,6 +106,12 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
                         selectedOptions.add(options[i].split('-')[0])
                     }
                 }
+
+                // Сохранить выбранные значения в SharedPreferences
+                val editor = sharedPreferences.edit()
+                editor.putStringSet(title, selectedOptions.toSet())
+                editor.apply()
+
                 dayWeekTimeMap[title] = selectedOptions
             }
             .setNegativeButton("Отмена") { dialog, _ ->
@@ -97,4 +120,8 @@ class SelectUnwantedTimePageFragment : Fragment(), DayAdapter.OnItemClickListene
         builder.create().show()
     }
 
+    private fun stopAnimation(btn: CircularProgressButton) {
+        btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.lecturer_bg)
+        btn.revertAnimation()
+    }
 }

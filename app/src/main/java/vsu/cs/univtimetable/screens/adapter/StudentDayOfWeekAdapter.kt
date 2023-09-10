@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.dto.DateDto
+import vsu.cs.univtimetable.dto.datetime.DateDto
 
 class StudentDayOfWeekAdapter(
     var context: Context,

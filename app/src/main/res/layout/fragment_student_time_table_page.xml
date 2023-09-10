@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".screens.headman_screens.StudentTimeTablePageFragment">
@@ -18,7 +18,7 @@
     <View
         android:id="@+id/waveView"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:background="@drawable/wave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,14 +27,17 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="360dp"
-        android:layout_height="386dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="90dp"
-        android:layout_marginEnd="32dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/prevPageButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waveView"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView2"
         tools:listitem="@layout/stud_timetable_item" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -72,14 +75,12 @@
         app:layout_constraintTop_toTopOf="@+id/recyclerView2"
         tools:ignore="ContentDescription" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
         android:id="@+id/saveTimeTable"
         android:layout_width="137dp"
         android:layout_height="40dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="26dp"
         android:layout_weight="1"
         android:background="@drawable/headman_bg"
         android:drawableStart="@drawable/save_stud_tt"
@@ -90,21 +91,21 @@
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.94"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/prevPageButton" />
 
     <ImageButton
         android:id="@+id/prevPageButton"
         android:layout_width="91dp"
         android:layout_height="40dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="6dp"
         android:background="@drawable/headman_bg"
         android:contentDescription="Go to the previous page"
         android:src="@drawable/ic_arrow_back"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/saveTimeTable"
+        app:layout_constraintEnd_toStartOf="@+id/saveTimeTable"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+        app:layout_constraintTop_toTopOf="@+id/saveTimeTable" />
 </androidx.constraintlayout.widget.ConstraintLayout>

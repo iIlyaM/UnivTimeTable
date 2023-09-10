@@ -8,12 +8,12 @@ import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Streaming
-import vsu.cs.univtimetable.dto.MoveClassRequest
-import vsu.cs.univtimetable.dto.MoveClassResponse
-import vsu.cs.univtimetable.dto.RequestDataDto
-import vsu.cs.univtimetable.dto.RequestDto
-import vsu.cs.univtimetable.dto.SendRequest
-import vsu.cs.univtimetable.dto.TimetableResponse
+import vsu.cs.univtimetable.dto.classes.MoveClassRequest
+import vsu.cs.univtimetable.dto.classes.MoveClassResponse
+import vsu.cs.univtimetable.dto.classes.RequestDataDto
+import vsu.cs.univtimetable.dto.classes.RequestDto
+import vsu.cs.univtimetable.dto.classes.SendRequest
+import vsu.cs.univtimetable.dto.classes.TimetableResponse
 
 interface TimetableApi {
 

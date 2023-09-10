@@ -1,6 +1,8 @@
 package vsu.cs.univtimetable.api
 
+import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -10,41 +12,48 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
-import vsu.cs.univtimetable.dto.CreateFacultyDto
-import vsu.cs.univtimetable.dto.FacultyDto
-import vsu.cs.univtimetable.dto.FacultyResponseDto
+import vsu.cs.univtimetable.dto.univ.CreateFacultyDto
+import vsu.cs.univtimetable.dto.faculty.FacultyDto
+import vsu.cs.univtimetable.dto.faculty.FacultyResponseDto
 
 interface FacultyApi {
 
     @Headers("Content-Type: application/json")
-    @GET("university/{univId}/faculties")
-    fun getFaculties(
+    @GET("university/v2/{univId}/faculties")
+    suspend fun getFaculties(
         @Header("Authorization") basicToken: String,
         @Path("univId") id: Int,
         @Query("name") name: String?,
         @Query("order") order: String?
-    ): Call<FacultyResponseDto>
+    ): Response<List<FacultyDto>>
+
+    @Headers("Content-Type: application/json")
+    @GET("university/faculty/{id}")
+    suspend fun getFaculty(
+        @Header("Authorization") basicToken: String,
+        @Path("id") id: Int
+    ): Response<FacultyDto>
 
     @Headers("Content-Type: application/json")
     @POST("university/{univId}/faculty/create")
-    fun addFaculty(
+    suspend fun addFaculty(
         @Header("Authorization") basicToken: String,
         @Path("univId") id: Int,
         @Body faculty: CreateFacultyDto
-    ): Call<Void>
+    ): Response<ResponseBody>
 
     @Headers("Content-Type: application/json")
     @PUT("university/faculty/{id}")
-    fun editFaculty(
+    suspend fun editFaculty(
         @Header("Authorization") basicToken: String,
         @Path("id") id: Int,
         @Body faculty: FacultyDto
-    ): Call<Void>
+    ): Response<ResponseBody>
 
     @Headers("Content-Type: application/json")
     @DELETE("university/faculty/{id}")
-    fun deleteFaculty(
+    suspend fun deleteFaculty(
         @Header("Authorization") basicToken: String,
         @Path("id") id: Int
-    ): Call<Void>
+    ): Response<ResponseBody>
 }

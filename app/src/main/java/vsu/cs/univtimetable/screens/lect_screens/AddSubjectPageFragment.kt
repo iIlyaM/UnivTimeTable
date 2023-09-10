@@ -1,9 +1,9 @@
 package vsu.cs.univtimetable.screens.lect_screens
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,31 +13,36 @@ import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
 import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.SessionManager
+import vsu.cs.univtimetable.utils.token_utils.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.TimetableApi
-import vsu.cs.univtimetable.dto.GroupResponse
-import vsu.cs.univtimetable.dto.ImpossibleTimeDto
-import vsu.cs.univtimetable.dto.RequestDataDto
-import vsu.cs.univtimetable.dto.SendRequest
+import vsu.cs.univtimetable.dto.group.GroupResponse
+import vsu.cs.univtimetable.dto.datetime.ImpossibleTimeDto
+import vsu.cs.univtimetable.dto.classes.RequestDataDto
+import vsu.cs.univtimetable.dto.classes.SendRequest
+import vsu.cs.univtimetable.dto.datetime.Day
 import vsu.cs.univtimetable.screens.adapter.GroupAdapter
+import vsu.cs.univtimetable.utils.NotificationManager.showToastNotification
+import vsu.cs.univtimetable.utils.date_utils.DateManager.Companion.clearChoices
 
 
 class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
 
     private var classTypes =
         arrayOf("Лекция", "Семинар")
+
+    private var times =
+        arrayOf("3", "6", "9")
 
 
     private lateinit var selectedEquipment: BooleanArray
@@ -48,6 +53,7 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
     private var equipList = ArrayList<String>()
     private var chosenEquipment = mutableListOf<String>()
     private lateinit var dayWeekTimeMap: ImpossibleTimeDto
+    private lateinit var confirm: CircularProgressButton
 
 
     private lateinit var timetableApi: TimetableApi
@@ -62,22 +68,61 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_add_subject_page, container, false)
-        val classTypeCompleteView =
-            view.findViewById<AutoCompleteTextView>(R.id.typeAutoCompleteText)
-        val confirm = view.findViewById<AppCompatButton>(R.id.confirmSubjectBtn)
-        val lectRequestsButton = view.findViewById<AppCompatButton>(R.id.lectRequestsButton)
+
 
         val typeAdapter = ArrayAdapter(requireContext(), R.layout.subj_item, classTypes)
 
         val equipListView = view.findViewById<TextView>(R.id.selectEquipmentView)
         val editSubjectNameText = view.findViewById<EditText>(R.id.editSubjectNameText)
-        val editHoursCountText = view.findViewById<EditText>(R.id.editHoursCountText)
+        val editHoursCountTextInputLayout = view.findViewById<TextInputLayout>(R.id.editHoursCountText)
+        editHoursCountTextInputLayout.boxStrokeColor =
+            ContextCompat.getColor(requireContext(), R.color.lecturerColor)
+        editHoursCountTextInputLayout.setBoxStrokeColorStateList(
+            ContextCompat.getColorStateList(
+                requireContext(),
+                R.color.lecturer_selector
+            )!!
+        )
+        editHoursCountTextInputLayout.boxStrokeWidth = resources.getDimensionPixelSize(R.dimen.new_stroke_width)
+        val hoursAdapter = ArrayAdapter(requireContext(), R.layout.subj_item, times)
+        val hoursAutoCompleteText = view.findViewById<AutoCompleteTextView>(R.id.hoursAutoCompleteText)
+        hoursAutoCompleteText.setAdapter(hoursAdapter)
+        hoursAutoCompleteText.setOnItemClickListener { parent, view2, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as String
 
+        }
+
+        val classTypeCompleteView =
+            view.findViewById<AutoCompleteTextView>(R.id.typeAutoCompleteText)
+        confirm = view.findViewById(R.id.confirmSubjectBtn)
         classTypeCompleteView.setAdapter(typeAdapter)
         classTypeCompleteView.setOnItemClickListener { parent, view2, position, id ->
             val selectedItem = parent.getItemAtPosition(position) as String
 
         }
+
+        val groupTextInputLayout =
+            view.findViewById<TextInputLayout>(R.id.selectGroupView)
+        groupTextInputLayout.boxStrokeColor =
+            ContextCompat.getColor(requireContext(), R.color.lecturerColor)
+        groupTextInputLayout.setBoxStrokeColorStateList(
+            ContextCompat.getColorStateList(
+                requireContext(),
+                R.color.lecturer_selector
+            )!!
+        )
+        groupTextInputLayout.boxStrokeWidth = resources.getDimensionPixelSize(R.dimen.new_stroke_width)
+
+        val classTypeInputLayout = view.findViewById<TextInputLayout>(R.id.classTypeInputLayout)
+        classTypeInputLayout.boxStrokeColor =
+            ContextCompat.getColor(requireContext(), R.color.lecturerColor)
+        classTypeInputLayout.setBoxStrokeColorStateList(
+            ContextCompat.getColorStateList(
+                requireContext(),
+                R.color.lecturer_selector
+            )!!
+        )
+        classTypeInputLayout.boxStrokeWidth = resources.getDimensionPixelSize(R.dimen.new_stroke_width)
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
@@ -88,11 +133,6 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
         mainPageButton.setOnClickListener {
             findNavController().navigate(R.id.action_addSubjectPageFragment_to_lecturerMainPageFragment)
         }
-
-        val groupTextInputLayout =
-            view.findViewById<TextInputLayout>(R.id.selectGroupView)
-        groupTextInputLayout.boxStrokeColor =
-            ContextCompat.getColor(requireContext(), R.color.adminsColor)
 
         val selectGroupAutoCompleteText =
             view.findViewById<AutoCompleteTextView>(R.id.selectGroupAutoCompleteText)
@@ -105,11 +145,13 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
         }
 
         confirm.setOnClickListener {
-            sendRequest(classTypeCompleteView, selectGroupAutoCompleteText, editSubjectNameText, editHoursCountText)
-        }
-
-        lectRequestsButton.setOnClickListener {
-            findNavController().navigate(R.id.action_addSubjectPageFragment_to_generateTimetablePageFragment)
+            confirm.startAnimation()
+            sendRequest(
+                classTypeCompleteView,
+                selectGroupAutoCompleteText,
+                editSubjectNameText,
+                hoursAutoCompleteText
+            )
         }
         return view
     }
@@ -123,30 +165,31 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
         classTypeCompleteView: AutoCompleteTextView,
         selectGroupAutoCompleteText: AutoCompleteTextView,
         editSubjectNameText: EditText,
-        editHoursCountText: EditText,
+        editHoursCountText: AutoCompleteTextView,
     ) {
         val subject: String = editSubjectNameText.text.toString()
-        val hours: Int = editHoursCountText.text.toString().toInt()
+        val hours: Int? = editHoursCountText.text.toString().toIntOrNull()
         val classType: String = classTypeCompleteView.text.toString()
         val group: String = selectGroupAutoCompleteText.text.toString()
 
-        if (editSubjectNameText.text.isEmpty())
-        {
+        if (editSubjectNameText.text.isEmpty()) {
             editSubjectNameText.error = "Введите название предмета"
+            stopAnimation(confirm)
             return
         }
-        if (classTypeCompleteView.text.isEmpty())
-        {
+        if (classTypeCompleteView.text.isEmpty()) {
             classTypeCompleteView.error = "Выберите тип предмета"
+            stopAnimation(confirm)
             return
         }
-        if (selectGroupAutoCompleteText.text.isEmpty())
-        {
+        if (selectGroupAutoCompleteText.text.isEmpty()) {
             selectGroupAutoCompleteText.error = "Выберите группы"
+            stopAnimation(confirm)
             return
         }
-        if (editHoursCountText.text.isEmpty() || (hours<=0 || hours > 9)) {
-            editHoursCountText.error = "Введите количество часов в пределах от 0 до 9"
+        if (editHoursCountText.text.isEmpty() || (hours == null ||hours <= 0 || hours > 9)) {
+            editHoursCountText.error = "Введите количество часов (целочисленное значение пределах от 1 до 9)"
+            stopAnimation(confirm)
             return
         }
 
@@ -171,28 +214,41 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
                 response: Response<Void>
             ) {
                 if (response.isSuccessful) {
+                    stopAnimation(confirm)
                     Log.d("API Request Successful", "${response.code()}")
-                    showToastNotification("Заявка отправлена")
+                    showToastNotification(requireContext(), "Заявка отправлена")
+                    classTypeCompleteView.text.clear()
+                    editSubjectNameText.text.clear()
+                    selectGroupAutoCompleteText.text.clear()
+                    editHoursCountText.text.clear()
+                    clearChoices(requireContext())
+
                 } else {
-                    if(response.code() == 403){
-                        showToastNotification("Недостаточно прав доступа для выполнения")
+                    stopAnimation(confirm)
+                    if (response.code() == 403) {
+                        showToastNotification(
+                            requireContext(),
+                            "Недостаточно прав доступа для выполнения"
+                        )
                     }
-                    if(response.code() == 404){
-                        showToastNotification("Id переданной группы не было найдено/\n" +
-                                "Переданного инвентаря не существует в базе/\n" +
-                                "Неверный username пользователя")
+                    if (response.code() == 404) {
+                        showToastNotification(
+                            requireContext(), "Id переданной группы не было найдено/\n" +
+                                    "Переданного инвентаря не существует в базе/\n" +
+                                    "Неверный username пользователя"
+                        )
                     }
                     println("Не успешно")
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
-                println("Ошибка")
+                stopAnimation(confirm)
+                showToastNotification(requireContext(), "Ошибка")
                 println(t)
             }
         })
-        editSubjectNameText.text.clear()
-        editHoursCountText.text.clear()
+
     }
 
     private fun getUnwantedTime(): ImpossibleTimeDto {
@@ -202,7 +258,6 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
     private fun getRequestData() {
         val token: String? = SessionManager.getToken(requireContext())
 
-        Log.d("API Request failed", "${token}")
         val call = timetableApi.getRequestData("Bearer ${token}")
 
 
@@ -226,8 +281,8 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
                         groupList.add(str)
                         groupMap[str] = group
                     }
-                    //TODO:
                 } else {
+                    stopAnimation(confirm)
                     println("Не успешно")
                 }
             }
@@ -286,12 +341,9 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
         builder.create().show()
     }
 
-    private fun showToastNotification(message: String) {
-        val duration = Toast.LENGTH_LONG
-
-        val toast = Toast.makeText(requireContext(), message, duration)
-        toast.show()
-        val handler = Handler()
-        handler.postDelayed({ toast.cancel() }, 1500)
+    private fun stopAnimation(btn: CircularProgressButton) {
+        btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.lecturer_bg)
+        btn.revertAnimation()
     }
+
 }

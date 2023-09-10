@@ -1,27 +1,27 @@
 package vsu.cs.univtimetable.screens.lect_screens
 
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.SessionManager
+import vsu.cs.univtimetable.utils.token_utils.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.TimetableApi
-import vsu.cs.univtimetable.dto.RequestDto
+import vsu.cs.univtimetable.dto.classes.RequestDto
 import vsu.cs.univtimetable.screens.adapter.LecturerNameAdapter
+import vsu.cs.univtimetable.utils.NotificationManager.showToastNotification
 
 class GenerateTimetablePageFragment : Fragment() {
 
@@ -29,6 +29,8 @@ class GenerateTimetablePageFragment : Fragment() {
     private lateinit var lecturers: List<String>
 
     private lateinit var lecturersRecyclerView: RecyclerView
+    private lateinit var generateBtn: CircularProgressButton
+    private lateinit var clearTTBtn: CircularProgressButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,23 +46,20 @@ class GenerateTimetablePageFragment : Fragment() {
         lecturersRecyclerView = view.findViewById(R.id.lecturersRecyclerView)
         lecturersRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val generateBtn = view.findViewById<AppCompatButton>(R.id.generateTTBtn)
+        generateBtn = view.findViewById(R.id.generateTTBtn)
         generateBtn.setOnClickListener {
+            generateBtn.startAnimation()
             generate()
         }
 
-        val clearTTBtn = view.findViewById<AppCompatButton>(R.id.clearTTBtn)
+        clearTTBtn = view.findViewById(R.id.clearTTBtn)
         clearTTBtn.setOnClickListener {
+            clearTTBtn.startAnimation()
             clear()
         }
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
-            findNavController().navigate(R.id.action_generateTimetablePageFragment_to_addSubjectPageFragment)
-        }
-
-        val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
-        mainPageButton.setOnClickListener {
             findNavController().navigate(R.id.action_generateTimetablePageFragment_to_lecturerMainPageFragment)
         }
 
@@ -97,7 +96,7 @@ class GenerateTimetablePageFragment : Fragment() {
                 } else {
                     println("Не успешно")
                     if (response.code() == 403){
-                        showToastNotification("Недостаточно прав доступа для выполнения")
+                        showToastNotification(requireContext(), "Недостаточно прав доступа для выполнения")
                     }
                 }
             }
@@ -123,18 +122,20 @@ class GenerateTimetablePageFragment : Fragment() {
                 response: Response<Void>
             ) {
                 if (response.isSuccessful) {
+                    stopAnimation(generateBtn)
                     Log.d("API Request Successful", "${response.code()}")
-                    showToastNotification("Расписание сформировано")
+                    showToastNotification(requireContext(), "Расписание сформировано")
                 } else {
+                    stopAnimation(generateBtn)
                     if (response.code() == 400) {
-                        showToastNotification("Расписание не может быть составлено,\n" +
+                        showToastNotification(requireContext(), "Расписание не может быть составлено,\n" +
                                 "Расписание уже было составлено")
                     }
                     if (response.code() == 403) {
-                        showToastNotification("Недостаточно прав доступа для выполнения")
+                        showToastNotification(requireContext(), "Недостаточно прав доступа для выполнения")
                     }
                     if (response.code() == 404) {
-                        showToastNotification("Неверный username пользователя")
+                        showToastNotification(requireContext(), "Неверный username пользователя")
                     }
                     println("Не успешно")
                     Log.d("Не успешно", "Ошибка, код - ${response.code()}")
@@ -142,6 +143,7 @@ class GenerateTimetablePageFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
+                stopAnimation(generateBtn)
                 println("Ошибка")
                 println(t)
             }
@@ -162,20 +164,23 @@ class GenerateTimetablePageFragment : Fragment() {
                 response: Response<Void>
             ) {
                 if (response.isSuccessful) {
+                    clearButtonStopAnimation(clearTTBtn)
                     Log.d("API Request Successful", "${response.code()}")
-                    showToastNotification("Расписание очищено")
+                    showToastNotification(requireContext(), "Расписание очищено")
                 } else {
+                    clearButtonStopAnimation(clearTTBtn)
                     if (response.code() == 404) {
-                        showToastNotification("Неверный username пользователя")
+                        showToastNotification(requireContext(), "Неверный username пользователя")
                     }
                     if (response.code() == 403) {
-                        showToastNotification("Недостаточно прав доступа для выполнения")
+                        showToastNotification(requireContext(), "Недостаточно прав доступа для выполнения")
                     }
                     println("Не успешно")
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
+                clearButtonStopAnimation(clearTTBtn)
                 println("Ошибка")
                 println(t)
             }
@@ -199,12 +204,13 @@ class GenerateTimetablePageFragment : Fragment() {
         return names.toList()
     }
 
-    private fun showToastNotification(message: String) {
-        val duration = Toast.LENGTH_LONG
+    private fun stopAnimation(btn: CircularProgressButton) {
+        btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.lecturer_bg)
+        btn.revertAnimation()
+    }
 
-        val toast = Toast.makeText(requireContext(), message, duration)
-        toast.show()
-        val handler = Handler()
-        handler.postDelayed({ toast.cancel() }, 1500)
+    private fun clearButtonStopAnimation(btn: CircularProgressButton) {
+        btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.clear_btn)
+        btn.revertAnimation()
     }
 }

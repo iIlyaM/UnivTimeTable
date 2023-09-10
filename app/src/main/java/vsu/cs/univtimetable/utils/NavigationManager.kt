@@ -14,8 +14,9 @@ object NavigationManager {
             return
         }
         if(decodedToken.contains("", ignoreCase = true)) {
-            navController.navigate(R.id.action_loginFragment_to_headmanMainPageFragment)
+            navController.navigate(R.id.action_loginFragment_to_studentTimeTablePageFragment)
             return
         }
     }
 }
+

@@ -6,8 +6,8 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
-import vsu.cs.univtimetable.dto.AuthRequestDto
-import vsu.cs.univtimetable.dto.AuthResponseDto
+import vsu.cs.univtimetable.dto.auth.AuthRequestDto
+import vsu.cs.univtimetable.dto.auth.AuthResponseDto
 
 interface UserAuthApi {
 

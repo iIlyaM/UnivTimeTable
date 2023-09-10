@@ -9,7 +9,7 @@ import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.fragment.findNavController
 import vsu.cs.univtimetable.R
-import vsu.cs.univtimetable.SessionManager
+import vsu.cs.univtimetable.utils.token_utils.SessionManager
 
 
 class AdminMainPageFragment : Fragment() {
@@ -18,13 +18,8 @@ class AdminMainPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_admin_main_page, container, false)
-        val button = view.findViewById<ImageButton>(R.id.prevPageButton)
         val usersBtn = view.findViewById<AppCompatButton>(R.id.usersButton)
-        button.setOnClickListener {
-            findNavController().navigate(R.id.action_adminMainPageFragment_to_loginFragment)
-        }
         usersBtn.setOnClickListener {
             findNavController().navigate(R.id.action_adminMainPageFragment_to_userListPageFragment)
         }
@@ -36,6 +31,7 @@ class AdminMainPageFragment : Fragment() {
 
         val adminLogoutBtn = view.findViewById<ImageButton>(R.id.adminLogoutBtn)
         adminLogoutBtn.setOnClickListener {
+            SessionManager.isAuth = false
             SessionManager.clearData(requireContext())
              findNavController().navigate(R.id.action_adminMainPageFragment_to_loginFragment)
         }
