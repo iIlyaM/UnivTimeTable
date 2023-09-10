@@ -164,11 +164,11 @@ class GenerateTimetablePageFragment : Fragment() {
                 response: Response<Void>
             ) {
                 if (response.isSuccessful) {
-                    stopAnimation(generateBtn)
+                    clearButtonStopAnimation(clearTTBtn)
                     Log.d("API Request Successful", "${response.code()}")
                     showToastNotification(requireContext(), "Расписание очищено")
                 } else {
-                    stopAnimation(clearTTBtn)
+                    clearButtonStopAnimation(clearTTBtn)
                     if (response.code() == 404) {
                         showToastNotification(requireContext(), "Неверный username пользователя")
                     }
@@ -180,7 +180,7 @@ class GenerateTimetablePageFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
-                stopAnimation(clearTTBtn)
+                clearButtonStopAnimation(clearTTBtn)
                 println("Ошибка")
                 println(t)
             }
@@ -206,6 +206,11 @@ class GenerateTimetablePageFragment : Fragment() {
 
     private fun stopAnimation(btn: CircularProgressButton) {
         btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.lecturer_bg)
+        btn.revertAnimation()
+    }
+
+    private fun clearButtonStopAnimation(btn: CircularProgressButton) {
+        btn.background = ContextCompat.getDrawable(requireContext(), R.drawable.clear_btn)
         btn.revertAnimation()
     }
 }
