@@ -155,9 +155,21 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
                     Status.SUCCESS -> {
                         clearSortBtns()
                         getSearchItems(it.data!!)
+                        if(checkNullParams(searchParams) && name == null) {
+                            if(it.data!!.isEmpty()) {
+                                NotificationManager.showToastNotification(
+                                    requireContext(),
+                                    "Пользователи не добавлены"
+                                )
+                            }
+                            pDialog.dismiss()
+                        }
                     }
 
                     Status.ERROR -> {
+                        if(checkNullParams(searchParams) && name == null) {
+                            pDialog.dismiss()
+                        }
                         NotificationManager.showToastNotification(
                             requireContext(),
                             it.message.toString()
@@ -165,6 +177,9 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
                     }
 
                     Status.LOADING -> {
+                        if(checkNullParams(searchParams) && name == null) {
+                            pDialog.dismiss()
+                        }
                     }
                 }
             }
@@ -268,7 +283,7 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
     override fun onDeleteClick(userId: Int) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Удаление пользователя")
-            .setMessage("Вы уверены что хотите удалить из списка?")
+            .setMessage("Вы уверены что хотите удалить пользователя из списка?")
             .setCancelable(true)
             .setPositiveButton("Удалить") { _, _ ->
                 delete(userId)
@@ -294,6 +309,19 @@ class UserListPageFragment : Fragment(), OnUserEditInterface, OnUserDeleteInterf
         univs.clear()
         cities.clear()
         roles.clear()
+    }
+
+    private fun checkNullParams(params: MutableList<String?>): Boolean {
+        var count = 0
+        for (param in params) {
+            if (param == null) {
+                count++
+            }
+        }
+        if (count == 3) {
+            return true
+        }
+        return false
     }
 
 }

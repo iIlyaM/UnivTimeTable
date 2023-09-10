@@ -25,6 +25,8 @@ import vsu.cs.univtimetable.screens.adapter.GroupListAdapter
 import vsu.cs.univtimetable.screens.adapter.OnGroupDeleteClickInterface
 import vsu.cs.univtimetable.screens.adapter.OnGroupEditClickInterface
 import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
+import vsu.cs.univtimetable.utils.NotificationManager.setLoadingDialog
+import vsu.cs.univtimetable.utils.NotificationManager.showToastNotification
 import vsu.cs.univtimetable.utils.Status
 
 class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDeleteClickInterface {
@@ -110,9 +112,9 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
             adapter.submitList(it)
         }
         groupViewModel.errorMsg.observe(viewLifecycleOwner) {
-            showToastNotification(it)
+            showToastNotification(requireContext(), it)
         }
-        setLoadingDialog()
+        setLoadingDialog(pDialog)
         getGroups(null, null, null)
         pDialog.dismiss()
         universityId = getUnivId()
@@ -190,7 +192,7 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
 
                     Status.ERROR -> {}
                     Status.LOADING -> {
-                        setLoadingDialog()
+                        setLoadingDialog(pDialog)
                     }
                 }
             }
@@ -209,7 +211,7 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
                         pDialog.dismiss()
                     }
                     Status.LOADING -> {
-                        setLoadingDialog()
+                        setLoadingDialog(pDialog)
                     }
                 }
             }
@@ -231,10 +233,22 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
             it?.let {
                 when(it.status) {
                     Status.SUCCESS -> {
+                        if(course== null && order == null && groupNumber == null) {
+                            if(it.data!!.groups.isEmpty()) {
+                                showToastNotification(requireContext(), "Группы на этом факультете ещё не добавлены")
+                            }
+                            pDialog.dismiss()
+                        }
                     }
                     Status.ERROR -> {
+                        if(course== null && order == null && groupNumber == null) {
+                            pDialog.dismiss()
+                        }
                     }
                     Status.LOADING -> {
+                        if(course== null && order == null && groupNumber == null) {
+                            setLoadingDialog(pDialog)
+                        }
                     }
                 }
             }
@@ -270,21 +284,6 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
         )
         rv.layoutManager = LinearLayoutManager(requireContext())
         rv.adapter = adapter
-    }
-
-    private fun setLoadingDialog() {
-        pDialog.setMessage("Загрузка...пожалуйста подождите")
-        pDialog.setCancelable(false)
-        pDialog.show()
-    }
-
-    private fun showToastNotification(message: String) {
-        val duration = Toast.LENGTH_LONG
-
-        val toast = Toast.makeText(requireContext(), message, duration)
-        toast.show()
-        val handler = Handler()
-        handler.postDelayed({ toast.cancel() }, 1500)
     }
 
 

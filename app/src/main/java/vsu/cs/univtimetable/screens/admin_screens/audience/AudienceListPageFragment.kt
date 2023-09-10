@@ -21,6 +21,7 @@ import vsu.cs.univtimetable.screens.adapter.AudienceListAdapter
 import vsu.cs.univtimetable.screens.adapter.OnAudienceDeleteInterface
 import vsu.cs.univtimetable.screens.adapter.OnAudienceEditInterface
 import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
+import vsu.cs.univtimetable.utils.NotificationManager
 import vsu.cs.univtimetable.utils.NotificationManager.setLoadingDialog
 import vsu.cs.univtimetable.utils.NotificationManager.showToastNotification
 import vsu.cs.univtimetable.utils.Status
@@ -147,7 +148,7 @@ class AudienceListPageFragment : Fragment(), OnAudienceEditInterface, OnAudience
             it?.let {
                 when (it.status) {
                     Status.SUCCESS -> {
-                        builder.setTitle("Удаление группы")
+                        builder.setTitle("Удаление аудитории")
                             .setMessage(
                                 "Вы уверены что хотите удалить аудиторию: ${it.data!!.audienceNumber} из списка?"
                             )
@@ -197,6 +198,12 @@ class AudienceListPageFragment : Fragment(), OnAudienceEditInterface, OnAudience
             it?.let {
                 when(it.status) {
                     Status.SUCCESS -> {
+                        if (it.data!!.isEmpty()) {
+                            NotificationManager.showToastNotification(
+                                requireContext(),
+                                "Аудитории для этого факультета не добавлены"
+                            )
+                        }
                         pDialog.dismiss()
                     }
                     Status.ERROR -> {

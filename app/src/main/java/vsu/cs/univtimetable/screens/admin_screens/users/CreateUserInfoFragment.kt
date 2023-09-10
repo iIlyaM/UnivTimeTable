@@ -456,7 +456,7 @@ class CreateUserInfoFragment : Fragment() {
                             }
                             if (editableUser.facultyId != null && editableUser.facultyId != -1L) {
                                 val faculty =
-                                    facultyList.firstOrNull { it.id == editableUser.facultyId };
+                                    facultyList.firstOrNull { it.id == editableUser.facultyId }
                                 val position = facultyList.indexOf(faculty)
                                 val groupId = editableUser.groupId
                                 facultyTextInputLayout(position, groupId)
