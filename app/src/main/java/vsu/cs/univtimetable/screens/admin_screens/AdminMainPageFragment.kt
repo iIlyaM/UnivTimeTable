@@ -31,6 +31,7 @@ class AdminMainPageFragment : Fragment() {
 
         val adminLogoutBtn = view.findViewById<ImageButton>(R.id.adminLogoutBtn)
         adminLogoutBtn.setOnClickListener {
+            SessionManager.isAuth = false
             SessionManager.clearData(requireContext())
              findNavController().navigate(R.id.action_adminMainPageFragment_to_loginFragment)
         }

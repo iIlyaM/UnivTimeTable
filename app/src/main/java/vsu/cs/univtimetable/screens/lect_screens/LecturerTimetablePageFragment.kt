@@ -211,7 +211,7 @@ class LecturerTimetablePageFragment : Fragment() {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             loadFile(contentResolver, resolver, contentValues, response)
                             stopAnimation(downloadLectTTBtn)
-                            showToastNotification(requireContext(), "Файл сохранен")
+                            showToastNotification(requireContext(), "Файл 'расписание.xlsx' сохранен в Загрузки")
                         } else {
                             val file = File(
                                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),

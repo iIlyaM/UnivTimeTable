@@ -211,7 +211,7 @@ class StudentTimeTablePageFragment : Fragment() {
                             stopAnimation(saveTimeTable)
                             NotificationManager.showToastNotification(
                                 requireContext(),
-                                "Файл сохранен"
+                                "Файл 'расписание.xlsx' сохранен в Загрузки"
                             )
                         } else {
                             val file = File(

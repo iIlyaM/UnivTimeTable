@@ -1,8 +1,10 @@
 package vsu.cs.univtimetable.utils.date_utils
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import vsu.cs.univtimetable.dto.datetime.Day
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -76,6 +78,26 @@ class DateManager {
         fun stringToLocalDate(time: String): LocalDate {
             val formatter = DateTimeFormatter.ofPattern("hh:mm");
             return  LocalDate.parse(time, formatter);
+        }
+
+        fun clearChoices(context: Context) {
+            val sharedPreferences = context.getSharedPreferences("dayTimeChoices", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+
+            val days = listOf(
+                Day("Понедельник"),
+                Day("Вторник"),
+                Day("Среда"),
+                Day("Четверг"),
+                Day("Пятница"),
+                Day("Суббота"),
+                Day("Воскресенье")
+            )
+            for (day in days) {
+                editor.remove(day.name)
+            }
+
+            editor.apply()
         }
     }
 }
