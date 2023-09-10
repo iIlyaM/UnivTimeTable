@@ -7,7 +7,7 @@
     app:cardCornerRadius ="10dp"
     app:cardElevation="5dp"
     app:cardBackgroundColor="@color/colorPrimary"
-    android:foreground="@drawable/prim_color_rect_border">
+    android:foreground="@drawable/lect_color_rect_border">
 
     <RelativeLayout
         android:layout_width="match_parent"

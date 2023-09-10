@@ -82,6 +82,7 @@ class LoginFragment : Fragment() {
                     val token = response.body()?.token
                     SessionManager.saveAuthToken(requireContext(), token!!)
                     val decodedToken = SessionManager.decodeToken(token)
+                    SessionManager.isAuth = true
                     progressbar.setState(true){
                         NavigationManager.navigateTo(decodedToken, navController)
                     }

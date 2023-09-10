@@ -38,6 +38,7 @@ class LecturerMainPageFragment : Fragment() {
 
         val lecturerLogoutBtn = view.findViewById<ImageButton>(R.id.lecturerLogoutBtn)
         lecturerLogoutBtn.setOnClickListener {
+            SessionManager.isAuth = false
             SessionManager.clearData(requireContext())
             findNavController().navigate(R.id.action_lecturerMainPageFragment_to_loginFragment)
         }

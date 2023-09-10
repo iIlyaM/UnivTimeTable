@@ -104,6 +104,8 @@ class StudentTimeTablePageFragment : Fragment() {
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
+            SessionManager.isAuth = false
+            SessionManager.clearData(requireContext())
             findNavController().navigate(R.id.action_studentTimeTablePageFragment_to_loginFragment)
         }
 
@@ -209,7 +211,7 @@ class StudentTimeTablePageFragment : Fragment() {
                             stopAnimation(saveTimeTable)
                             NotificationManager.showToastNotification(
                                 requireContext(),
-                                "Файл сохранен"
+                                "Файл 'расписание.xlsx' сохранен в Загрузки"
                             )
                         } else {
                             val file = File(
@@ -229,7 +231,7 @@ class StudentTimeTablePageFragment : Fragment() {
                             stopAnimation(saveTimeTable)
                             NotificationManager.showToastNotification(
                                 requireContext(),
-                                "Файл сохранен"
+                                "Файл 'расписание.xlsx' сохранен в Загрузки"
                             )
                         }
 
@@ -247,7 +249,7 @@ class StudentTimeTablePageFragment : Fragment() {
                         NotificationManager.showToastNotification(requireContext(), "Недостаточно прав доступа для выполнения")
                     }
                     if (response.code() == 404) {
-                        NotificationManager.showToastNotification(requireContext(), "Неверный username пользователя")
+                        NotificationManager.showToastNotification(requireContext(), "Неверное имя пользователя пользователя")
                     }
                     Log.d("ошибка", "Получили ошибку - ${response.code()}")
                     Log.d("ошибка", "с ошибкой пришло - ${response.body()}")

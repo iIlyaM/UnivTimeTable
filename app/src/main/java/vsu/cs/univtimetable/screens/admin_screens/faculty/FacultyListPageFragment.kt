@@ -28,6 +28,7 @@ import vsu.cs.univtimetable.screens.adapter.OnFacultyDeleteInterface
 import vsu.cs.univtimetable.screens.adapter.OnFacultyEditInterface
 import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
 import vsu.cs.univtimetable.utils.NotificationManager
+import vsu.cs.univtimetable.utils.NotificationManager.setLoadingDialog
 import vsu.cs.univtimetable.utils.Status
 
 class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFacultyEditInterface,
@@ -101,10 +102,6 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        facultyViewModel.facultyList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-        }
         facultyViewModel.errorMsg.observe(viewLifecycleOwner) {
             NotificationManager.showToastNotification(requireContext(), it)
         }
@@ -139,6 +136,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
                         pDialog.dismiss()
                         editFacultyName?.setText(it.data?.name)
                     }
+
                     Status.ERROR -> {
                         pDialog.dismiss()
                         NotificationManager.showToastNotification(
@@ -146,6 +144,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
                             it.message.toString()
                         )
                     }
+
                     Status.LOADING -> {
                         NotificationManager.setLoadingDialog(pDialog)
                     }
@@ -170,8 +169,8 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
 
     override fun onDeleteClick(id: Int) {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Удаление университета")
-            .setMessage("Вы уверены что хотите удалить этот университет?")
+        builder.setTitle("Удаление факультета")
+            .setMessage("Вы уверены что хотите удалить этот факультет?")
             .setCancelable(true)
             .setPositiveButton("Удалить") { _, _ ->
                 delete(id)
@@ -203,6 +202,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
                         getFaculties(null, null)
                         pDialog.dismiss()
                     }
+
                     Status.ERROR -> {
                         pDialog.dismiss()
                         NotificationManager.showToastNotification(
@@ -210,6 +210,7 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
                             it.message.toString()
                         )
                     }
+
                     Status.LOADING -> {
                         NotificationManager.setLoadingDialog(pDialog)
                     }
@@ -246,15 +247,27 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
     private fun getFaculties(name: String?, order: String?) {
         val token: String? = SessionManager.getToken(requireContext())
 
-        Log.d("API Request failed", "${token}")
         val universityId = getUnivId()
         facultyViewModel.getFaculties(universityId, name, order).observe(viewLifecycleOwner) {
             it?.let {
                 when (it.status) {
                     Status.SUCCESS -> {
+                        adapter.submitList(it.data)
+                        if (name == null && order == null) {
+                            if (it.data!!.isEmpty()) {
+                                NotificationManager.showToastNotification(
+                                    requireContext(),
+                                    "Факультеты для этого университета не добавлены"
+                                )
+                            }
+                            pDialog.dismiss()
+                        }
                     }
 
                     Status.ERROR -> {
+                        if (name == null && order == null) {
+                            pDialog.dismiss()
+                        }
                         NotificationManager.showToastNotification(
                             requireContext(),
                             it.message.toString()
@@ -262,6 +275,9 @@ class FacultyListPageFragment : Fragment(), OnFacultiesItemClickInterface, OnFac
                     }
 
                     Status.LOADING -> {
+                        if (name == null && order == null) {
+                            setLoadingDialog(pDialog)
+                        }
                     }
                 }
             }

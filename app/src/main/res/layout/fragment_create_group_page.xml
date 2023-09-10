@@ -19,7 +19,7 @@
     <View
         android:id="@+id/waveView"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:background="@drawable/wave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,8 +30,8 @@
         android:id="@+id/scrollView5"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="180dp"
-        android:layout_marginBottom="180dp"
+        android:layout_marginTop="140dp"
+        android:layout_marginBottom="140dp"
         android:paddingLeft="6dp"
         android:paddingRight="6dp">
 

@@ -26,6 +26,7 @@ import vsu.cs.univtimetable.screens.adapter.OnUnivDeleteInterface
 import vsu.cs.univtimetable.screens.adapter.OnUnivEditInterface
 import vsu.cs.univtimetable.screens.adapter.UnivListAdapter
 import vsu.cs.univtimetable.utils.NotificationManager
+import vsu.cs.univtimetable.utils.NotificationManager.setLoadingDialog
 import vsu.cs.univtimetable.utils.Status
 
 class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterface,
@@ -177,8 +178,20 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
             it?.let {
                 when (it.status) {
                     Status.SUCCESS -> {
+                        if(param== null && order == null) {
+                            if(it.data!!.isEmpty()) {
+                                NotificationManager.showToastNotification(
+                                    requireContext(),
+                                    "Университеты не добавлены"
+                                )
+                            }
+                            pDialog.dismiss()
+                        }
                     }
                     Status.ERROR -> {
+                        if(param== null && order == null) {
+                            pDialog.dismiss()
+                        }
                         pDialog.dismiss()
                         NotificationManager.showToastNotification(
                             requireContext(),
@@ -186,7 +199,9 @@ class UnivListPageFragment : Fragment(), OnUnivEditInterface, OnUnivDeleteInterf
                         )
                     }
                     Status.LOADING -> {
-
+                        if(param== null && order == null) {
+                            setLoadingDialog(pDialog)
+                        }
                     }
                 }
             }

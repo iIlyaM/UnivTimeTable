@@ -85,23 +85,38 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/editHoursCountText"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="32dp"
-                android:background="@drawable/lect_color_rect_border"
-                android:hint="@string/hours_per_week"
-                android:inputType="text"
-                android:padding="16dp"
+                android:hint="Часов в неделю"
                 android:textColorHint="@color/black"
-                android:textSize="24sp"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@color/lecturerColor"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selectGroupsView"
-                tools:ignore="MissingConstraints" />
+                app:layout_constraintTop_toBottomOf="@+id/selectGroupsView">
+
+            <AutoCompleteTextView
+                android:id="@+id/hoursAutoCompleteText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:popupBackground="#DDEAF6"
+                android:textColor="@color/black"
+                android:textSize="24sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/classTypeInputLayout"
@@ -153,7 +168,9 @@
                 android:textSize="24sp"
                 app:layout_constraintTop_toBottomOf="@+id/classTypeInputLayout"
                 app:strokeColor="@color/lecturerColor"
-                app:strokeWidth="1dp"></TextView>
+                app:strokeWidth="1dp">
+
+            </TextView>
 
 
             <LinearLayout

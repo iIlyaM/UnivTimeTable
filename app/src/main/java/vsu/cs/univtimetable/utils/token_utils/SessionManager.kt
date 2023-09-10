@@ -8,6 +8,7 @@ import vsu.cs.univtimetable.R
 object SessionManager {
 
     const val USER_TOKEN = ""
+    var isAuth = false
 
 
     fun saveAuthToken(context: Context, token: String) {

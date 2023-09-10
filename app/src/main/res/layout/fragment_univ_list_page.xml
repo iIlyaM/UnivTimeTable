@@ -18,7 +18,7 @@
     <View
         android:id="@+id/waveView"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:background="@drawable/wave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -113,12 +113,14 @@
         android:id="@+id/enterUnivName"
         android:layout_width="220dp"
         android:layout_height="40dp"
-        android:layout_marginStart="6dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="6dp"
         android:background="@drawable/rect_border"
         android:iconifiedByDefault="false"
-        app:layout_constraintBottom_toBottomOf="@+id/sortButton"
-        app:layout_constraintStart_toStartOf="@+id/topView"
-        app:layout_constraintTop_toTopOf="@+id/sortButton" />
+        app:layout_constraintBottom_toBottomOf="@+id/topView"
+        app:layout_constraintEnd_toStartOf="@+id/sortButton"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <ImageButton
@@ -126,12 +128,11 @@
         android:layout_width="51dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:layout_marginEnd="6dp"
+        android:layout_marginStart="6dp"
         android:background="@drawable/admin_bg"
         android:contentDescription="@string/sort_btn_descr"
         android:src="@drawable/ic_sort"
-        app:layout_constraintBottom_toBottomOf="@+id/topView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/enterUnivName"
         app:layout_constraintStart_toEndOf="@+id/enterUnivName"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/enterUnivName" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -62,7 +62,7 @@
                 android:padding="16dp"
                 android:text="Посмотреть расписание"
                 android:textAllCaps="false"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/waveView" />
@@ -79,7 +79,7 @@
                 android:padding="16dp"
                 android:text=" Подать заявку"
                 android:textAllCaps="false"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/lookTimeTableBtn" />
@@ -96,7 +96,7 @@
                 android:padding="16dp"
                 android:text="Перенести\nзанятие"
                 android:textAllCaps="false"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/choosingTimeRequestBtn" />
@@ -113,7 +113,7 @@
                 android:padding="16dp"
                 android:text="Сгенерировать\nрасписание"
                 android:textAllCaps="false"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/moveClassRequestBtn" />
