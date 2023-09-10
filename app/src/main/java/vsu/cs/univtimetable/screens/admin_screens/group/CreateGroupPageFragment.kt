@@ -102,8 +102,10 @@ class CreateGroupPageFragment : Fragment() {
             val bundle = Bundle()
             bundle.putInt("facultyId", getFacultyId())
             bundle.putInt("univId", arguments?.getInt("univId")!!)
-            findNavController().navigate(R.id.action_createGroupPageFragment_to_groupListPageFragment,
-                bundle)
+            findNavController().navigate(
+                R.id.action_createGroupPageFragment_to_groupListPageFragment,
+                bundle
+            )
         }
 
         val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
@@ -197,20 +199,26 @@ class CreateGroupPageFragment : Fragment() {
             stopAnimation(confirmBtn)
             return
         }
-        if (groupNumField.text.isEmpty() || groupNumField.text.toString().toInt() < 0) {
-            groupNumField.error = "Введите номер группы"
+        if (groupNumField.text.isEmpty() || groupNumField.text.toString()
+                .filter { it.isDigit() }.length > 1 || groupNumField.text.toString()
+                .filter { it.isDigit() }
+                .toLong() < 0
+        ) {
+            groupNumField.error = "Введите корректный номер группы"
             stopAnimation(confirmBtn)
             return
         }
-        if (groupNumField.text.toString().toInt() >= 10) {
+        if (groupNumField.text.toString().filter { it.isDigit() }.toLong() >= 10) {
             groupNumField.error = "Номер группы должен быть меньше 10"
             stopAnimation(confirmBtn)
             return
         }
-        if (amountField.text.isEmpty() || amountField.text.toString().toInt() < 0 ||
+        if (amountField.text.isEmpty() || amountField.text.toString()
+                .filter { it.isDigit() }.length > 2 ||amountField.text.toString().filter { it.isDigit() }
+                .toLong().toInt() < 0 ||
             amountField.text.toString().toInt() > 100
         ) {
-            amountField.error = "Введите численность группы"
+            amountField.error = "Введите корректную численность группы"
             stopAnimation(confirmBtn)
             return
         }
@@ -315,11 +323,11 @@ class CreateGroupPageFragment : Fragment() {
                     Status.ERROR -> {
                         showToastNotification(it.message.toString())
                     }
+
                     Status.LOADING -> {}
                 }
             }
         }
-//        }
     }
 
     private fun getFacultyId(): Int {
