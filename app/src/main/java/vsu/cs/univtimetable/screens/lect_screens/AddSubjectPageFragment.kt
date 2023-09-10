@@ -146,7 +146,7 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
         editHoursCountText: EditText,
     ) {
         val subject: String = editSubjectNameText.text.toString()
-        val hours: Int = editHoursCountText.text.toString().toInt()
+        val hours: Int? = editHoursCountText.text.toString().toIntOrNull()
         val classType: String = classTypeCompleteView.text.toString()
         val group: String = selectGroupAutoCompleteText.text.toString()
 
@@ -165,8 +165,8 @@ class AddSubjectPageFragment : Fragment(), GroupAdapter.OnItemClickListener {
             stopAnimation(confirm)
             return
         }
-        if (editHoursCountText.text.isEmpty() || (hours <= 0 || hours > 9)) {
-            editHoursCountText.error = "Введите количество часов в пределах от 0 до 9"
+        if (editHoursCountText.text.isEmpty() || (hours == null ||hours <= 0 || hours > 9)) {
+            editHoursCountText.error = "Введите количество часов (целочисленное значение пределах от 1 до 9)"
             stopAnimation(confirm)
             return
         }
