@@ -145,7 +145,7 @@ class GroupViewModel(
     private fun onError(code: Int): String {
         var msg: String = " "
         if (code == 400) {
-            msg = "Такая группа на этом факультете уже существует,\n" +
+            msg = "Такая группа на этом факультете уже существует \n" +
                     "Не пройдена валидация"
         }
         if (code == 403) {
