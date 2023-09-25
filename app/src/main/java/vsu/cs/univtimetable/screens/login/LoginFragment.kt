@@ -111,36 +111,6 @@ class LoginFragment : Fragment() {
                 }
             }
         }
-
-
-//        val call = authApi.login(AuthRequestDto(email.text.toString(), password.text.toString()))
-//        call.enqueue(object : Callback<AuthResponseDto> {
-//            override fun onResponse(
-//                call: Call<AuthResponseDto>,
-//                response: Response<AuthResponseDto>
-//            ) {
-//                if (response.isSuccessful) {
-//                    val token = response.body()?.token
-//                    SessionManager.saveAuthToken(requireContext(), token!!)
-//                    val decodedToken = SessionManager.decodeToken(token)
-//                    SessionManager.isAuth = true
-//                    progressbar.setState(true){
-//                        NavigationManager.navigateTo(decodedToken, navController)
-//                    }
-//
-//                } else {
-//                    println(response.code())
-//                    startError(progressbar)
-//                    email.error = "Доступ запрещён"
-//                    password.error = "Доступ запрещён"
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<AuthResponseDto>, t: Throwable) {
-//                startError(progressbar)
-//                call.cancel()
-//            }
-//        })
     }
 
     private fun startError(progressbar: BtnLoadingProgressbar) {
