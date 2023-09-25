@@ -285,6 +285,7 @@ class CreateGroupPageFragment : Fragment() {
                         }
 
                         Status.ERROR -> {
+                            showToastNotification(it.message.toString())
                             stopAnimation(confirmBtn)
                         }
 
