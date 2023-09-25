@@ -3,6 +3,7 @@ package vsu.cs.univtimetable.api
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
@@ -68,7 +69,7 @@ interface TimetableApi {
     ): Call<List<RequestDto>>
 
     @Headers("Content-Type: application/json")
-    @POST("schedule/reset")
+    @DELETE("schedule/reset")
     fun clearTimetable(
         @Header("Authorization") basicToken: String,
     ): Call<Void>
