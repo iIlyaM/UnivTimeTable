@@ -1,5 +1,7 @@
 package vsu.cs.univtimetable.screens.login
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.util.Patterns
@@ -30,10 +32,20 @@ class LoginFragment : Fragment() {
     private lateinit var authApi: UserAuthApi
     private lateinit var loginViewModel: LoginViewModel
     private val handler = Handler()
+    private lateinit var sharedPreferencesEmail: SharedPreferences
+    private lateinit var sharedPreferencesPassword: SharedPreferences
+    private var flag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        sharedPreferencesEmail =
+            requireActivity().getSharedPreferences("email", Context.MODE_PRIVATE)
+        sharedPreferencesPassword =
+            requireActivity().getSharedPreferences("password", Context.MODE_PRIVATE)
         authApi = TimetableClient.getClient().create(UserAuthApi::class.java)
+        if (!sharedPreferencesEmail.equals("")) {
+            flag = true
+        }
     }
 
     override fun onCreateView(
@@ -45,6 +57,8 @@ class LoginFragment : Fragment() {
         val emailField = view.findViewById<EditText>(R.id.editTextTextEmail)
         val pwd = view.findViewById<EditText>(R.id.editTextTextPassword)
         val navController = findNavController()
+
+        setIfSharedPreferencesNotEmpty(emailField, pwd)
 
         val authRepository = AuthRepository(authApi)
 
@@ -81,31 +95,35 @@ class LoginFragment : Fragment() {
             return
         }
 
-        loginViewModel.login(AuthRequestDto(email.text.toString(), password.text.toString())).observe(viewLifecycleOwner) {
-            it?.let {
-                when (it.status) {
-                    Status.SUCCESS -> {
-                        val token = it.data?.token
-                        SessionManager.saveAuthToken(requireContext(), token!!)
-                        val decodedToken = SessionManager.decodeToken(token)
-                        SessionManager.isAuth = true
-                        progressbar.setState(true){
-                            NavigationManager.navigateTo(decodedToken, navController)
+        loginViewModel.login(AuthRequestDto(email.text.toString(), password.text.toString()))
+            .observe(viewLifecycleOwner) {
+                it?.let {
+                    when (it.status) {
+                        Status.SUCCESS -> {
+                            val token = it.data?.token
+                            SessionManager.saveAuthToken(requireContext(), token!!)
+                            val decodedToken = SessionManager.decodeToken(token)
+                            setEmailToSharedPreferences(email.text.toString())
+                            setPasswordToSharedPreferences(password.text.toString())
+                            SessionManager.isAuth = true
+                            progressbar.setState(true) {
+                                NavigationManager.navigateTo(decodedToken, navController)
+                            }
                         }
-                    }
 
-                    Status.ERROR -> {
-                        startError(progressbar)
-                        NotificationManager.showToastNotification(
-                            requireContext(),
-                            it.message.toString()
-                        )
-                    }
-                    Status.LOADING -> {
+                        Status.ERROR -> {
+                            startError(progressbar)
+                            NotificationManager.showToastNotification(
+                                requireContext(),
+                                it.message.toString()
+                            )
+                        }
+
+                        Status.LOADING -> {
+                        }
                     }
                 }
             }
-        }
     }
 
     private fun startError(progressbar: BtnLoadingProgressbar) {
@@ -121,4 +139,35 @@ class LoginFragment : Fragment() {
             }, 2000)
         }, 600)
     }
+
+    private fun setEmailToSharedPreferences(value: String) {
+        val editor = sharedPreferencesEmail.edit()
+        editor.putString("email", value)
+        editor.apply()
+    }
+
+    private fun setPasswordToSharedPreferences(value: String){
+        val editor = sharedPreferencesPassword.edit()
+        editor.putString("password", value)
+        editor.apply()
+    }
+
+    private fun getEmailFromSharedPreferences(): String {
+        return sharedPreferencesEmail.getString("email", "") ?: ""
+    }
+
+    private fun getPasswordFromSharedPreferences(): String {
+        return sharedPreferencesPassword.getString("password", "") ?: ""
+    }
+
+    private fun setIfSharedPreferencesNotEmpty(
+        email: EditText,
+        password: EditText,
+    ) {
+        if(flag) {
+            email.setText(getEmailFromSharedPreferences())
+            password.setText(getPasswordFromSharedPreferences())
+        }
+    }
+
 }
