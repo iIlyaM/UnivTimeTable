@@ -110,7 +110,7 @@ class CreateGroupPageFragment : Fragment() {
 
         val mainPageButton = view.findViewById<ImageButton>(R.id.mainPageButton)
         mainPageButton.setOnClickListener {
-            findNavController().navigate(R.id.action_createAudiencePageFragment_to_adminMainPageFragment)
+            findNavController().navigate(R.id.action_createGroupPageFragment_to_adminMainPageFragment)
         }
 
         val courseTypeCompleteView =
