@@ -19,7 +19,7 @@ import vsu.cs.univtimetable.dto.faculty.FacultyResponseDto
 interface FacultyApi {
 
     @Headers("Content-Type: application/json")
-    @GET("university/v2/{univId}/faculties")
+    @GET("v2/university/{univId}/faculties")
     suspend fun getFaculties(
         @Header("Authorization") basicToken: String,
         @Path("univId") id: Int,

@@ -16,7 +16,7 @@ import vsu.cs.univtimetable.dto.group.GroupResponseDto
 
 interface GroupApi {
     @Headers("Content-Type: application/json")
-    @GET("faculty/v2/{facultyId}/groups")
+    @GET("v2/faculty/{facultyId}/groups")
     suspend fun getGroups(
         @Header("Authorization") basicToken: String,
         @Path("facultyId") id: Int,
