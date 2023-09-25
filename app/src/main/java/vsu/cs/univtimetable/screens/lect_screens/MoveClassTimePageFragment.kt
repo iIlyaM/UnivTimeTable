@@ -1,6 +1,7 @@
 package vsu.cs.univtimetable.screens.lect_screens
 
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -30,6 +31,7 @@ import vsu.cs.univtimetable.dto.classes.ClassDto
 import vsu.cs.univtimetable.dto.datetime.DayTime
 import vsu.cs.univtimetable.dto.classes.MoveClassRequest
 import vsu.cs.univtimetable.dto.classes.MoveClassResponse
+import vsu.cs.univtimetable.utils.NotificationManager
 import vsu.cs.univtimetable.utils.NotificationManager.showToastNotification
 
 class MoveClassTimePageFragment : Fragment() {
@@ -44,6 +46,7 @@ class MoveClassTimePageFragment : Fragment() {
     private lateinit var audienceInputLayout: TextInputLayout
     private lateinit var dayTimeInputLayout: TextInputLayout
     private lateinit var confirmSubjectBtn: CircularProgressButton
+    private lateinit var pDialog: ProgressDialog
 
 
     private var subjects = mutableSetOf<String>()
@@ -69,6 +72,8 @@ class MoveClassTimePageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_move_class_time_page, container, false)
+
+        pDialog = ProgressDialog(context)
 
         val prevPageButton = view.findViewById<ImageButton>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
@@ -327,7 +332,9 @@ class MoveClassTimePageFragment : Fragment() {
                 call: Call<MoveClassResponse>,
                 response: Response<MoveClassResponse>
             ) {
+                NotificationManager.setLoadingDialog(pDialog)
                 if (response.isSuccessful) {
+                    pDialog.dismiss()
                     Log.d("API Request successful", "Получили ${response.code()}")
                     val dataResponse = response.body()
                     println(dataResponse)
@@ -343,6 +350,7 @@ class MoveClassTimePageFragment : Fragment() {
                         subjectCompleteView.setAdapter(adapter)
                     }
                 } else {
+                    pDialog.dismiss()
                     showToastNotification(requireContext(), "Расписание ещё не сформировано")
                     findNavController().navigate(R.id.action_moveClassTimePageFragment_to_lecturerMainPageFragment)
                     Log.d("Не успешно", "Получили ${response.code()}")
@@ -350,6 +358,7 @@ class MoveClassTimePageFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<MoveClassResponse>, t: Throwable) {
+                pDialog.dismiss()
                 println("Ошибка")
                 println(t)
             }
