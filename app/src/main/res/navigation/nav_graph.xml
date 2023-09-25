@@ -102,26 +102,8 @@
             android:id="@+id/action_userListPageFragment_to_adminMainPageFragment"
             app:destination="@id/adminMainPageFragment" />
         <action
-            android:id="@+id/action_userListPageFragment_to_createUserAuthFragment"
-            app:destination="@id/createUserAuthFragment" />
-        <action
             android:id="@+id/action_userListPageFragment_to_createUserInfoFragment"
             app:destination="@id/createUserInfoFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/createUserAuthFragment"
-        android:name="vsu.cs.univtimetable.screens.admin_screens.users.CreateUserAuthFragment"
-        android:label="fragment_create_user_auth"
-        tools:layout="@layout/fragment_create_user_auth" >
-        <action
-            android:id="@+id/action_createUserAuthFragment_to_createUserInfoFragment"
-            app:destination="@id/createUserInfoFragment" />
-        <action
-            android:id="@+id/action_createUserAuthFragment_to_userListPageFragment"
-            app:destination="@id/userListPageFragment" />
-        <action
-            android:id="@+id/action_createUserAuthFragment_to_adminMainPageFragment"
-            app:destination="@id/adminMainPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/createUserInfoFragment"
@@ -131,9 +113,6 @@
         <action
             android:id="@+id/action_createUserInfoFragment_to_userListPageFragment"
             app:destination="@id/userListPageFragment" />
-        <action
-            android:id="@+id/action_createUserInfoFragment_to_createUserAuthFragment"
-            app:destination="@id/createUserAuthFragment" />
         <action
             android:id="@+id/action_createUserInfoFragment_to_adminMainPageFragment"
             app:destination="@id/adminMainPageFragment" />
