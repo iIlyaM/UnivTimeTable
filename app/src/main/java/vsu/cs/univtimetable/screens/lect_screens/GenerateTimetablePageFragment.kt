@@ -152,7 +152,7 @@ class GenerateTimetablePageFragment : Fragment() {
 
     private fun clear() {
         val token: String? = SessionManager.getToken(requireContext())
-        Log.d("API Request failed", "${token}")
+        Log.d("API Request ", "${token}")
 
         val call = timetableApi.clearTimetable(
             "Bearer $token"
@@ -168,6 +168,7 @@ class GenerateTimetablePageFragment : Fragment() {
                     Log.d("API Request Successful", "${response.code()}")
                     showToastNotification(requireContext(), "Расписание очищено")
                 } else {
+                    Log.d("API Request Successful", "${response.code()}")
                     clearButtonStopAnimation(clearTTBtn)
                     if (response.code() == 404) {
                         showToastNotification(requireContext(), "Неверный username пользователя")

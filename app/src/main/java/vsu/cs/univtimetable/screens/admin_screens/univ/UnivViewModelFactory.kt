@@ -3,6 +3,7 @@ package vsu.cs.univtimetable.screens.admin_screens.univ
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import vsu.cs.univtimetable.repository.AudienceRepository
+import vsu.cs.univtimetable.repository.AuthRepository
 import vsu.cs.univtimetable.repository.FacultyRepository
 import vsu.cs.univtimetable.repository.GroupRepository
 import vsu.cs.univtimetable.repository.UnivRepository
@@ -11,6 +12,7 @@ import vsu.cs.univtimetable.screens.admin_screens.audience.AudienceViewModel
 import vsu.cs.univtimetable.screens.admin_screens.faculty.FacultyViewModel
 import vsu.cs.univtimetable.screens.admin_screens.group.GroupViewModel
 import vsu.cs.univtimetable.screens.admin_screens.users.UserViewModel
+import vsu.cs.univtimetable.screens.login.LoginViewModel
 import java.lang.IllegalArgumentException
 
 class UnivViewModelFactory(
@@ -42,6 +44,10 @@ class UnivViewModelFactory(
             modelClass.isAssignableFrom(AudienceViewModel::class.java) -> AudienceViewModel(
                 token = token,
                 audienceRepository = repository as AudienceRepository
+            ) as T
+
+            modelClass.isAssignableFrom(LoginViewModel::class.java) -> LoginViewModel(
+                authRepository = repository as AuthRepository
             ) as T
             else -> throw IllegalArgumentException("No such ViewModel")
         }
