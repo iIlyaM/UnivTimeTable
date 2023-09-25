@@ -111,9 +111,7 @@ class GroupListPageFragment : Fragment(), OnGroupEditClickInterface, OnGroupDele
         groupViewModel.groupList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
-        groupViewModel.errorMsg.observe(viewLifecycleOwner) {
-            showToastNotification(requireContext(), it)
-        }
+        groupViewModel.errorMsg.observe(viewLifecycleOwner) {}
         setLoadingDialog(pDialog)
         getGroups(null, null, null)
         pDialog.dismiss()
