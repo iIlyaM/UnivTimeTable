@@ -19,7 +19,7 @@ import vsu.cs.univtimetable.dto.univ.UnivResponseDto
 interface UnivApi {
 
     @Headers("Content-Type: application/json")
-    @GET("universities/v2")
+    @GET("v2/universities")
     suspend fun getUniversities(
         @Header("Authorization") basicToken: String,
         @Query("universityName") univName: String?,
