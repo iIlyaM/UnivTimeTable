@@ -12,17 +12,12 @@ import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import vsu.cs.univtimetable.BtnLoadingProgressbar
 import vsu.cs.univtimetable.R
 import vsu.cs.univtimetable.utils.token_utils.SessionManager
 import vsu.cs.univtimetable.TimetableClient
 import vsu.cs.univtimetable.api.UserAuthApi
 import vsu.cs.univtimetable.dto.auth.AuthRequestDto
-import vsu.cs.univtimetable.dto.auth.AuthResponseDto
-import vsu.cs.univtimetable.dto.univ.CreateFacultyDto
 import vsu.cs.univtimetable.repository.AuthRepository
 import vsu.cs.univtimetable.screens.admin_screens.univ.UnivViewModelFactory
 import vsu.cs.univtimetable.utils.NavigationManager
